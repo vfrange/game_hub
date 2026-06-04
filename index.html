@@ -3539,6 +3539,15 @@
 
   refreshStats();
   loop();
+
+
+  // HOME button
+  document.getElementById('homeBtn').addEventListener('click', () => {
+    if (typeof ensureAudio === 'function') ensureAudio();
+    if (typeof sndTap === 'function') sndTap();
+    parent.postMessage('back-to-hub', '*');
+  });
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -3731,8 +3740,9 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="scoreBar"><span class="star">⭐</span><span class="num" id="scoreNum">0</span></div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -4051,6 +4061,23 @@
     ensureAudio(); sndTap();
     showScreen(menuScreen);
   });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -4229,11 +4256,12 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="infoBar">
       <span class="badge">🎯 <span id="movesNum">0</span></span>
       <span class="badge">✅ <span id="matchesNum">0/0</span></span>
     </div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -4499,6 +4527,23 @@
     ensureAudio(); sndTap();
     showScreen(menuScreen);
   });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -4671,8 +4716,9 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="infoBar">🍎 <span class="num" id="scoreNum">0</span></div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -5024,6 +5070,23 @@
     if (timerId) clearInterval(timerId);
     showScreen(menuScreen);
   });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -5240,8 +5303,9 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="infoBar">⭐ <span class="num" id="scoreNum">0</span></div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -5317,71 +5381,83 @@
   // Banco de palavras PT-BR curadas (sem acento, maiúsculas)
   // Estrutura: para cada nível, conjuntos de letras + palavras válidas que podem ser formadas
   const PUZZLES = {
-    0: [ // 4 letras — múltiplas palavras possíveis
-      { letters:'CASA', words:['CASA','SACA','ASCA'] },
-      { letters:'BOLA', words:['BOLA','LOBA','ABOL'] },
-      { letters:'AMOR', words:['AMOR','RAMO','MORA','ORMA','OARM'] },
-      { letters:'GATO', words:['GATO','TOGA','GOTA'] },
-      { letters:'PATO', words:['PATO','TAPA','POTA','APTO'] },
-      { letters:'ROSA', words:['ROSA','ASOR','ORSA'] },
-      { letters:'PERA', words:['PERA','PREA','RAPE','REPA'] },
-      { letters:'FOGO', words:['FOGO'] },
-      { letters:'MESA', words:['MESA','SAME','EMSA'] },
-      { letters:'RATO', words:['RATO','TORA','OTAR'] },
-      { letters:'LUVA', words:['LUVA','UVAL','VULA'] },
+    0: [ // 4 letras
+      { letters:'AMOR', words:['AMOR','RAMO','MORA','ROMA'] },
+      { letters:'PATO', words:['PATO','APTO','TOPA'] },
+      { letters:'RATO', words:['RATO','TORA','ROTA'] },
+      { letters:'LATA', words:['LATA','ALTA','TALA'] },
+      { letters:'GATO', words:['GATO','TOGA'] },
+      { letters:'BOLA', words:['BOLA','LOBA'] },
       { letters:'CACO', words:['CACO','COCA'] },
-      { letters:'PEIX', words:[] },  // sentinel
-      { letters:'CADO', words:['CADO','ADOC','DACO'] },
-      { letters:'BICO', words:['BICO','OBIC'] },
+      { letters:'TIRO', words:['TIRO','RITO'] },
+      { letters:'CASO', words:['CASO','SACO'] },
+      { letters:'CASA', words:['CASA','SACA'] },
+      { letters:'VELA', words:['VELA','LEVA','VALE'] },
+      { letters:'VIDA', words:['VIDA','DIVA'] },
+      { letters:'CARA', words:['CARA','ARCA'] },
+      { letters:'BOCA', words:['BOCA','CABO'] },
+      { letters:'MESA', words:['MESA'] },
+      { letters:'FOGO', words:['FOGO'] },
+      { letters:'LUVA', words:['LUVA'] },
+      { letters:'COPA', words:['COPA'] },
+      { letters:'NAVE', words:['NAVE'] },
+      { letters:'DADO', words:['DADO'] },
       { letters:'OLHO', words:['OLHO'] },
-      { letters:'TIRO', words:['TIRO','RITO','TORI'] },
-      { letters:'VELA', words:['VELA','LAVE','ELVA'] },
-      { letters:'NAVE', words:['NAVE','VENA','VANE'] },
-      { letters:'DADO', words:['DADO','ADDO'] },
+      { letters:'PERA', words:['PERA'] },
+      { letters:'FACA', words:['FACA'] },
+      { letters:'LIMA', words:['LIMA'] },
     ],
     1: [ // 5 letras
-      { letters:'CARRO', words:['CARRO','ROCAR','CORAR'] },
-      { letters:'TIGRE', words:['TIGRE','GIRET','RITEG'] },
       { letters:'PRATO', words:['PRATO','PORTA','TROPA','PARTO','RAPTO'] },
-      { letters:'PEIXE', words:['PEIXE'] },
-      { letters:'VERDE', words:['VERDE','REVED'] },
-      { letters:'MUNDO', words:['MUNDO','DUMOM'] },
-      { letters:'CAVAL', words:[] },  // sentinel — vamos usar CASOS reais
-      { letters:'NOITE', words:['NOITE','ENITO','TENOI'] },
-      { letters:'FOGAO', words:['FOGAO','GOFA'] },
-      { letters:'CINCO', words:['CINCO','NICOC'] },
-      { letters:'BICHO', words:['BICHO','BOCHI'] },
-      { letters:'PEDRA', words:['PEDRA','PARDE','PREDA'] },
-      { letters:'RIMAS', words:['RIMAS','MIRAS','IRMAS'] },
-      { letters:'BARCO', words:['BARCO','CABRO','BROCA'] },
-      { letters:'PORCO', words:['PORCO','COPRO'] },
-      { letters:'AGUIA', words:['AGUIA'] },
+      { letters:'CARRO', words:['CARRO','CORAR'] },
+      { letters:'AROMA', words:['AROMA','AMORA'] },
+      { letters:'CORTA', words:['CORTA','TROCA'] },
+      { letters:'BARCO', words:['BARCO','BROCA'] },
+      { letters:'BUSCA', words:['BUSCA','CUBAS'] },
+      { letters:'MORTE', words:['MORTE','METRO'] },
+      { letters:'VERDE', words:['VERDE'] },
+      { letters:'LIVRO', words:['LIVRO'] },
+      { letters:'AMIGO', words:['AMIGO'] },
+      { letters:'BICHO', words:['BICHO'] },
+      { letters:'TIGRE', words:['TIGRE'] },
+      { letters:'TARDE', words:['TARDE'] },
+      { letters:'VOLTA', words:['VOLTA'] },
+      { letters:'CAMPO', words:['CAMPO'] },
+      { letters:'NUVEM', words:['NUVEM'] },
+      { letters:'PEDRA', words:['PEDRA'] },
+      { letters:'CARTA', words:['CARTA'] },
+      { letters:'PORCO', words:['PORCO'] },
       { letters:'CHUVA', words:['CHUVA'] },
-      { letters:'ALMOC', words:[] },  // pula
-      { letters:'PALMA', words:['PALMA','LAMPA','MAPLA'] },
-      { letters:'TRAVA', words:['TRAVA','VARTA','VATAR'] },
+      { letters:'NOITE', words:['NOITE'] },
+      { letters:'MUNDO', words:['MUNDO'] },
+      { letters:'CINCO', words:['CINCO'] },
+      { letters:'PALMA', words:['PALMA'] },
     ],
     2: [ // 6 letras
-      { letters:'TIGELA', words:['TIGELA','GELITA','LATEGI'] },
-      { letters:'CABELO', words:['CABELO','BOLACE'] },
-      { letters:'ESCOLA', words:['ESCOLA','COLASE'] },
-      { letters:'BOLERO', words:['BOLERO','REBOLO'] },
-      { letters:'CRIANC', words:[] },  // pula
+      { letters:'BANANA', words:['BANANA'] },
+      { letters:'ESCOLA', words:['ESCOLA'] },
+      { letters:'SALADA', words:['SALADA'] },
+      { letters:'CINEMA', words:['CINEMA'] },
+      { letters:'PIPOCA', words:['PIPOCA'] },
+      { letters:'TUCANO', words:['TUCANO'] },
+      { letters:'JANELA', words:['JANELA'] },
+      { letters:'GORILA', words:['GORILA'] },
+      { letters:'CABELO', words:['CABELO'] },
+      { letters:'AMARGO', words:['AMARGO'] },
+      { letters:'LIMITE', words:['LIMITE'] },
       { letters:'FUTURO', words:['FUTURO'] },
-      { letters:'PALACO', words:['PALACO','COPALA'] },
-      { letters:'PIPOCA', words:['PIPOCA','POPICA'] },
-      { letters:'BICICL', words:[] },  // pula
-      { letters:'SALADA', words:['SALADA','LASADA'] },
-      { letters:'BORBOL', words:[] },
-      { letters:'FAROIS', words:['FAROIS','FARIOS'] },
-      { letters:'GORILA', words:['GORILA','LARGIO'] },
-      { letters:'JANELA', words:['JANELA','ALENAJ'] },
-      { letters:'PRATEL', words:[] },
-      { letters:'TUCANO', words:['TUCANO','CANUTO'] },
-      { letters:'TRENZO', words:[] },
-      { letters:'CINEMA', words:['CINEMA','AMICEN'] },
-      { letters:'LIMITE', words:['LIMITE','MILITE'] },
-      { letters:'CIRCUL', words:[] },
+      { letters:'CAVALO', words:['CAVALO'] },
+      { letters:'CADEIA', words:['CADEIA'] },
+      { letters:'ONIBUS', words:['ONIBUS'] },
+      { letters:'COMIDA', words:['COMIDA'] },
+      { letters:'ESCURO', words:['ESCURO'] },
+      { letters:'FERIAS', words:['FERIAS'] },
+      { letters:'TIGELA', words:['TIGELA'] },
+      { letters:'BOLERO', words:['BOLERO'] },
+      { letters:'FAROIS', words:['FAROIS'] },
+      { letters:'PRENDA', words:['PRENDA'] },
+      { letters:'COELHO', words:['COELHO'] },
+      { letters:'CIRCUS', words:['CIRCUS'] },
     ],
   };
 
@@ -5532,6 +5608,10 @@
         formed.push({ char: ch, tileIdx: idx });
         btn.classList.add('used');
         updateFormed();
+        // Auto-confirma quando usar todas as letras disponíveis
+        if (formed.length === currentPuzzle.letters.length) {
+          setTimeout(() => document.getElementById('submitBtn').click(), 200);
+        }
       });
       row.appendChild(btn);
     });
@@ -5703,6 +5783,23 @@
     if (timerId) clearInterval(timerId);
     showScreen(menuScreen);
   });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -5870,8 +5967,9 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="infoBar">🚀 <span class="num" id="scoreNum">0</span>m</div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -6295,6 +6393,23 @@
     running = false;
     showScreen(menuScreen);
   });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -6466,11 +6581,12 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="infoBar">
       <span class="lives" id="livesEl">❤️❤️❤️</span>
       <span class="coins" id="coinsEl">🪙 0/0</span>
     </div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -7164,6 +7280,23 @@
     running = false;
     showScreen(menuScreen);
   });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -7351,8 +7484,9 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="infoBar">💡 <span class="num" id="hintsUsedNum">0</span></div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -7875,6 +8009,23 @@
     ensureAudio(); sndTap();
     showScreen(menuScreen);
   });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -8042,8 +8193,9 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="infoBar">🎈 <span class="num" id="scoreNum">0</span></div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -8480,6 +8632,23 @@
     if (timerId) clearInterval(timerId);
     showScreen(menuScreen);
   });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -8659,8 +8828,9 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="infoBar">⭐ <span class="num" id="scoreNum">0</span></div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -8968,6 +9138,23 @@
   document.getElementById('backMenuBtn').addEventListener('click', () => {
     ensureAudio(); sndTap(); showScreen(menuScreen);
   });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -9118,8 +9305,9 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="titlePill" id="modeTitle">Pintar</div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -9426,6 +9614,23 @@
   });
 
   window.addEventListener('resize', () => { if (!gameScreen.classList.contains('hidden')) resize(); });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -9598,8 +9803,9 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="infoBar">🎵 <span id="modeNameBar">Livre</span></div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -9869,6 +10075,23 @@
     ensureAudio(); sndTap();
     showScreen(menuScreen);
   });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -10043,8 +10266,9 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="infoBar">🎯 <span class="num" id="scoreNum">0</span></div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -10310,6 +10534,23 @@
     if (spawnId) clearInterval(spawnId);
     showScreen(menuScreen);
   });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -10496,8 +10737,9 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="infoBar">🎯 <span class="num" id="goalNum">256</span></div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -10861,6 +11103,23 @@
     running = false;
     showScreen(menuScreen);
   });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -11033,8 +11292,9 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="infoBar">🏆 <span class="num" id="bestNum">0</span></div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -11470,6 +11730,23 @@
     if (dropTimer) { clearInterval(dropTimer); dropTimer = null; }
     showScreen(menuScreen);
   });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -11632,11 +11909,12 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="infoBar">
       <span class="lives" id="livesEl">❤️❤️❤️</span>
       <span>🧱 <span class="num" id="scoreNum">0</span></span>
     </div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -12018,6 +12296,23 @@
     running = false;
     showScreen(menuScreen);
   });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -12181,8 +12476,9 @@
 
 <div id="stage">
   <header>
-    <button class="iconBtn" onclick="parent.postMessage('back-to-hub','*')" aria-label="Voltar">←</button>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="infoBar">🏁 <span class="num" id="scoreNum">0</span>m</div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -12522,6 +12818,23 @@
     running = false;
     showScreen(menuScreen);
   });
+
+  // NAVEGAÇÃO (back + home)
+  (function setupNav() {
+    const backEl = document.getElementById('backBtn');
+    const homeEl = document.getElementById('homeBtn');
+    function goHub() { parent.postMessage('back-to-hub', '*'); }
+    function tap() { if (typeof ensureAudio === 'function') ensureAudio(); if (typeof sndTap === 'function') sndTap(); }
+    if (backEl) backEl.addEventListener('click', () => {
+      tap();
+      const menu = document.getElementById('menuScreen');
+      if (!menu || !menu.classList.contains('hidden')) { goHub(); return; }
+      if (typeof showScreen === 'function') showScreen(menu);
+      else { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); menu.classList.remove('hidden'); }
+    });
+    if (homeEl) homeEl.addEventListener('click', () => { tap(); goHub(); });
+  })();
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -12706,6 +13019,7 @@
   <header>
     <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="infoBar"><span id="headerText">Sokoban</span></div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -13197,6 +13511,15 @@
 
   window.addEventListener('resize', () => { if (!gameScreen.classList.contains('hidden')) { resize(); render(); } });
   refreshMenu();
+
+
+  // HOME button
+  document.getElementById('homeBtn').addEventListener('click', () => {
+    if (typeof ensureAudio === 'function') ensureAudio();
+    if (typeof sndTap === 'function') sndTap();
+    parent.postMessage('back-to-hub', '*');
+  });
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -13371,6 +13694,7 @@
       <span><span class="label">SCORE</span> <span class="val" id="scoreVal">0000</span></span>
       <span class="lives" id="livesEl">▲▲▲</span>
     </div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -14090,6 +14414,15 @@
     running = false;
     showScreen(menuScreen);
   });
+
+
+  // HOME button
+  document.getElementById('homeBtn').addEventListener('click', () => {
+    if (typeof ensureAudio === 'function') ensureAudio();
+    if (typeof sndTap === 'function') sndTap();
+    parent.postMessage('back-to-hub', '*');
+  });
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -14272,6 +14605,7 @@
   <header>
     <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
     <div class="hud"><span id="headerText">Sudoku</span></div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -14762,6 +15096,15 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
     if (timerInterval) clearInterval(timerInterval);
     showScreen(menuScreen);
   });
+
+
+  // HOME button
+  document.getElementById('homeBtn').addEventListener('click', () => {
+    if (typeof ensureAudio === 'function') ensureAudio();
+    if (typeof sndTap === 'function') sndTap();
+    parent.postMessage('back-to-hub', '*');
+  });
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -14943,6 +15286,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       <span><span>SCORE</span> <span class="num" id="scoreVal">0</span></span>
       <span class="lives" id="livesEl">●●●</span>
     </div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -15799,6 +16143,14 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
     showScreen(menuScreen);
   });
 
+
+  // HOME button
+  document.getElementById('homeBtn').addEventListener('click', () => {
+    if (typeof ensureAudio === 'function') ensureAudio();
+    if (typeof sndTap === 'function') sndTap();
+    parent.postMessage('back-to-hub', '*');
+  });
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -15987,6 +16339,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       <span class="gold">💰 <span class="num" id="goldVal">100</span></span>
       <span class="wave">🌊 <span class="num" id="waveVal">0</span>/10</span>
     </div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -16738,6 +17091,15 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
     running = false;
     showScreen(menuScreen);
   });
+
+
+  // HOME button
+  document.getElementById('homeBtn').addEventListener('click', () => {
+    if (typeof ensureAudio === 'function') ensureAudio();
+    if (typeof sndTap === 'function') sndTap();
+    parent.postMessage('back-to-hub', '*');
+  });
+
 })();
 <<<__SCRIPT_END__>>>
 
@@ -16942,6 +17304,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       <div class="row mp"><span>MP</span><span class="v" id="mpVal">5/5</span></div>
       <div class="row"><span>Lv <span id="lvVal">1</span> · XP</span><span class="v" id="xpVal">0</span></div>
     </div>
+    <button class="iconBtn" id="homeBtn" aria-label="Início">🏠</button>
     <button class="iconBtn" id="muteBtn">🔊</button>
   </header>
 
@@ -17536,6 +17899,15 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
     ensureAudio(); sndTap();
     showScreen(menuScreen);
   });
+
+
+  // HOME button
+  document.getElementById('homeBtn').addEventListener('click', () => {
+    if (typeof ensureAudio === 'function') ensureAudio();
+    if (typeof sndTap === 'function') sndTap();
+    parent.postMessage('back-to-hub', '*');
+  });
+
 })();
 <<<__SCRIPT_END__>>>
 
