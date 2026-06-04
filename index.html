@@ -3810,6 +3810,7 @@
   .board.cols2 { grid-template-columns:repeat(2, 1fr); }
   .board.cols3 { grid-template-columns:repeat(3, 1fr); }
   .board.cols4 { grid-template-columns:repeat(4, 1fr); }
+  .board.cols5 { grid-template-columns:repeat(5, 1fr); gap:6px; }
 
   .card3d { aspect-ratio:1; perspective:600px; cursor:pointer; }
   .card3d-inner { position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .35s cubic-bezier(.4,2,.6,1); }
@@ -3820,7 +3821,9 @@
   .face { position:absolute; inset:0; border-radius:14px; display:flex; align-items:center; justify-content:center; backface-visibility:hidden; -webkit-backface-visibility:hidden; }
   .face-back { background:linear-gradient(135deg,#22c55e,#16a34a); border:2px solid #4ade80; box-shadow:inset 0 -3px 0 rgba(0,0,0,.2); }
   .face-back::after { content:'?'; font-size:clamp(24px, 8vw, 38px); font-weight:900; color:rgba(255,255,255,.7); }
-  .face-front { background:#fff; color:#222; transform:rotateY(180deg); border:2px solid #4ade80; font-size:clamp(28px, 9vw, 50px); }
+  .face-front { background:#fff; color:#222; transform:rotateY(180deg); border:2px solid #4ade80; font-size:clamp(36px, 13vw, 64px); }
+  .board.cols4 .face-front { font-size:clamp(32px, 10vw, 52px); }
+  .board.cols5 .face-front { font-size:clamp(24px, 7vw, 38px); }
 
   /* FIM DE RODADA */
   #endScreen { text-align:center; padding:20px; }
@@ -3879,6 +3882,14 @@
           <div class="lvlRange">12 pares · 4×6</div>
         </div>
         <div class="lvlStars" id="stars2"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
+      </div>
+      <div class="levelCard" data-lvl="3">
+        <div class="lvlIcon">💀</div>
+        <div class="lvlInfo">
+          <div class="lvlName">Insano</div>
+          <div class="lvlRange">15 pares · 5×6</div>
+        </div>
+        <div class="lvlStars" id="stars3"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
       </div>
     </div>
   </div>
@@ -3939,6 +3950,7 @@
     { name:'Fácil',   pairs:3,  cols:2, optimal:3,  ok:5,  poor:8 },
     { name:'Médio',   pairs:8,  cols:4, optimal:10, ok:16, poor:24 },
     { name:'Difícil', pairs:12, cols:4, optimal:15, ok:25, poor:36 },
+    { name:'Insano',  pairs:15, cols:5, optimal:20, ok:32, poor:48 },
   ];
   const EMOJI_POOL = ['🐶','🐱','🦊','🐻','🐼','🐨','🦁','🐯','🐸','🐵','🦄','🐙','🦋','🐝','🐠','🦖','🦓','🦩','🐧','🦚','🍎','🍊','🍋','🍇','🍓','🍑','🍒','🥝'];
 
@@ -3949,9 +3961,10 @@
     if (n > cur) localStorage.setItem('blg-memory-stars-' + lvl, n);
   }
   function refreshMenu() {
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
       const s = getStars(i);
       const container = document.getElementById('stars' + i);
+      if (!container) continue;
       container.querySelectorAll('.s').forEach((el, idx) => {
         el.classList.toggle('lit', idx < s);
       });
@@ -4681,29 +4694,56 @@
   .timer.crit { color:#ef4444; animation:pulse .5s infinite; }
   @keyframes pulse { 50% { transform:scale(1.1); } }
 
-  .formedDisplay { min-height:50px; font-size:32px; font-weight:900; letter-spacing:4px; color:#38bdf8; margin-bottom:12px; min-width:200px; text-align:center; padding:8px 16px; background:rgba(0,0,0,.3); border-radius:14px; border:2px dashed rgba(56,189,248,.3); }
+  .formedDisplay { min-height:50px; font-size:32px; font-weight:900; letter-spacing:4px; color:#38bdf8; margin-bottom:12px; min-width:200px; text-align:center; padding:8px 16px; background:rgba(0,0,0,.3); border-radius:14px; border:2px dashed rgba(56,189,248,.3); transition:border-color .2s, background .2s; }
   .formedDisplay.empty::after { content:'_'; opacity:.3; }
-  .formedDisplay.shake { animation:shake .3s; }
-  @keyframes shake { 0%, 100% { transform:translateX(0); } 25% { transform:translateX(-8px); } 75% { transform:translateX(8px); } }
-  .formedDisplay.flash { animation:flash .4s; }
-  @keyframes flash { 50% { background:rgba(74,222,128,.5); transform:scale(1.1); } }
+  .formedDisplay.shake { animation:shakeBig .45s; background:rgba(239,68,68,.25)!important; border-color:#ef4444!important; }
+  @keyframes shakeBig {
+    0%, 100% { transform:translateX(0) rotate(0); }
+    15% { transform:translateX(-14px) rotate(-2deg); }
+    30% { transform:translateX(14px) rotate(2deg); }
+    45% { transform:translateX(-12px) rotate(-1.5deg); }
+    60% { transform:translateX(12px) rotate(1.5deg); }
+    75% { transform:translateX(-8px) rotate(-1deg); }
+    90% { transform:translateX(8px) rotate(1deg); }
+  }
+  .formedDisplay.flash { animation:flashGreen .5s; }
+  @keyframes flashGreen { 50% { background:rgba(74,222,128,.5); transform:scale(1.1); border-color:#4ade80; } }
+
+  /* Flash vermelho fullscreen */
+  #errorFlash { position:fixed; inset:0; background:radial-gradient(circle, rgba(239,68,68,.45), transparent 70%); pointer-events:none; opacity:0; z-index:60; }
+  #errorFlash.fire { animation:flashFullRed .45s; }
+  @keyframes flashFullRed { 0%, 100% { opacity:0; } 30% { opacity:1; } }
+
+  /* Big "X" emoji overlay no erro */
+  #errorX { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; opacity:0; z-index:61; font-size:140px; }
+  #errorX.fire { animation:xPop .5s; }
+  @keyframes xPop { 0% { opacity:0; transform:scale(0) rotate(-30deg); } 50% { opacity:1; transform:scale(1.1) rotate(8deg); } 100% { opacity:0; transform:scale(.8) rotate(0); } }
 
   .letterRow { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:16px; max-width:340px; }
   .letterTile { width:54px; height:60px; background:linear-gradient(180deg,#fff,#e5e5e5); color:#0c4a6e; font-size:26px; font-weight:900; border:none; border-radius:10px; cursor:pointer; box-shadow:0 3px 0 #94a3b8, 0 5px 8px rgba(0,0,0,.3); transition:transform .1s, box-shadow .1s; }
   .letterTile:active { transform:translateY(2px); box-shadow:0 1px 0 #94a3b8, 0 3px 4px rgba(0,0,0,.3); }
   .letterTile.used { opacity:.25; pointer-events:none; }
 
-  .actionBtns { display:flex; gap:10px; max-width:340px; width:100%; }
-  .actionBtn { flex:1; padding:14px; font-size:13px; font-weight:800; border:none; border-radius:14px; cursor:pointer; color:#fff; }
+  .actionBtns { display:grid; grid-template-columns:1fr 1fr 1.3fr; gap:8px; max-width:340px; width:100%; }
+  .actionBtn { padding:14px 6px; font-size:13px; font-weight:800; border:none; border-radius:14px; cursor:pointer; color:#fff; }
   .actionBtn:active { transform:scale(.96); }
+  .actionBtn:disabled { opacity:.4; cursor:not-allowed; }
   .clearBtn { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); }
+  .hintBtn  { background:linear-gradient(90deg,#fbbf24,#f59e0b); }
+  .hintBtn.shake { animation:btnShake .35s; }
+  @keyframes btnShake { 0%, 100% { transform:translateX(0); } 25% { transform:translateX(-6px); } 75% { transform:translateX(6px); } }
   .submitBtn { background:linear-gradient(90deg,#38bdf8,#0284c7); }
 
   .wordsList { width:100%; max-width:340px; margin-top:14px; padding:12px; background:rgba(0,0,0,.25); border-radius:12px; min-height:60px; }
   .wordsList .title { font-size:11px; opacity:.6; margin-bottom:6px; text-transform:uppercase; letter-spacing:1px; }
+  .wordsList .title.spaced { margin-top:10px; }
   .wordsList .chips { display:flex; flex-wrap:wrap; gap:6px; }
   .wordChip { background:rgba(56,189,248,.2); color:#7dd3fc; padding:4px 10px; border-radius:99px; font-size:12px; font-weight:700; animation:popIn .3s; }
   @keyframes popIn { from { transform:scale(0); } to { transform:scale(1); } }
+
+  .hints { display:flex; flex-wrap:wrap; gap:8px; }
+  .hintWord { background:rgba(255,255,255,.06); padding:4px 10px; border-radius:8px; font-size:14px; font-weight:700; letter-spacing:3px; color:rgba(255,255,255,.5); border:1px dashed rgba(255,255,255,.15); }
+  .hintWord .rev { color:#fbbf24; text-shadow:0 0 8px rgba(251,191,36,.6); }
 
   /* FIM */
   #endScreen { text-align:center; padding:20px; }
@@ -4771,13 +4811,19 @@
     <div class="letterRow" id="letters"></div>
     <div class="actionBtns">
       <button class="actionBtn clearBtn" id="clearBtn">Limpar</button>
+      <button class="actionBtn hintBtn" id="hintBtn">💡 -5</button>
       <button class="actionBtn submitBtn" id="submitBtn">Validar</button>
     </div>
     <div class="wordsList">
-      <div class="title">Palavras encontradas</div>
+      <div class="title">Palavras pra achar</div>
+      <div class="hints" id="hintsList"></div>
+      <div class="title spaced">Encontradas</div>
       <div class="chips" id="foundChips"></div>
     </div>
   </div>
+
+  <div id="errorFlash"></div>
+  <div id="errorX">❌</div>
 
   <!-- FIM -->
   <div id="endScreen" class="screen hidden">
@@ -4895,7 +4941,8 @@
   function sndTap()     { beep(660, 0.04, 'triangle', 0.05); }
   function sndLetter()  { beep(440 + Math.random()*200, 0.04, 'triangle', 0.04); }
   function sndValid()   { [523, 659, 880, 1047, 1318].forEach((f, i) => beep(f, 0.10, 'triangle', 0.06, i*0.05)); }
-  function sndInvalid() { beep(220, 0.12, 'sine', 0.05); }
+  function sndInvalid() { beep(180, 0.15, 'sawtooth', 0.06); setTimeout(() => beep(140, 0.18, 'sawtooth', 0.05), 80); }
+  function sndHint()    { [659, 988, 1318].forEach((f, i) => beep(f, 0.08, 'triangle', 0.05, i*0.04)); }
   function sndTick()    { beep(800, 0.05, 'square', 0.03); }
   function sndEnd()     { [880, 659, 523, 392].forEach((f, i) => beep(f, 0.15, 'triangle', 0.06, i*0.1)); }
 
@@ -4936,6 +4983,7 @@
   let currentPuzzle = null;
   let formed = [];           // array de {char, tileIdx}
   let foundWords = [];
+  let hintsRevealed = new Set();  // palavras com 1ª letra revelada
   let score = 0;
   let timeLeft = 0;
   let timerId = null;
@@ -4995,6 +5043,7 @@
 
   function renderPuzzle() {
     formed = [];
+    hintsRevealed = new Set();
     const letters = shuffleStr(currentPuzzle.letters);
     const row = document.getElementById('letters');
     row.innerHTML = '';
@@ -5014,6 +5063,50 @@
       row.appendChild(btn);
     });
     updateFormed();
+    updateHints();
+  }
+
+  function updateHints() {
+    const remaining = currentPuzzle.words.filter(w => !foundWords.includes(w));
+    const el = document.getElementById('hintsList');
+    el.innerHTML = '';
+    if (remaining.length === 0) {
+      el.innerHTML = '<div style="opacity:.5;font-size:12px;">Próximo puzzle...</div>';
+      return;
+    }
+    remaining.forEach(w => {
+      const div = document.createElement('div');
+      div.className = 'hintWord';
+      let html = '';
+      for (let i = 0; i < w.length; i++) {
+        if (i === 0 && hintsRevealed.has(w)) {
+          html += `<span class="rev">${w[0]}</span> `;
+        } else {
+          html += '_ ';
+        }
+      }
+      div.innerHTML = html.trim();
+      el.appendChild(div);
+    });
+  }
+
+  function useHint() {
+    ensureAudio();
+    const remaining = currentPuzzle.words.filter(w => !foundWords.includes(w) && !hintsRevealed.has(w));
+    if (remaining.length === 0) { sndInvalid(); return; }
+    if (score < 5) {
+      sndInvalid();
+      const btn = document.getElementById('hintBtn');
+      btn.classList.add('shake');
+      setTimeout(() => btn.classList.remove('shake'), 400);
+      return;
+    }
+    score -= 5;
+    document.getElementById('scoreNum').textContent = score;
+    const pick = remaining[Math.floor(Math.random() * remaining.length)];
+    hintsRevealed.add(pick);
+    updateHints();
+    sndHint();
   }
 
   function updateFormed() {
@@ -5033,6 +5126,15 @@
     clearFormed();
   });
 
+  function fireErrorAnim() {
+    const el = document.getElementById('formed');
+    el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+    const fl = document.getElementById('errorFlash');
+    fl.classList.remove('fire'); void fl.offsetWidth; fl.classList.add('fire');
+    const xx = document.getElementById('errorX');
+    xx.classList.remove('fire'); void xx.offsetWidth; xx.classList.add('fire');
+  }
+
   document.getElementById('submitBtn').addEventListener('click', () => {
     ensureAudio();
     const word = formed.map(f => f.char).join('');
@@ -5040,12 +5142,13 @@
 
     if (word.length < 3) {
       sndInvalid();
-      el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+      fireErrorAnim();
       return;
     }
     if (foundWords.includes(word)) {
       sndInvalid();
-      el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+      fireErrorAnim();
+      setTimeout(clearFormed, 500);
       return;
     }
     if (currentPuzzle.words.includes(word)) {
@@ -5059,21 +5162,27 @@
       chip.textContent = word;
       document.getElementById('foundChips').appendChild(chip);
       el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+      updateHints();
 
       // Se achou todas, próximo puzzle
       if (foundWords.length >= currentPuzzle.words.length) {
         setTimeout(() => {
+          foundWords = [];
+          document.getElementById('foundChips').innerHTML = '';
           currentPuzzle = pickPuzzle();
           renderPuzzle();
-        }, 800);
+        }, 900);
       } else {
         setTimeout(clearFormed, 400);
       }
     } else {
       sndInvalid();
-      el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake');
+      fireErrorAnim();
+      setTimeout(clearFormed, 500);
     }
   });
+
+  document.getElementById('hintBtn').addEventListener('click', useHint);
 
   function endGame() {
     clearInterval(timerId);
@@ -5216,10 +5325,10 @@
   #gameScreen { padding:0; justify-content:flex-start; }
   #gameCanvas { width:100%; flex:1; display:block; }
 
-  /* Controles invisíveis nas laterais */
-  .ctrlLeft, .ctrlRight { position:fixed; top:0; bottom:0; width:50%; z-index:4; }
-  .ctrlLeft { left:0; }
-  .ctrlRight { right:0; }
+  /* Controles visíveis */
+  .controls { position:fixed; bottom:env(safe-area-inset-bottom,20px); left:0; right:0; display:flex; justify-content:space-between; padding:0 24px; z-index:6; pointer-events:none; }
+  .ctrlBtn { width:78px; height:78px; background:rgba(255,255,255,.18); border:2px solid rgba(255,255,255,.4); border-radius:50%; color:#fff; font-size:32px; font-weight:900; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 0 rgba(0,0,0,.3); pointer-events:auto; transition:transform .1s, background .1s; }
+  .ctrlBtn.active { background:rgba(6,182,212,.6); transform:scale(.92) translateY(2px); box-shadow:0 2px 0 rgba(0,0,0,.3); }
 
   /* FIM */
   #endScreen { text-align:center; padding:20px; background:rgba(0,0,0,.5); }
@@ -5283,8 +5392,10 @@
   <!-- JOGO -->
   <div id="gameScreen" class="screen hidden">
     <canvas id="gameCanvas"></canvas>
-    <div class="ctrlLeft"></div>
-    <div class="ctrlRight"></div>
+    <div class="controls">
+      <button class="ctrlBtn" id="btnLeft">◀</button>
+      <button class="ctrlBtn" id="btnRight">▶</button>
+    </div>
   </div>
 
   <!-- FIM -->
@@ -5630,20 +5741,17 @@
     setTimeout(() => showScreen(endScreen), 800);
   }
 
-  // Controles touch
-  const ctrlLeft = document.querySelector('.ctrlLeft');
-  const ctrlRight = document.querySelector('.ctrlRight');
-  ctrlLeft.addEventListener('touchstart', (e) => { e.preventDefault(); ensureAudio(); inputLeft = true; }, { passive:false });
-  ctrlLeft.addEventListener('touchend', () => { inputLeft = false; });
-  ctrlRight.addEventListener('touchstart', (e) => { e.preventDefault(); ensureAudio(); inputRight = true; }, { passive:false });
-  ctrlRight.addEventListener('touchend', () => { inputRight = false; });
-  // mouse fallback
-  ctrlLeft.addEventListener('mousedown', () => { ensureAudio(); inputLeft = true; });
-  ctrlLeft.addEventListener('mouseup', () => { inputLeft = false; });
-  ctrlLeft.addEventListener('mouseleave', () => { inputLeft = false; });
-  ctrlRight.addEventListener('mousedown', () => { ensureAudio(); inputRight = true; });
-  ctrlRight.addEventListener('mouseup', () => { inputRight = false; });
-  ctrlRight.addEventListener('mouseleave', () => { inputRight = false; });
+  // Controles touch (botões visíveis)
+  function bindBtn(el, set) {
+    el.addEventListener('touchstart', (e) => { e.preventDefault(); ensureAudio(); set(true); el.classList.add('active'); }, { passive:false });
+    el.addEventListener('touchend',   (e) => { e.preventDefault(); set(false); el.classList.remove('active'); }, { passive:false });
+    el.addEventListener('touchcancel', () => { set(false); el.classList.remove('active'); });
+    el.addEventListener('mousedown',  () => { ensureAudio(); set(true); el.classList.add('active'); });
+    el.addEventListener('mouseup',    () => { set(false); el.classList.remove('active'); });
+    el.addEventListener('mouseleave', () => { set(false); el.classList.remove('active'); });
+  }
+  bindBtn(document.getElementById('btnLeft'),  (v) => inputLeft = v);
+  bindBtn(document.getElementById('btnRight'), (v) => inputRight = v);
 
   // Teclado (desktop)
   window.addEventListener('keydown', (e) => {
