@@ -11262,17 +11262,22 @@
   .levelCard .lvlStars .s.lit { opacity:1; filter:drop-shadow(0 0 4px #ffd700); }
 
   /* JOGO */
-  #gameScreen { padding-top:6px; }
-  .gameTop { display:flex; gap:8px; width:100%; max-width:380px; margin-bottom:10px; }
-  .gameTop .stat { flex:1; background:rgba(0,0,0,.4); border-radius:10px; padding:6px 10px; text-align:center; }
+  #gameScreen { padding-top:6px; gap:4px; justify-content:flex-start; min-height:0; flex:1; align-items:center; }
+  .gameTop { display:flex; gap:8px; width:100%; max-width:380px; margin-bottom:4px; }
+  .gameTop .stat { flex:1; background:rgba(0,0,0,.4); border-radius:10px; padding:5px 10px; text-align:center; }
   .gameTop .stat .lbl { font-size:9px; opacity:.6; text-transform:uppercase; }
   .gameTop .stat .val { font-size:18px; font-weight:900; color:#22d3ee; }
 
-  #boardWrap { width:100%; max-width:300px; aspect-ratio:1/2; position:relative; }
-  canvas { width:100%; height:100%; display:block; background:#020817; border-radius:8px; border:2px solid rgba(34,211,238,.3); }
+  .boardRow { display:flex; gap:10px; flex:1; min-height:0; align-items:center; justify-content:center; width:100%; max-width:380px; }
+  #boardWrap { width:auto; max-width:260px; aspect-ratio:1/2; position:relative; flex:1; min-height:0; }
+  canvas#boardCanvas { width:100%; height:100%; display:block; background:#020817; border-radius:8px; border:2px solid rgba(34,211,238,.3); }
+  .sidePanel { display:flex; flex-direction:column; gap:8px; align-items:center; align-self:center; }
+  .sideLabel { font-size:9px; opacity:.6; text-transform:uppercase; letter-spacing:1px; }
+  .nextSlot { width:60px; height:46px; background:rgba(0,0,0,.4); border:1px solid rgba(34,211,238,.25); border-radius:8px; display:block; }
+  .nextSlot:first-of-type { border-color:rgba(34,211,238,.6); box-shadow:0 0 8px rgba(34,211,238,.3); }
 
-  .controls { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:6px; width:100%; max-width:380px; margin-top:12px; }
-  .ctrlBtn { aspect-ratio:1; background:rgba(255,255,255,.12); border:2px solid rgba(255,255,255,.2); color:#fff; font-size:24px; font-weight:900; border-radius:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .controls { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:6px; width:100%; max-width:380px; margin-top:4px; flex-shrink:0; }
+  .ctrlBtn { height:72px; background:rgba(255,255,255,.12); border:2px solid rgba(255,255,255,.2); color:#fff; font-size:26px; font-weight:900; border-radius:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
   .ctrlBtn:active { transform:scale(.92); background:rgba(34,211,238,.4); }
 
   /* FIM */
@@ -11342,7 +11347,15 @@
       <div class="stat"><div class="lbl">Linhas</div><div class="val" id="linesVal">0</div></div>
       <div class="stat"><div class="lbl">Nível</div><div class="val" id="levelVal">1</div></div>
     </div>
-    <div id="boardWrap"><canvas id="boardCanvas"></canvas></div>
+    <div class="boardRow">
+      <div id="boardWrap"><canvas id="boardCanvas"></canvas></div>
+      <div class="sidePanel">
+        <div class="sideLabel">Próximas</div>
+        <canvas class="nextSlot" id="next0" width="56" height="44"></canvas>
+        <canvas class="nextSlot" id="next1" width="56" height="44"></canvas>
+        <canvas class="nextSlot" id="next2" width="56" height="44"></canvas>
+      </div>
+    </div>
     <div class="controls">
       <button class="ctrlBtn" id="btnLeft">◀</button>
       <button class="ctrlBtn" id="btnRotate">↻</button>
@@ -11454,7 +11467,7 @@
   let currentLevel = 0;
   let board = [];   // board[r][c] = color or null
   let piece = null;
-  let nextPiece = null;
+  let nextQueue = [];
   let score = 0, lines = 0, level = 1;
   let dropMs = 800;
   let dropTimer = null;
@@ -11493,7 +11506,8 @@
     score = 0; lines = 0; level = 1;
     dropMs = LEVELS[currentLevel].initialSpeed;
     piece = randomPiece();
-    nextPiece = randomPiece();
+    nextQueue = [randomPiece(), randomPiece(), randomPiece()];
+    drawNextPanel();
     running = true;
     document.getElementById('bestNum').textContent = getBest(currentLevel);
     updateHUD();
@@ -11622,8 +11636,9 @@
       updateHUD();
     }
     // spawn next
-    piece = nextPiece;
-    nextPiece = randomPiece();
+    piece = nextQueue.shift();
+    nextQueue.push(randomPiece());
+    drawNextPanel();
     if (collide(piece)) {
       gameOver();
       return;
@@ -11707,6 +11722,34 @@
     ctx.fillStyle = 'rgba(0,0,0,.3)';
     ctx.fillRect(x + 1, y + CELL - 4, CELL - 2, 3);
     ctx.fillRect(x + CELL - 4, y + 1, 3, CELL - 2);
+  }
+
+  function drawNextPanel() {
+    for (let i = 0; i < 3; i++) {
+      const cv = document.getElementById('next' + i);
+      if (!cv) continue;
+      const c = cv.getContext('2d');
+      c.clearRect(0, 0, cv.width, cv.height);
+      const p = nextQueue[i];
+      if (!p) continue;
+      const m = p.matrix;
+      const rows = m.length, cols = m[0].length;
+      // calcula cell size pra caber com folga
+      const cellSize = Math.floor(Math.min((cv.width - 8) / cols, (cv.height - 8) / rows));
+      const offX = (cv.width - cellSize * cols) / 2;
+      const offY = (cv.height - cellSize * rows) / 2;
+      for (let r = 0; r < rows; r++) {
+        for (let cc = 0; cc < cols; cc++) {
+          if (!m[r][cc]) continue;
+          const x = offX + cc * cellSize, y = offY + r * cellSize;
+          c.fillStyle = p.color;
+          c.fillRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
+          c.fillStyle = 'rgba(255,255,255,.25)';
+          c.fillRect(x + 1, y + 1, cellSize - 2, 2);
+          c.fillRect(x + 1, y + 1, 2, cellSize - 2);
+        }
+      }
+    }
   }
 
   // CONTROLES
