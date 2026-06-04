@@ -482,13 +482,13 @@
 
   // Progresso Race
   let raceStars = 0;
-  for (let i = 0; i < 3; i++) raceStars += +(localStorage.getItem('blg-race-stars-' + i) || 0);
+  for (let i = 0; i < 5; i++) raceStars += +(localStorage.getItem('blg-race-stars-' + i) || 0);
   const raceProg = document.querySelector('.card[data-game="race"] .progress');
   if (raceProg) {
     const bar = raceProg.querySelector('div');
     if (raceStars > 0) {
       raceProg.classList.add('show');
-      bar.style.width = Math.max(5, (raceStars / 9) * 100) + '%';
+      bar.style.width = Math.max(5, (raceStars / 15) * 100) + '%';
     }
   }
 
@@ -3588,7 +3588,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -4118,7 +4118,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -4584,7 +4584,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -5127,7 +5127,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -5840,7 +5840,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -6450,7 +6450,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -7337,7 +7337,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -8066,7 +8066,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -8689,7 +8689,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -9195,7 +9195,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -9671,7 +9671,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -10132,7 +10132,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -10591,7 +10591,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -11160,7 +11160,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -11787,7 +11787,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -12156,12 +12156,20 @@
           ball.y + ball.r > b.y && ball.y - ball.r < b.y + b.h) {
         b.alive = false;
         score++;
-        // direção de quique
-        const cx = b.x + b.w / 2, cy = b.y + b.h / 2;
-        const dx = (ball.x - cx) / b.w;
-        const dy = (ball.y - cy) / b.h;
-        if (Math.abs(dx) > Math.abs(dy)) ball.vx = -ball.vx;
-        else ball.vy = -ball.vy;
+        // Eixo de overlap menor = lado por onde entrou
+        const overlapX = Math.min(ball.x + ball.r - b.x, b.x + b.w - (ball.x - ball.r));
+        const overlapY = Math.min(ball.y + ball.r - b.y, b.y + b.h - (ball.y - ball.r));
+        if (overlapX < overlapY) {
+          // bateu na lateral: inverte vx e empurra pra fora horizontalmente
+          ball.vx = -ball.vx;
+          if (ball.x < b.x + b.w / 2) ball.x = b.x - ball.r - 0.5;
+          else ball.x = b.x + b.w + ball.r + 0.5;
+        } else {
+          // bateu em cima/baixo: inverte vy e empurra pra fora verticalmente
+          ball.vy = -ball.vy;
+          if (ball.y < b.y + b.h / 2) ball.y = b.y - ball.r - 0.5;
+          else ball.y = b.y + b.h + ball.r + 0.5;
+        }
         sndBlock();
         updateHUD();
         break;
@@ -12353,7 +12361,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -12506,9 +12514,25 @@
         <div class="lvlIcon">🔥</div>
         <div class="lvlInfo">
           <div class="lvlName">Difícil</div>
-          <div class="lvlRange">Insano</div>
+          <div class="lvlRange">Trânsito pesado</div>
         </div>
         <div class="lvlStars" id="stars2"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
+      </div>
+      <div class="levelCard" data-lvl="3">
+        <div class="lvlIcon">💀</div>
+        <div class="lvlInfo">
+          <div class="lvlName">Insano</div>
+          <div class="lvlRange">Carros duplos</div>
+        </div>
+        <div class="lvlStars" id="stars3"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
+      </div>
+      <div class="levelCard" data-lvl="4">
+        <div class="lvlIcon">👹</div>
+        <div class="lvlInfo">
+          <div class="lvlName">Impossível</div>
+          <div class="lvlRange">Caos total</div>
+        </div>
+        <div class="lvlStars" id="stars4"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
       </div>
     </div>
   </div>
@@ -12563,9 +12587,11 @@
   });
 
   const LEVELS = [
-    { name:'Fácil',   speed:5, spawnMs:1400, goal3:1500, goal2:800,  goal1:300 },
-    { name:'Médio',   speed:7, spawnMs:900,  goal3:2000, goal2:1100, goal1:400 },
-    { name:'Difícil', speed:9, spawnMs:600,  goal3:2500, goal2:1400, goal1:500 },
+    { name:'Fácil',      speed:5,  spawnMs:1400, doubleProb:0,    goal3:1500, goal2:800,  goal1:300 },
+    { name:'Médio',      speed:7,  spawnMs:900,  doubleProb:0,    goal3:2000, goal2:1100, goal1:400 },
+    { name:'Difícil',    speed:9,  spawnMs:600,  doubleProb:0.15, goal3:2500, goal2:1400, goal1:500 },
+    { name:'Insano',     speed:11, spawnMs:500,  doubleProb:0.40, goal3:3500, goal2:2000, goal1:700 },
+    { name:'Impossível', speed:13, spawnMs:400,  doubleProb:0.60, goal3:4500, goal2:2500, goal1:900 },
   ];
 
   function getStars(l) { return +(localStorage.getItem('blg-race-stars-' + l) || 0); }
@@ -12573,9 +12599,10 @@
   function getBest(l) { return +(localStorage.getItem('blg-race-best-' + l) || 0); }
   function saveBest(l, s) { if (s > getBest(l)) localStorage.setItem('blg-race-best-' + l, s); }
   function refreshMenu() {
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 5; i++) {
       const s = getStars(i);
       const ct = document.getElementById('stars' + i);
+      if (!ct) continue;
       ct.querySelectorAll('.s').forEach((el, idx) => el.classList.toggle('lit', idx < s));
     }
   }
@@ -12668,11 +12695,17 @@
     if (now - lastSpawn > lvl.spawnMs) {
       lastSpawn = now;
       const lanes = [W * 0.25, W * 0.5, W * 0.75];
-      const x = lanes[Math.floor(Math.random() * lanes.length)];
-      enemies.push({
-        x, y: -80, w: 40, h: 65,
-        color: CAR_COLORS[Math.floor(Math.random() * CAR_COLORS.length)],
-      });
+      // Decide quantos spawnar (máximo 2 — sempre deixar 1 lane livre)
+      const doSpawn2 = lvl.doubleProb > 0 && Math.random() < lvl.doubleProb;
+      const numSpawn = doSpawn2 ? 2 : 1;
+      // Embaralhar lanes e pegar as primeiras N
+      const shuffled = lanes.slice().sort(() => Math.random() - 0.5);
+      for (let i = 0; i < numSpawn; i++) {
+        enemies.push({
+          x: shuffled[i], y: -80, w: 40, h: 65,
+          color: CAR_COLORS[Math.floor(Math.random() * CAR_COLORS.length)],
+        });
+      }
     }
 
     // mover inimigos
@@ -12875,7 +12908,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -13560,7 +13593,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -14463,7 +14496,7 @@
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -15145,7 +15178,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -16191,7 +16224,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -17140,7 +17173,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -17948,7 +17981,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
@@ -18078,7 +18111,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['g2048', 'blg-2048-stars-', 3, 9],
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
-      ['race', 'blg-race-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
