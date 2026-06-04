@@ -67,6 +67,8 @@
   .card[data-game="invaders"]  { border-color:rgba(34,197,94,.4); }
   .card[data-game="sudoku"]    { border-color:rgba(96,165,250,.4); }
   .card[data-game="pacman"]    { border-color:rgba(251,191,36,.4); }
+  .card[data-game="tower"]     { border-color:rgba(34,197,94,.4); }
+  .card[data-game="rpg"]       { border-color:rgba(168,85,247,.4); }
 
   /* FOOTER */
   footer { position:relative; z-index:2; text-align:center; padding:18px 0 8px; opacity:.5; font-size:11px; }
@@ -110,7 +112,7 @@
   <div class="grid">
     <button class="card available" data-game="dash">
       <div class="icon">🎮</div>
-      <div class="name">Ben &amp; Luca<br>Dash</div>
+      <div class="name">Geometry<br>Dash</div>
       <div class="progress"><div></div></div>
       <div class="tag">8+</div>
     </button>
@@ -232,6 +234,18 @@
       <div class="name">Pac-Man</div>
       <div class="progress"><div></div></div>
       <div class="tag">todos</div>
+    </button>
+    <button class="card available" data-game="tower">
+      <div class="icon">🏰</div>
+      <div class="name">Defesa<br>Torres</div>
+      <div class="progress"><div></div></div>
+      <div class="tag">8+</div>
+    </button>
+    <button class="card available" data-game="rpg">
+      <div class="icon">⚔️</div>
+      <div class="name">RPG</div>
+      <div class="progress"><div></div></div>
+      <div class="tag">8+</div>
     </button>
   </div>
 
@@ -530,6 +544,29 @@
     }
   }
 
+  // Progresso Tower Defense (3 níveis × 3 = 9)
+  let towerStars = 0;
+  for (let i = 0; i < 3; i++) towerStars += +(localStorage.getItem('blg-tower-stars-' + i) || 0);
+  const towerProg = document.querySelector('.card[data-game="tower"] .progress');
+  if (towerProg) {
+    const bar = towerProg.querySelector('div');
+    if (towerStars > 0) {
+      towerProg.classList.add('show');
+      bar.style.width = Math.max(5, (towerStars / 9) * 100) + '%';
+    }
+  }
+
+  // Progresso RPG (1 fim de jogo, 3 estrelas)
+  const rpgStars = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+  const rpgProg = document.querySelector('.card[data-game="rpg"] .progress');
+  if (rpgProg) {
+    const bar = rpgProg.querySelector('div');
+    if (rpgStars > 0) {
+      rpgProg.classList.add('show');
+      bar.style.width = Math.max(5, (rpgStars / 3) * 100) + '%';
+    }
+  }
+
   // ============ CARDS ============
   document.querySelectorAll('.card.available').forEach(card => {
     card.addEventListener('pointerdown', () => { ensureAudio(); sndTap(); });
@@ -650,7 +687,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1a0033">
-<title>Ben & Luca Dash</title>
+<title>Geometry Dash</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; user-select:none; -webkit-user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; }
   html, body { width:100%; height:100%; overflow:hidden; background:#000; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; color:#fff; }
@@ -745,7 +782,7 @@
 <div id="overlay">
   <div id="menu" class="screen">
     <button id="backToHubBtn" onclick="parent.postMessage('back-to-hub','*')" style="position:absolute;top:env(safe-area-inset-top,16px);left:12px;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.08);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;text-decoration:none;z-index:5;border:1px solid rgba(255,255,255,.12);cursor:pointer;" aria-label="Voltar ao Hub">←</button>
-    <h1>BEN &amp; LUCA DASH</h1>
+    <h1>GEOMETRY DASH</h1>
     <div class="subtitle">Escolha uma fase</div>
     <div id="totalCoins">⭐ 0/0 moedas</div>
     <div id="levelCards">
@@ -3546,6 +3583,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -3580,6 +3618,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -3646,7 +3694,7 @@
   @keyframes popIn { from { transform:scale(0); opacity:0; } to { transform:scale(1); opacity:1; } }
   @keyframes jump { 0%, 100% { transform:translateY(0); } 50% { transform:translateY(-20px) scale(1.15); } }
 
-  .answers { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px; }
+  .answers { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px; width:100%; max-width:340px; margin-left:auto; margin-right:auto; }
   .ansBtn { aspect-ratio:1.6 / 1; background:rgba(255,255,255,.1); border:2.5px solid rgba(255,255,255,.18); border-radius:20px; color:#fff; font-size:clamp(32px, 9vw, 44px); font-weight:900; cursor:pointer; transition:transform .15s, background .2s, border-color .2s; display:flex; align-items:center; justify-content:center; }
   .ansBtn:active { transform:scale(.95); }
   .ansBtn.correct { background:rgba(74,222,128,.35); border-color:#4ade80; animation:correctPulse .5s; }
@@ -4047,6 +4095,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -4081,6 +4130,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -4484,6 +4543,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -4518,6 +4578,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -4998,6 +5068,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -5032,6 +5103,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -5666,6 +5747,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -5700,6 +5782,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -6247,6 +6339,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -6281,6 +6374,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -7105,6 +7208,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -7139,6 +7243,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -7805,6 +7919,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -7839,6 +7954,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -8399,6 +8524,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -8433,6 +8559,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -8481,7 +8617,7 @@
   .levelCard .lvlStars .s.lit { opacity:1; filter:drop-shadow(0 0 4px #ffd700); }
 
   /* JOGO */
-  #gameScreen { padding-top:8px; }
+  #gameScreen { padding-top:8px; justify-content:flex-start; gap:8px; }
   .progressBar { width:100%; height:6px; background:rgba(255,255,255,.1); border-radius:99px; overflow:hidden; margin:8px 0 18px; }
   .progressBar > div { height:100%; background:linear-gradient(90deg,#a3e635,#16a34a); transition:width .3s; }
 
@@ -8490,9 +8626,9 @@
   .speakBtn { width:50px; height:50px; border:none; background:rgba(163,230,53,.25); border:2px solid rgba(163,230,53,.5); color:#fff; border-radius:50%; font-size:22px; cursor:pointer; }
   .speakBtn:active { transform:scale(.92); }
 
-  .options { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-top:10px; flex:1; }
-  .options.cols2 { grid-template-columns:1fr 1fr; }
-  .opt { aspect-ratio:1; background:rgba(255,255,255,.1); border:2.5px solid rgba(255,255,255,.18); border-radius:20px; font-size:clamp(48px, 14vw, 76px); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .15s, background .2s, border-color .2s; }
+  .options { display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-top:10px; width:100%; max-width:380px; }
+  .options.cols2 { grid-template-columns:1fr 1fr; max-width:280px; }
+  .opt { aspect-ratio:1; background:rgba(255,255,255,.1); border:2.5px solid rgba(255,255,255,.18); border-radius:20px; font-size:clamp(40px, 12vw, 64px); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .15s, background .2s, border-color .2s; }
   .opt:active { transform:scale(.95); }
   .opt.correct { background:rgba(74,222,128,.35); border-color:#4ade80; animation:correctPulse .5s; }
   .opt.wrong { background:rgba(239,68,68,.3); border-color:#ef4444; animation:shake .35s; }
@@ -8876,6 +9012,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -8910,6 +9047,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -9323,6 +9470,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -9357,6 +9505,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -9755,6 +9913,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -9789,6 +9948,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -10185,6 +10354,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -10219,6 +10389,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -10725,6 +10905,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -10759,6 +10940,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -11323,6 +11514,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -11357,6 +11549,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -11578,7 +11780,7 @@
     lives = lvl.lives;
     score = 0;
     updateHUD();
-    paddle = { x: W/2 - lvl.paddleW/2, y: H - 40, w: lvl.paddleW, h: 12 };
+    paddle = { x: W/2 - lvl.paddleW/2, y: H - 100, w: lvl.paddleW, h: 12 };
     resetBall();
     buildBricks();
     running = true;
@@ -11687,8 +11889,8 @@
         break;
       }
     }
-    // perdeu vida?
-    if (ball.y - ball.r > H) {
+    // perdeu vida? (logo abaixo do paddle, não no fundo do canvas)
+    if (ball.y - ball.r > paddle.y + paddle.h + 30) {
       lives--;
       sndLose();
       updateHUD();
@@ -11860,6 +12062,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -11894,6 +12097,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -12353,6 +12566,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -12387,6 +12601,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -13017,6 +13241,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -13051,6 +13276,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -13899,6 +14134,7 @@
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -13933,6 +14169,16 @@
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -14560,6 +14806,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -14594,6 +14841,16 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
@@ -15586,6 +15843,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -15622,6 +15880,1753 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
+      }
+    }
+  };
+</script>
+</body>
+</html>
+
+</script>
+<script type="text/html" id="game-tower">
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a1f0a">
+<title>Defesa de Torres</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; }
+  html, body { width:100%; min-height:100%; background:#0a1f0a; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; color:#fff; overscroll-behavior:none; touch-action:none; }
+  body { display:flex; justify-content:center; min-height:100vh; min-height:100dvh; }
+  #stage { width:100%; max-width:min(100vw, calc(100vh * 9 / 16)); min-height:100vh; min-height:100dvh; position:relative; display:flex; flex-direction:column; padding:env(safe-area-inset-top,8px) 8px env(safe-area-inset-bottom,8px); background:linear-gradient(180deg,#0a1f0a,#14532d); }
+
+  header { display:flex; align-items:center; justify-content:space-between; padding:4px 6px; }
+  .iconBtn { width:42px; height:42px; border:none; background:rgba(255,255,255,.1); color:#fff; border-radius:50%; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .15s; }
+  .iconBtn:active { transform:scale(.9); }
+  .hud { display:flex; align-items:center; gap:12px; font-size:12px; font-weight:800; background:rgba(0,0,0,.4); padding:6px 12px; border-radius:99px; }
+  .hud .num { font-weight:900; }
+  .hud .hp { color:#ef4444; }
+  .hud .gold { color:#fbbf24; }
+  .hud .wave { color:#22d3ee; }
+
+  .screen { flex:1; display:flex; flex-direction:column; align-items:center; }
+  .screen.hidden { display:none; }
+
+  #menuScreen { justify-content:center; padding:20px; }
+  #menuScreen h1 { font-size:clamp(28px, 8vw, 40px); font-weight:900; margin-bottom:6px; background:linear-gradient(90deg,#22c55e,#15803d); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  #menuScreen .sub { opacity:.7; font-size:13px; margin-bottom:18px; text-align:center; max-width:300px; line-height:1.5; }
+  .levelGrid { display:flex; flex-direction:column; gap:14px; width:100%; max-width:340px; }
+  .levelCard { background:rgba(255,255,255,.06); border:2px solid rgba(34,197,94,.4); border-radius:14px; padding:14px 18px; display:flex; align-items:center; gap:12px; cursor:pointer; transition:transform .15s; }
+  .levelCard:active { transform:scale(.97); }
+  .levelCard .lvlIcon { font-size:30px; line-height:1; }
+  .levelCard .lvlInfo { flex:1; }
+  .levelCard .lvlName { font-size:16px; font-weight:800; }
+  .levelCard .lvlRange { font-size:11px; opacity:.6; margin-top:2px; }
+  .levelCard .lvlStars { display:flex; gap:2px; font-size:18px; }
+  .levelCard .lvlStars .s { opacity:.25; }
+  .levelCard .lvlStars .s.lit { opacity:1; filter:drop-shadow(0 0 4px #ffd700); }
+
+  #gameScreen { padding:0; justify-content:flex-start; gap:6px; }
+  #gameCanvas { display:block; margin:0 auto; max-width:100%; }
+
+  .actionBar { display:flex; gap:6px; padding:6px 4px; align-items:center; min-height:50px; }
+  .startBtn { flex:1; background:linear-gradient(90deg,#22c55e,#15803d); color:#fff; border:none; padding:12px; border-radius:10px; font-size:14px; font-weight:800; cursor:pointer; }
+  .startBtn:active { transform:scale(.96); }
+  .startBtn:disabled { opacity:.4; }
+
+  .towerMenu { background:rgba(0,0,0,.7); border-radius:12px; padding:10px; display:none; gap:6px; flex-direction:column; }
+  .towerMenu.show { display:flex; }
+  .towerMenu .title { font-size:12px; opacity:.7; }
+  .towerMenu .options { display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; }
+  .towerMenu .opt { background:rgba(255,255,255,.1); border:2px solid rgba(255,255,255,.2); border-radius:10px; padding:8px 4px; text-align:center; font-size:10px; cursor:pointer; color:#fff; }
+  .towerMenu .opt .ico { font-size:22px; line-height:1; display:block; margin-bottom:2px; }
+  .towerMenu .opt .cost { color:#fbbf24; font-weight:900; }
+  .towerMenu .opt:disabled { opacity:.35; }
+  .towerMenu .opt:active { transform:scale(.95); }
+  .towerMenu .actions { display:flex; gap:6px; }
+  .towerMenu .act { flex:1; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); color:#fff; padding:8px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer; }
+  .towerMenu .act.upgrade { background:rgba(34,197,94,.25); border-color:rgba(34,197,94,.5); }
+  .towerMenu .act.sell { background:rgba(239,68,68,.25); border-color:rgba(239,68,68,.5); }
+  .towerMenu .act:disabled { opacity:.4; }
+
+  #endScreen { text-align:center; padding:20px; justify-content:center; }
+  #endScreen .bigEmoji { font-size:80px; line-height:1; margin-bottom:14px; animation:bounce .8s; }
+  @keyframes bounce { 0% { transform:scale(0); } 60% { transform:scale(1.2); } 100% { transform:scale(1); } }
+  #endScreen h2 { font-size:22px; margin-bottom:8px; }
+  #endScreen .stats { font-size:13px; margin:8px 0 14px; opacity:.85; line-height:1.6; }
+  #endScreen .stats b { color:#22c55e; }
+  #endScreen .earnedStars { font-size:46px; margin:8px 0 18px; letter-spacing:6px; }
+  #endScreen .earnedStars .s { opacity:.25; display:inline-block; }
+  #endScreen .earnedStars .s.lit { opacity:1; filter:drop-shadow(0 0 12px #ffd700); }
+  #endScreen .btnRow { display:flex; gap:10px; max-width:340px; width:100%; }
+  #endScreen button { flex:1; padding:14px; font-size:14px; font-weight:800; border:none; border-radius:14px; cursor:pointer; color:#fff; }
+  #endScreen button:active { transform:scale(.96); }
+  .primaryBtn { background:linear-gradient(90deg,#22c55e,#15803d); }
+  .secondaryBtn { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2) !important; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <header>
+    <button class="iconBtn" id="backBtn">←</button>
+    <div class="hud">
+      <span class="hp">❤️ <span class="num" id="hpVal">20</span></span>
+      <span class="gold">💰 <span class="num" id="goldVal">100</span></span>
+      <span class="wave">🌊 <span class="num" id="waveVal">0</span>/10</span>
+    </div>
+    <button class="iconBtn" id="muteBtn">🔊</button>
+  </header>
+
+  <!-- MENU -->
+  <div id="menuScreen" class="screen">
+    <h1>Defesa de Torres</h1>
+    <div class="sub">Construa torres pra impedir que os inimigos cheguem ao fim do caminho.</div>
+    <div class="levelGrid">
+      <div class="levelCard" data-lvl="0">
+        <div class="lvlIcon">🌱</div>
+        <div class="lvlInfo">
+          <div class="lvlName">Fácil</div>
+          <div class="lvlRange">25 HP base, 150 ouro</div>
+        </div>
+        <div class="lvlStars" id="stars0"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
+      </div>
+      <div class="levelCard" data-lvl="1">
+        <div class="lvlIcon">⚡</div>
+        <div class="lvlInfo">
+          <div class="lvlName">Normal</div>
+          <div class="lvlRange">15 HP base, 100 ouro</div>
+        </div>
+        <div class="lvlStars" id="stars1"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
+      </div>
+      <div class="levelCard" data-lvl="2">
+        <div class="lvlIcon">🔥</div>
+        <div class="lvlInfo">
+          <div class="lvlName">Difícil</div>
+          <div class="lvlRange">10 HP base, 80 ouro</div>
+        </div>
+        <div class="lvlStars" id="stars2"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JOGO -->
+  <div id="gameScreen" class="screen hidden">
+    <canvas id="gameCanvas"></canvas>
+    <div class="actionBar">
+      <div class="towerMenu" id="towerMenu" style="flex:1"></div>
+      <button class="startBtn" id="startBtn">Começar onda</button>
+    </div>
+  </div>
+
+  <!-- FIM -->
+  <div id="endScreen" class="screen hidden">
+    <div class="bigEmoji" id="endEmoji">🏆</div>
+    <h2 id="endTitle">VITÓRIA</h2>
+    <div class="stats">
+      Ondas sobreviveu: <b id="finalWave">0</b>/10<br>
+      HP restante: <b id="finalHp">0</b>
+    </div>
+    <div class="earnedStars" id="earnedStars"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
+    <div class="btnRow">
+      <button class="secondaryBtn" id="backMenuBtn">Menu</button>
+      <button class="primaryBtn" id="playAgainBtn">Jogar de novo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // GRID + PATH
+  const COLS = 11, ROWS = 16;
+  // Caminho em "S": entra esquerda, desce, vai pra direita, desce, vai pra esquerda, sai
+  // Coordenadas em centro de célula (offset 0.5)
+  const PATH = [
+    { x: -0.5, y: 1.5 },
+    { x: 7.5,  y: 1.5 },
+    { x: 7.5,  y: 5.5 },
+    { x: 2.5,  y: 5.5 },
+    { x: 2.5,  y: 9.5 },
+    { x: 8.5,  y: 9.5 },
+    { x: 8.5,  y: 13.5 },
+    { x: -0.5, y: 13.5 },
+  ];
+  // Tiles ocupadas pelo caminho — marcadas como não-construíveis
+  const PATH_TILES = new Set();
+  function markPath() {
+    for (let i = 0; i < PATH.length - 1; i++) {
+      const a = PATH[i], b = PATH[i+1];
+      if (a.x === b.x) {
+        const x = Math.floor(a.x + 0.5);  // já offset
+        const minY = Math.min(a.y, b.y), maxY = Math.max(a.y, b.y);
+        for (let y = Math.floor(minY); y <= Math.floor(maxY); y++) {
+          PATH_TILES.add(x + ',' + y);
+        }
+      } else {
+        const y = Math.floor(a.y);
+        const minX = Math.min(a.x, b.x), maxX = Math.max(a.x, b.x);
+        for (let x = Math.floor(minX); x <= Math.floor(maxX); x++) {
+          if (x >= 0 && x < COLS) PATH_TILES.add(x + ',' + y);
+        }
+      }
+    }
+  }
+  markPath();
+
+  // AUDIO
+  let audioCtx = null;
+  let muted = localStorage.getItem('blg-mute') === '1';
+  function ensureAudio() { if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} } if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
+  function beep(freq, dur=0.08, type='sine', vol=0.05, when=0) {
+    if (!audioCtx || muted) return;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    const t = audioCtx.currentTime + when;
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g).connect(audioCtx.destination);
+    o.start(t); o.stop(t + dur);
+  }
+  function sndShoot()   { beep(880, 0.04, 'square', 0.025); }
+  function sndHit()     { beep(440, 0.05, 'sawtooth', 0.04); }
+  function sndKill()    { beep(220, 0.08, 'sawtooth', 0.05); setTimeout(() => beep(110, 0.1, 'sawtooth', 0.04), 40); }
+  function sndPlace()   { [440, 660, 880].forEach((f, i) => beep(f, 0.06, 'triangle', 0.05, i*0.04)); }
+  function sndUpgrade() { [659, 784, 988].forEach((f, i) => beep(f, 0.08, 'triangle', 0.05, i*0.05)); }
+  function sndStartWave(){ [330, 440, 660, 880].forEach((f, i) => beep(f, 0.1, 'triangle', 0.05, i*0.06)); }
+  function sndLoseHp()  { beep(180, 0.15, 'sawtooth', 0.07); }
+  function sndWin()     { [523, 659, 784, 1047, 1318].forEach((f, i) => beep(f, 0.15, 'triangle', 0.06, i*0.08)); }
+  function sndLose()    { [440, 330, 220, 165, 110].forEach((f, i) => beep(f, 0.18, 'sawtooth', 0.06, i*0.10)); }
+  function sndTap()     { beep(660, 0.04, 'triangle', 0.05); }
+
+  const muteBtn = document.getElementById('muteBtn');
+  function refreshMute() { muteBtn.textContent = muted ? '🔇' : '🔊'; }
+  refreshMute();
+  muteBtn.addEventListener('click', () => {
+    ensureAudio();
+    muted = !muted;
+    localStorage.setItem('blg-mute', muted ? '1' : '0');
+    refreshMute();
+    if (!muted) sndTap();
+  });
+
+  // CONFIG
+  const TOWER_TYPES = {
+    basic:  { name:'Rápida',  icon:'🏹', color:'#22d3ee', cost:50,  dmg:8,  fireMs:500,  range:2.2, type:'single' },
+    sniper: { name:'Sniper',  icon:'🎯', color:'#a855f7', cost:100, dmg:60, fireMs:1500, range:4.0, type:'single' },
+    cannon: { name:'Canhão',  icon:'💥', color:'#ef4444', cost:150, dmg:30, fireMs:1100, range:2.3, type:'aoe', aoeRadius:1.3 },
+    slow:   { name:'Lentidão',icon:'❄️', color:'#3b82f6', cost:75,  dmg:3,  fireMs:600,  range:2.0, type:'slow', slowFactor:0.5, slowMs:1500 },
+  };
+  // Upgrade: multiplica dmg × 1.8 e range × 1.15, custo = baseCost × 1.5
+  const MAX_UPGRADES = 2;
+
+  const ENEMY_TYPES = {
+    normal: { hp:50,  speed:1.2, gold:5,  color:'#a16207', radius:0.32 },
+    fast:   { hp:30,  speed:2.4, gold:7,  color:'#22d3ee', radius:0.28 },
+    tank:   { hp:200, speed:0.7, gold:15, color:'#475569', radius:0.40 },
+    boss:   { hp:1200,speed:0.6, gold:80, color:'#dc2626', radius:0.55 },
+  };
+
+  // 10 ondas — cada onda é lista de { type, delay (ms desde início da onda) }
+  function buildWaves(difficulty) {
+    // multiplicador de HP por dificuldade
+    const hpMult = [0.8, 1.0, 1.3][difficulty];
+    const waves = [
+      // wave 1: 8 normais
+      Array.from({length: 8}, (_, i) => ({ type:'normal', delay:i*900 })),
+      // wave 2: 12 normais
+      Array.from({length: 12}, (_, i) => ({ type:'normal', delay:i*800 })),
+      // wave 3: 8 normais + 4 fast
+      [...Array.from({length:8}, (_, i) => ({ type:'normal', delay:i*700 })),
+       ...Array.from({length:4}, (_, i) => ({ type:'fast', delay:6000 + i*500 }))],
+      // wave 4: 10 fast
+      Array.from({length: 10}, (_, i) => ({ type:'fast', delay:i*500 })),
+      // wave 5: 3 tanks + 6 normais
+      [{type:'tank', delay:0}, {type:'tank', delay:2000}, {type:'tank', delay:4000},
+       ...Array.from({length:6}, (_, i) => ({ type:'normal', delay:1000 + i*700 }))],
+      // wave 6: 15 mix
+      Array.from({length: 15}, (_, i) => ({ type: i%3 === 0 ? 'fast' : 'normal', delay:i*500 })),
+      // wave 7: 5 tanks + 10 normais
+      [...Array.from({length:5}, (_, i) => ({ type:'tank', delay:i*1800 })),
+       ...Array.from({length:10}, (_, i) => ({ type:'normal', delay:2000 + i*500 }))],
+      // wave 8: 20 fast
+      Array.from({length: 20}, (_, i) => ({ type:'fast', delay:i*350 })),
+      // wave 9: 6 tanks + 8 fast
+      [...Array.from({length:6}, (_, i) => ({ type:'tank', delay:i*1500 })),
+       ...Array.from({length:8}, (_, i) => ({ type:'fast', delay:1000 + i*600 }))],
+      // wave 10: BOSS + horda
+      [{type:'boss', delay:0},
+       ...Array.from({length:15}, (_, i) => ({ type:'fast', delay:3000 + i*400 })),
+       ...Array.from({length:5}, (_, i) => ({ type:'tank', delay:8000 + i*1500 }))],
+    ];
+    // aplica hpMult
+    return waves.map(wave => wave.map(spawn => ({ ...spawn, hpMult })));
+  }
+
+  const LEVELS = [
+    { name:'Fácil',   baseHp:25, baseGold:150, difficulty:0, goal3:25, goal2:18, goal1:10 },
+    { name:'Normal',  baseHp:15, baseGold:100, difficulty:1, goal3:15, goal2:12, goal1:7 },
+    { name:'Difícil', baseHp:10, baseGold:80,  difficulty:2, goal3:10, goal2:8,  goal1:5 },
+  ];
+
+  function getStars(l) { return +(localStorage.getItem('blg-tower-stars-' + l) || 0); }
+  function saveStars(l, n) { if (n > getStars(l)) localStorage.setItem('blg-tower-stars-' + l, n); }
+  function refreshMenu() {
+    for (let i = 0; i < 3; i++) {
+      const s = getStars(i);
+      const ct = document.getElementById('stars' + i);
+      if (!ct) continue;
+      ct.querySelectorAll('.s').forEach((el, idx) => el.classList.toggle('lit', idx < s));
+    }
+  }
+  refreshMenu();
+
+  // CANVAS
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  let CELL = 0, DPR = 1, W = 0, H = 0;
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    const stage = document.getElementById('stage');
+    const rect = stage.getBoundingClientRect();
+    const maxW = rect.width - 16;
+    const maxH = window.innerHeight - 180;
+    CELL = Math.max(20, Math.floor(Math.min(maxW / COLS, maxH / ROWS)));
+    W = CELL * COLS; H = CELL * ROWS;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+
+  // STATE
+  let currentLevel = 0;
+  let hp = 0, gold = 0, currentWave = 0, totalWaves = 10;
+  let towers = [];  // {type, gridX, gridY, level, lastFire}
+  let enemies = []; // instances
+  let projectiles = []; // {x, y, target, dmg, type, aoeRadius?}
+  let waveData = [];
+  let waveQueue = [];  // { type, spawnTime }
+  let waveStartTime = 0;
+  let waveInProgress = false;
+  let allWavesDone = false;
+  let selectedTile = null; // {gridX, gridY}
+  let selectedTower = null;
+  let running = false;
+  let lastTime = 0;
+  let gameEnded = false;
+
+  const menuScreen = document.getElementById('menuScreen');
+  const gameScreen = document.getElementById('gameScreen');
+  const endScreen = document.getElementById('endScreen');
+  function showScreen(s) {
+    [menuScreen, gameScreen, endScreen].forEach(el => el.classList.add('hidden'));
+    s.classList.remove('hidden');
+    if (s === menuScreen) refreshMenu();
+  }
+
+  document.querySelectorAll('.levelCard').forEach(card => {
+    card.addEventListener('click', () => {
+      ensureAudio(); sndTap();
+      currentLevel = +card.dataset.lvl;
+      showScreen(gameScreen);
+      setTimeout(() => { resize(); startGame(); }, 30);
+    });
+  });
+
+  function startGame() {
+    const lvl = LEVELS[currentLevel];
+    hp = lvl.baseHp;
+    gold = lvl.baseGold;
+    currentWave = 0;
+    towers = [];
+    enemies = [];
+    projectiles = [];
+    waveData = buildWaves(lvl.difficulty);
+    waveInProgress = false;
+    allWavesDone = false;
+    selectedTile = null;
+    selectedTower = null;
+    gameEnded = false;
+    running = true;
+    updateHUD();
+    closeMenu();
+    document.getElementById('startBtn').disabled = false;
+    document.getElementById('startBtn').textContent = 'Começar onda 1';
+    lastTime = performance.now();
+    requestAnimationFrame(loop);
+  }
+
+  function updateHUD() {
+    document.getElementById('hpVal').textContent = hp;
+    document.getElementById('goldVal').textContent = gold;
+    document.getElementById('waveVal').textContent = currentWave;
+  }
+
+  function loop(now) {
+    if (!running) return;
+    const dt = Math.min(2.5, (now - lastTime) / 16.67);
+    lastTime = now;
+    update(dt, now);
+    render();
+    requestAnimationFrame(loop);
+  }
+
+  function update(dt, now) {
+    // Spawn enemies da wave queue
+    if (waveInProgress) {
+      while (waveQueue.length > 0 && now - waveStartTime >= waveQueue[0].delay) {
+        const spawn = waveQueue.shift();
+        spawnEnemy(spawn.type, spawn.hpMult || 1);
+      }
+    }
+
+    // Update enemies
+    for (let i = enemies.length - 1; i >= 0; i--) {
+      const e = enemies[i];
+      const target = PATH[e.segment + 1];
+      if (!target) {
+        // reached end
+        enemies.splice(i, 1);
+        hp--;
+        sndLoseHp();
+        updateHUD();
+        if (hp <= 0 && !gameEnded) { gameEnded = true; endGame(false); return; }
+        continue;
+      }
+      const dx = target.x - e.x, dy = target.y - e.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      const effSpeed = now < e.slowUntil ? e.speed * 0.5 : e.speed;
+      const moveDistance = effSpeed * dt * 0.1;  // ajustar pra match cell coords
+      if (moveDistance >= dist) {
+        e.x = target.x; e.y = target.y;
+        e.segment++;
+      } else {
+        e.x += dx / dist * moveDistance;
+        e.y += dy / dist * moveDistance;
+      }
+    }
+
+    // Towers shoot
+    for (const t of towers) {
+      if (now - t.lastFire < t.fireMs) continue;
+      // find target
+      const cx = t.gridX + 0.5, cy = t.gridY + 0.5;
+      let target = null;
+      let bestProgress = -1;  // mais próximo do fim
+      for (const e of enemies) {
+        const d = Math.sqrt((e.x - cx)**2 + (e.y - cy)**2);
+        if (d > t.range) continue;
+        const progress = e.segment + (1 - Math.sqrt((PATH[e.segment+1].x - e.x)**2 + (PATH[e.segment+1].y - e.y)**2) /
+                                        Math.sqrt((PATH[e.segment+1].x - PATH[e.segment].x)**2 + (PATH[e.segment+1].y - PATH[e.segment].y)**2));
+        if (progress > bestProgress) { bestProgress = progress; target = e; }
+      }
+      if (target) {
+        t.lastFire = now;
+        sndShoot();
+        // create projectile
+        projectiles.push({
+          x: cx, y: cy,
+          tx: target.x, ty: target.y,
+          target,
+          dmg: t.dmg,
+          color: t.color,
+          type: t.type,
+          aoeRadius: t.aoeRadius,
+          slowFactor: t.slowFactor,
+          slowMs: t.slowMs,
+          speed: 0.25,
+          ttl: 60,
+        });
+      }
+    }
+
+    // Update projectiles
+    for (let i = projectiles.length - 1; i >= 0; i--) {
+      const p = projectiles[i];
+      p.ttl--;
+      if (p.ttl <= 0) { projectiles.splice(i, 1); continue; }
+      // follow target if still alive
+      if (p.target && p.target.hp > 0) { p.tx = p.target.x; p.ty = p.target.y; }
+      const pdx = p.tx - p.x, pdy = p.ty - p.y;
+      const pdist = Math.sqrt(pdx*pdx + pdy*pdy);
+      if (pdist <= p.speed * dt * 2 || pdist < 0.1) {
+        // hit
+        applyDamage(p);
+        projectiles.splice(i, 1);
+      } else {
+        p.x += pdx / pdist * p.speed * dt;
+        p.y += pdy / pdist * p.speed * dt;
+      }
+    }
+
+    // Verifica fim de wave
+    if (waveInProgress && waveQueue.length === 0 && enemies.length === 0) {
+      waveInProgress = false;
+      // bônus de ouro por finalizar onda
+      gold += 20 + currentWave * 5;
+      updateHUD();
+      if (currentWave >= totalWaves) {
+        allWavesDone = true;
+        document.getElementById('startBtn').disabled = true;
+        document.getElementById('startBtn').textContent = 'VITÓRIA!';
+        if (!gameEnded) { gameEnded = true; setTimeout(() => endGame(true), 800); }
+      } else {
+        document.getElementById('startBtn').disabled = false;
+        document.getElementById('startBtn').textContent = 'Começar onda ' + (currentWave + 1);
+      }
+    }
+  }
+
+  function spawnEnemy(type, hpMult) {
+    const t = ENEMY_TYPES[type];
+    enemies.push({
+      type, x: PATH[0].x, y: PATH[0].y,
+      segment: 0,
+      hp: t.hp * hpMult, maxHp: t.hp * hpMult,
+      speed: t.speed,
+      gold: t.gold,
+      color: t.color,
+      radius: t.radius,
+      slowUntil: 0,
+    });
+  }
+
+  function applyDamage(p) {
+    if (p.type === 'aoe') {
+      // dano em área a partir do ponto de impacto
+      for (const e of enemies) {
+        const d = Math.sqrt((e.x - p.tx)**2 + (e.y - p.ty)**2);
+        if (d <= p.aoeRadius) {
+          damageEnemy(e, p.dmg);
+        }
+      }
+    } else if (p.type === 'slow') {
+      if (p.target && p.target.hp > 0) {
+        damageEnemy(p.target, p.dmg);
+        p.target.slowUntil = performance.now() + p.slowMs;
+      }
+    } else {
+      if (p.target && p.target.hp > 0) {
+        damageEnemy(p.target, p.dmg);
+      }
+    }
+  }
+
+  function damageEnemy(e, dmg) {
+    e.hp -= dmg;
+    if (e.hp <= 0) {
+      gold += e.gold;
+      sndKill();
+      updateHUD();
+      const idx = enemies.indexOf(e);
+      if (idx >= 0) enemies.splice(idx, 1);
+    } else {
+      sndHit();
+    }
+  }
+
+  // RENDER
+  function render() {
+    if (!CELL) return;
+    // BG (gramado)
+    ctx.fillStyle = '#16a34a';
+    ctx.fillRect(0, 0, W, H);
+    // textura simples
+    ctx.fillStyle = 'rgba(0,0,0,.05)';
+    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+      if ((r + c) % 2 === 0) ctx.fillRect(c * CELL, r * CELL, CELL, CELL);
+    }
+    // Path (terra)
+    for (const key of PATH_TILES) {
+      const [gx, gy] = key.split(',').map(Number);
+      if (gx < 0 || gx >= COLS || gy < 0 || gy >= ROWS) continue;
+      ctx.fillStyle = '#a16207';
+      ctx.fillRect(gx * CELL, gy * CELL, CELL, CELL);
+      ctx.strokeStyle = '#78350f';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(gx * CELL + 0.5, gy * CELL + 0.5, CELL - 1, CELL - 1);
+    }
+    // Entrada e saída
+    const entry = PATH[0], exit = PATH[PATH.length - 1];
+    ctx.fillStyle = '#22c55e';
+    ctx.beginPath();
+    ctx.arc(entry.x * CELL + CELL/2, entry.y * CELL + CELL/2, CELL * 0.3, 0, Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle = '#ef4444';
+    ctx.beginPath();
+    ctx.arc(exit.x * CELL + CELL/2, exit.y * CELL + CELL/2, CELL * 0.3, 0, Math.PI*2);
+    ctx.fill();
+
+    // Range preview da tile selecionada (se há torre)
+    if (selectedTower) {
+      const cx = (selectedTower.gridX + 0.5) * CELL;
+      const cy = (selectedTower.gridY + 0.5) * CELL;
+      ctx.fillStyle = 'rgba(255,255,255,.1)';
+      ctx.beginPath();
+      ctx.arc(cx, cy, selectedTower.range * CELL, 0, Math.PI*2);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,.4)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+    // Highlight tile selecionada vazia
+    if (selectedTile && !selectedTower) {
+      ctx.strokeStyle = '#fbbf24';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(selectedTile.gridX * CELL + 2, selectedTile.gridY * CELL + 2, CELL - 4, CELL - 4);
+    }
+
+    // Towers
+    for (const t of towers) {
+      drawTower(t);
+    }
+
+    // Enemies
+    for (const e of enemies) {
+      drawEnemy(e);
+    }
+
+    // Projectiles
+    for (const p of projectiles) {
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x * CELL + CELL/2, p.y * CELL + CELL/2, 4, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+
+  function drawTower(t) {
+    const cx = (t.gridX + 0.5) * CELL;
+    const cy = (t.gridY + 0.5) * CELL;
+    // base
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(t.gridX * CELL + 3, t.gridY * CELL + 3, CELL - 6, CELL - 6);
+    // top
+    ctx.fillStyle = t.color;
+    ctx.beginPath();
+    ctx.arc(cx, cy, CELL * 0.32, 0, Math.PI*2);
+    ctx.fill();
+    // icon
+    ctx.fillStyle = '#fff';
+    ctx.font = '700 ' + Math.floor(CELL * 0.45) + 'px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(t.icon, cx, cy + 2);
+    // upgrade level pips
+    for (let i = 0; i < t.level; i++) {
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath();
+      ctx.arc(t.gridX * CELL + 6 + i * 7, t.gridY * CELL + CELL - 6, 2.5, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+
+  function drawEnemy(e) {
+    const cx = e.x * CELL + CELL/2;
+    const cy = e.y * CELL + CELL/2;
+    const r = e.radius * CELL;
+    // body
+    ctx.fillStyle = e.color;
+    if (now() < e.slowUntil) {
+      ctx.fillStyle = '#67e8f9';
+    }
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,.5)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    // HP bar
+    const hpW = r * 2;
+    const hpH = 3;
+    const hpY = cy - r - 6;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(cx - hpW/2, hpY, hpW, hpH);
+    ctx.fillStyle = e.hp / e.maxHp > 0.5 ? '#22c55e' : e.hp / e.maxHp > 0.25 ? '#fbbf24' : '#ef4444';
+    ctx.fillRect(cx - hpW/2, hpY, hpW * (e.hp / e.maxHp), hpH);
+  }
+
+  function now() { return performance.now(); }
+
+  // INPUT
+  canvas.addEventListener('click', (e) => {
+    ensureAudio();
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const gx = Math.floor(x / CELL);
+    const gy = Math.floor(y / CELL);
+    if (gx < 0 || gx >= COLS || gy < 0 || gy >= ROWS) return;
+    // Check se há torre nessa tile
+    const existing = towers.find(t => t.gridX === gx && t.gridY === gy);
+    if (existing) {
+      selectedTower = existing;
+      selectedTile = null;
+      showTowerActions(existing);
+    } else if (PATH_TILES.has(gx + ',' + gy)) {
+      // não pode construir no path
+      selectedTile = null;
+      selectedTower = null;
+      closeMenu();
+    } else {
+      selectedTile = { gridX: gx, gridY: gy };
+      selectedTower = null;
+      showBuildMenu();
+    }
+  });
+
+  const menuEl = document.getElementById('towerMenu');
+  function closeMenu() {
+    menuEl.classList.remove('show');
+    menuEl.innerHTML = '';
+  }
+  function showBuildMenu() {
+    menuEl.classList.add('show');
+    let html = '<div class="title">Construir torre:</div><div class="options">';
+    for (const key in TOWER_TYPES) {
+      const t = TOWER_TYPES[key];
+      const can = gold >= t.cost;
+      html += `<button class="opt" data-type="${key}" ${can?'':'disabled'}>
+        <span class="ico">${t.icon}</span>
+        ${t.name}<br><span class="cost">${t.cost}💰</span>
+      </button>`;
+    }
+    html += '</div>';
+    menuEl.innerHTML = html;
+    menuEl.querySelectorAll('.opt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        buyTower(btn.dataset.type);
+      });
+    });
+  }
+  function showTowerActions(tower) {
+    menuEl.classList.add('show');
+    const baseCost = TOWER_TYPES[tower.kind].cost;
+    const upgradeCost = Math.floor(baseCost * Math.pow(1.5, tower.level + 1));
+    const sellValue = Math.floor(tower.totalSpent * 0.6);
+    const canUpgrade = tower.level < MAX_UPGRADES && gold >= upgradeCost;
+    let html = `<div class="title">${TOWER_TYPES[tower.kind].icon} ${TOWER_TYPES[tower.kind].name} (Lv ${tower.level+1}) — Dano: ${Math.floor(tower.dmg)}</div>
+      <div class="actions">
+        <button class="act upgrade" ${canUpgrade?'':'disabled'}>${tower.level < MAX_UPGRADES ? 'Melhorar ' + upgradeCost + '💰' : 'Max upgrade'}</button>
+        <button class="act sell">Vender ${sellValue}💰</button>
+      </div>`;
+    menuEl.innerHTML = html;
+    menuEl.querySelector('.upgrade').addEventListener('click', () => upgradeTower(tower, upgradeCost));
+    menuEl.querySelector('.sell').addEventListener('click', () => sellTower(tower, sellValue));
+  }
+
+  function buyTower(kind) {
+    if (!selectedTile) return;
+    const cfg = TOWER_TYPES[kind];
+    if (gold < cfg.cost) return;
+    gold -= cfg.cost;
+    const tower = {
+      kind,
+      gridX: selectedTile.gridX,
+      gridY: selectedTile.gridY,
+      level: 0,
+      dmg: cfg.dmg,
+      range: cfg.range,
+      fireMs: cfg.fireMs,
+      color: cfg.color,
+      icon: cfg.icon,
+      type: cfg.type,
+      aoeRadius: cfg.aoeRadius,
+      slowFactor: cfg.slowFactor,
+      slowMs: cfg.slowMs,
+      lastFire: 0,
+      totalSpent: cfg.cost,
+    };
+    towers.push(tower);
+    sndPlace();
+    updateHUD();
+    selectedTile = null;
+    closeMenu();
+  }
+  function upgradeTower(tower, cost) {
+    if (gold < cost || tower.level >= MAX_UPGRADES) return;
+    gold -= cost;
+    tower.totalSpent += cost;
+    tower.level++;
+    tower.dmg *= 1.8;
+    tower.range *= 1.15;
+    sndUpgrade();
+    updateHUD();
+    showTowerActions(tower);
+  }
+  function sellTower(tower, value) {
+    gold += value;
+    const idx = towers.indexOf(tower);
+    if (idx >= 0) towers.splice(idx, 1);
+    sndTap();
+    updateHUD();
+    selectedTower = null;
+    closeMenu();
+  }
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    if (waveInProgress || allWavesDone) return;
+    ensureAudio();
+    currentWave++;
+    updateHUD();
+    waveQueue = [...waveData[currentWave - 1]];
+    waveStartTime = performance.now();
+    waveInProgress = true;
+    sndStartWave();
+    document.getElementById('startBtn').disabled = true;
+    document.getElementById('startBtn').textContent = 'Onda em curso...';
+  });
+
+  function endGame(victory) {
+    running = false;
+    const lvl = LEVELS[currentLevel];
+    saveStars(currentLevel, victory ? (
+      hp >= lvl.goal3 ? 3 : hp >= lvl.goal2 ? 2 : hp >= lvl.goal1 ? 1 : 1
+    ) : 0);
+    if (victory) sndWin(); else sndLose();
+    document.getElementById('finalWave').textContent = victory ? totalWaves : currentWave - 1;
+    document.getElementById('finalHp').textContent = Math.max(0, hp);
+    let earned = 0;
+    if (victory) {
+      if (hp >= lvl.goal3) earned = 3;
+      else if (hp >= lvl.goal2) earned = 2;
+      else earned = 1;
+    }
+    const es = document.getElementById('earnedStars');
+    es.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+      const s = document.createElement('span');
+      s.className = 's' + (i < earned ? ' lit' : '');
+      s.textContent = '★';
+      es.appendChild(s);
+    }
+    document.getElementById('endEmoji').textContent = victory ? (earned === 3 ? '🏆' : '🎉') : '💀';
+    document.getElementById('endTitle').textContent = victory ? 'VITÓRIA!' : 'DERROTA';
+    setTimeout(() => showScreen(endScreen), 600);
+  }
+
+  window.addEventListener('resize', () => { if (!gameScreen.classList.contains('hidden')) resize(); });
+
+  document.getElementById('backBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    if (!menuScreen.classList.contains('hidden')) {
+      parent.postMessage('back-to-hub', '*');
+    } else {
+      running = false;
+      showScreen(menuScreen);
+    }
+  });
+  document.getElementById('playAgainBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    showScreen(gameScreen);
+    setTimeout(() => { resize(); startGame(); }, 30);
+  });
+  document.getElementById('backMenuBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    running = false;
+    showScreen(menuScreen);
+  });
+})();
+<<<__SCRIPT_END__>>>
+
+<script>
+  // Helper global pra atualizar progresso após voltar de jogo
+  window.refreshHubStats = function() {
+    // Dash
+    let totalDone = 0, totalCoins = 0;
+    for (let i = 0; i < 11; i++) {
+      if (localStorage.getItem('cubo-dash-done-' + i) === '1') totalDone++;
+      totalCoins += +(localStorage.getItem('cubo-dash-coins-' + i) || 0);
+    }
+    const td = document.getElementById('totalTrophies');
+    const ts = document.getElementById('totalStars');
+    if (td) td.textContent = totalDone + '/11';
+    if (ts) ts.textContent = totalCoins + '/55';
+    const dashProg = document.querySelector('.card[data-game="dash"] .progress');
+    if (dashProg) {
+      const bar = dashProg.querySelector('div');
+      const pct = Math.round((totalDone * 100) / 11);
+      if (pct > 0 || totalCoins > 0) {
+        dashProg.classList.add('show');
+        bar.style.width = Math.max(5, pct) + '%';
+      }
+    }
+    // Outros jogos
+    const games = [
+      ['conta', 'blg-conta-stars-', 3, 9],
+      ['memory', 'blg-memory-stars-', 4, 12],
+      ['snake', 'blg-snake-stars-', 3, 9],
+      ['letroca', 'blg-letroca-stars-', 3, 9],
+      ['skyhop', 'blg-skyhop-stars-', 3, 9],
+      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
+      ['balloons', 'blg-balloons-stars-', 6, 18],
+      ['animals', 'blg-animal-stars-', 3, 9],
+      ['mole', 'blg-mole-stars-', 4, 12],
+      ['g2048', 'blg-2048-stars-', 3, 9],
+      ['tetris', 'blg-tetris-stars-', 3, 9],
+      ['breakout', 'blg-breakout-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
+      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
+    ];
+    for (const [game, prefix, levels, max] of games) {
+      let stars = 0;
+      for (let i = 0; i < levels; i++) stars += +(localStorage.getItem(prefix + i) || 0);
+      const prog = document.querySelector('.card[data-game="' + game + '"] .progress');
+      if (prog) {
+        const bar = prog.querySelector('div');
+        if (stars > 0) {
+          prog.classList.add('show');
+          bar.style.width = Math.max(5, (stars / max) * 100) + '%';
+        }
+      }
+    }
+    // Piano: 1 valor único
+    const pianoS = +(localStorage.getItem('blg-piano-stars') || 0);
+    const pianoP = document.querySelector('.card[data-game="piano"] .progress');
+    if (pianoP) {
+      const bar = pianoP.querySelector('div');
+      if (pianoS > 0) {
+        pianoP.classList.add('show');
+        bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
+      }
+    }
+  };
+</script>
+</body>
+</html>
+
+</script>
+<script type="text/html" id="game-rpg">
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a0a26">
+<title>Aventura RPG</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; }
+  html, body { width:100%; min-height:100%; background:#1a0a26; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; color:#fff; overscroll-behavior:none; touch-action:none; }
+  body { display:flex; justify-content:center; min-height:100vh; min-height:100dvh; }
+  #stage { width:100%; max-width:min(100vw, calc(100vh * 9 / 16)); min-height:100vh; min-height:100dvh; position:relative; display:flex; flex-direction:column; padding:env(safe-area-inset-top,8px) 8px env(safe-area-inset-bottom,8px); background:linear-gradient(180deg,#1a0a26,#2e1065); }
+
+  header { display:flex; align-items:center; justify-content:space-between; padding:4px 6px; }
+  .iconBtn { width:40px; height:40px; border:none; background:rgba(255,255,255,.1); color:#fff; border-radius:50%; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .iconBtn:active { transform:scale(.9); }
+  .hud { display:flex; flex-direction:column; gap:2px; background:rgba(0,0,0,.4); padding:6px 10px; border-radius:10px; font-size:11px; font-weight:700; min-width:140px; }
+  .hud .row { display:flex; justify-content:space-between; }
+  .hud .row .v { color:#fbbf24; font-weight:900; }
+  .hud .hp { color:#ef4444; }
+  .hud .mp { color:#60a5fa; }
+
+  .screen { flex:1; display:flex; flex-direction:column; align-items:center; }
+  .screen.hidden { display:none; }
+
+  #menuScreen { justify-content:center; padding:20px; }
+  #menuScreen h1 { font-size:clamp(28px, 8vw, 40px); font-weight:900; margin-bottom:6px; background:linear-gradient(90deg,#a855f7,#ec4899); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  #menuScreen .sub { opacity:.7; font-size:13px; margin-bottom:18px; text-align:center; max-width:300px; line-height:1.5; }
+  .menuBtn { background:linear-gradient(90deg,#a855f7,#7c3aed); color:#fff; border:none; padding:16px 28px; border-radius:14px; font-size:16px; font-weight:800; cursor:pointer; }
+  .menuBtn:active { transform:scale(.96); }
+  .menuBtn + .menuBtn { margin-top:10px; }
+
+  #gameScreen { padding:0; justify-content:flex-start; gap:4px; }
+  #worldCanvas { display:block; margin:0 auto; image-rendering:pixelated; -webkit-image-rendering:pixelated; max-width:100%; }
+  .dpad { display:grid; grid-template-columns:repeat(3,68px); grid-template-rows:repeat(3,68px); gap:6px; margin:6px auto 0; }
+  .dpad .dBtn { background:rgba(168,85,247,.2); border:2px solid rgba(168,85,247,.5); border-radius:14px; color:#fff; font-size:26px; font-weight:900; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .dpad .dBtn:active { background:rgba(168,85,247,.45); transform:scale(.92); }
+  .dpad .empty { visibility:hidden; }
+  .dpad .up    { grid-column:2; grid-row:1; }
+  .dpad .left  { grid-column:1; grid-row:2; }
+  .dpad .action { grid-column:2; grid-row:2; background:rgba(34,197,94,.25); border-color:rgba(34,197,94,.5); font-size:18px; }
+  .dpad .right { grid-column:3; grid-row:2; }
+  .dpad .down  { grid-column:2; grid-row:3; }
+
+  /* MODAIS */
+  .modal { position:fixed; inset:0; background:rgba(0,0,0,.85); display:flex; align-items:center; justify-content:center; z-index:10; padding:20px; }
+  .modal.hidden { display:none; }
+  .modalBox { background:#2e1065; border:2px solid #a855f7; border-radius:16px; padding:18px; max-width:340px; width:100%; max-height:90vh; overflow-y:auto; }
+
+  /* DIÁLOGO */
+  #dialogModal .modalBox { padding:20px; }
+  .dialogSpeaker { font-size:12px; opacity:.6; margin-bottom:6px; text-transform:uppercase; letter-spacing:1px; }
+  .dialogText { font-size:14px; line-height:1.6; margin-bottom:16px; }
+  .dialogClose { background:rgba(168,85,247,.4); border:1px solid #a855f7; color:#fff; padding:10px 24px; border-radius:10px; font-weight:700; cursor:pointer; width:100%; }
+
+  /* BATALHA */
+  #battleModal .modalBox { padding:0; overflow:hidden; }
+  .battleEnemy { padding:20px; text-align:center; background:rgba(239,68,68,.1); border-bottom:1px solid rgba(255,255,255,.1); }
+  .battleEnemy .enemyEmoji { font-size:60px; line-height:1; margin-bottom:6px; }
+  .battleEnemy .enemyName { font-size:16px; font-weight:800; }
+  .battleEnemy .enemyHp { margin-top:8px; }
+  .hpBar { background:rgba(0,0,0,.4); height:14px; border-radius:7px; overflow:hidden; position:relative; }
+  .hpBar .fill { background:linear-gradient(90deg,#ef4444,#dc2626); height:100%; transition:width .3s; }
+  .hpBar .text { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:900; }
+  .battleLog { padding:10px 16px; min-height:60px; max-height:80px; overflow-y:auto; font-size:13px; line-height:1.5; }
+  .battleLog .l { opacity:.5; }
+  .battleLog .l.curr { opacity:1; color:#fbbf24; }
+  .playerStats { padding:8px 16px; background:rgba(0,0,0,.3); display:flex; gap:14px; font-size:11px; font-weight:700; }
+  .playerStats .hp { color:#ef4444; }
+  .playerStats .mp { color:#60a5fa; }
+  .battleActions { display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:10px; }
+  .battleActions button { background:rgba(255,255,255,.1); border:2px solid rgba(255,255,255,.2); color:#fff; padding:14px; border-radius:10px; font-weight:800; cursor:pointer; font-size:14px; }
+  .battleActions button:active { transform:scale(.95); }
+  .battleActions button:disabled { opacity:.4; }
+  .battleActions .attack { background:rgba(239,68,68,.25); border-color:rgba(239,68,68,.5); }
+  .battleActions .defend { background:rgba(96,165,250,.25); border-color:rgba(96,165,250,.5); }
+  .battleActions .magic  { background:rgba(168,85,247,.25); border-color:rgba(168,85,247,.5); }
+  .battleActions .run    { background:rgba(251,146,60,.25); border-color:rgba(251,146,60,.5); }
+
+  #endScreen { text-align:center; padding:20px; justify-content:center; }
+  #endScreen .bigEmoji { font-size:80px; line-height:1; margin-bottom:14px; animation:bounce .8s; }
+  @keyframes bounce { 0% { transform:scale(0); } 60% { transform:scale(1.2); } 100% { transform:scale(1); } }
+  #endScreen h2 { font-size:24px; margin-bottom:8px; }
+  #endScreen .stats { font-size:13px; margin:8px 0 14px; opacity:.85; line-height:1.6; }
+  #endScreen .stats b { color:#fbbf24; }
+  #endScreen .earnedStars { font-size:46px; margin:8px 0 18px; letter-spacing:6px; }
+  #endScreen .earnedStars .s { opacity:.25; display:inline-block; }
+  #endScreen .earnedStars .s.lit { opacity:1; filter:drop-shadow(0 0 12px #ffd700); }
+  #endScreen .btnRow { display:flex; gap:10px; max-width:340px; width:100%; }
+  #endScreen button { flex:1; padding:14px; font-size:14px; font-weight:800; border:none; border-radius:14px; cursor:pointer; color:#fff; }
+  .primaryBtn { background:linear-gradient(90deg,#a855f7,#7c3aed); }
+  .secondaryBtn { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2) !important; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <header>
+    <button class="iconBtn" id="backBtn">←</button>
+    <div class="hud">
+      <div class="row hp"><span>HP</span><span class="v" id="hpVal">20/20</span></div>
+      <div class="row mp"><span>MP</span><span class="v" id="mpVal">5/5</span></div>
+      <div class="row"><span>Lv <span id="lvVal">1</span> · XP</span><span class="v" id="xpVal">0</span></div>
+    </div>
+    <button class="iconBtn" id="muteBtn">🔊</button>
+  </header>
+
+  <!-- MENU -->
+  <div id="menuScreen" class="screen">
+    <h1>Aventura RPG</h1>
+    <div class="sub">Explore o reino, derrote monstros e encontre o cristal do dragão para salvar a vila.</div>
+    <button class="menuBtn" id="startBtn">Começar aventura</button>
+    <button class="menuBtn" id="continueBtn" style="background:rgba(255,255,255,.15);">Continuar</button>
+  </div>
+
+  <!-- JOGO -->
+  <div id="gameScreen" class="screen hidden">
+    <canvas id="worldCanvas"></canvas>
+    <div class="dpad">
+      <div class="empty"></div>
+      <button class="dBtn up" id="btnUp">▲</button>
+      <div class="empty"></div>
+      <button class="dBtn left" id="btnLeft">◀</button>
+      <button class="dBtn action" id="btnAction">A</button>
+      <button class="dBtn right" id="btnRight">▶</button>
+      <div class="empty"></div>
+      <button class="dBtn down" id="btnDown">▼</button>
+      <div class="empty"></div>
+    </div>
+  </div>
+
+  <!-- DIÁLOGO -->
+  <div class="modal hidden" id="dialogModal">
+    <div class="modalBox">
+      <div class="dialogSpeaker" id="dialogSpeaker">NPC</div>
+      <div class="dialogText" id="dialogText"></div>
+      <button class="dialogClose" id="dialogClose">Continuar</button>
+    </div>
+  </div>
+
+  <!-- BATALHA -->
+  <div class="modal hidden" id="battleModal">
+    <div class="modalBox">
+      <div class="battleEnemy">
+        <div class="enemyEmoji" id="enemyEmoji">👾</div>
+        <div class="enemyName" id="enemyName">Slime</div>
+        <div class="enemyHp">
+          <div class="hpBar">
+            <div class="fill" id="enemyHpFill"></div>
+            <div class="text" id="enemyHpText">10/10</div>
+          </div>
+        </div>
+      </div>
+      <div class="battleLog" id="battleLog"></div>
+      <div class="playerStats">
+        <span class="hp">HP <b id="bpHp">20</b></span>
+        <span class="mp">MP <b id="bpMp">5</b></span>
+      </div>
+      <div class="battleActions">
+        <button class="attack" id="btnAttack">⚔️ Atacar</button>
+        <button class="defend" id="btnDefend">🛡️ Defender</button>
+        <button class="magic" id="btnMagic">✨ Mágica (3 MP)</button>
+        <button class="run" id="btnRun">🏃 Fugir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIM -->
+  <div id="endScreen" class="screen hidden">
+    <div class="bigEmoji" id="endEmoji">🏆</div>
+    <h2 id="endTitle">VITÓRIA!</h2>
+    <div class="stats" id="endStats"></div>
+    <div class="earnedStars" id="earnedStars"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
+    <div class="btnRow">
+      <button class="secondaryBtn" id="backMenuBtn">Menu</button>
+      <button class="primaryBtn" id="playAgainBtn">Nova aventura</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // AUDIO
+  let audioCtx = null;
+  let muted = localStorage.getItem('blg-mute') === '1';
+  function ensureAudio() { if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} } if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
+  function beep(freq, dur=0.08, type='sine', vol=0.05, when=0) {
+    if (!audioCtx || muted) return;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    const t = audioCtx.currentTime + when;
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g).connect(audioCtx.destination);
+    o.start(t); o.stop(t + dur);
+  }
+  function sndStep()    { beep(330, 0.03, 'triangle', 0.025); }
+  function sndAttack()  { beep(220, 0.08, 'sawtooth', 0.06); setTimeout(() => beep(110, 0.1, 'sawtooth', 0.05), 50); }
+  function sndMagic()   { [659, 880, 1175].forEach((f, i) => beep(f, 0.1, 'triangle', 0.06, i*0.06)); }
+  function sndDefend()  { beep(440, 0.08, 'square', 0.04); }
+  function sndHit()     { beep(180, 0.1, 'sawtooth', 0.06); }
+  function sndDie()     { [440, 330, 220, 165].forEach((f, i) => beep(f, 0.2, 'sawtooth', 0.06, i*0.1)); }
+  function sndLevelUp() { [523, 659, 784, 1047, 1318, 1568].forEach((f, i) => beep(f, 0.12, 'triangle', 0.07, i*0.07)); }
+  function sndVictory() { [523, 659, 784, 1047].forEach((f, i) => beep(f, 0.2, 'triangle', 0.08, i*0.15)); }
+  function sndTap()     { beep(660, 0.04, 'triangle', 0.05); }
+  function sndTalk()    { beep(440, 0.04, 'triangle', 0.04); setTimeout(() => beep(550, 0.04, 'triangle', 0.04), 30); }
+
+  const muteBtn = document.getElementById('muteBtn');
+  function refreshMute() { muteBtn.textContent = muted ? '🔇' : '🔊'; }
+  refreshMute();
+  muteBtn.addEventListener('click', () => {
+    ensureAudio();
+    muted = !muted;
+    localStorage.setItem('blg-mute', muted ? '1' : '0');
+    refreshMute();
+    if (!muted) sndTap();
+  });
+
+  // MAPA: 16 col × 16 row
+  // # = parede, . = grama, ~ = água (parede), T = árvore (parede), v = vila/casa (parede)
+  const MAP_RAW = [
+    "################",
+    "#..............#",
+    "#.....T..T.....#",
+    "#..............#",
+    "#......v.v.....#",
+    "#......v.v.....#",
+    "#..............#",
+    "#~~~..T..T..~~~#",
+    "#.....~~~~.....#",
+    "#......~~......#",
+    "#.T...........T#",
+    "#..............#",
+    "#......T.T.....#",
+    "#..T.........T.#",
+    "#..............#",
+    "################",
+  ];
+  const COLS = MAP_RAW[0].length;
+  const ROWS = MAP_RAW.length;
+  function isWalkable(x, y) {
+    if (x < 0 || x >= COLS || y < 0 || y >= ROWS) return false;
+    const c = MAP_RAW[y][x];
+    return c === '.';
+  }
+
+  // ENTIDADES
+  const ENEMY_TYPES = {
+    slime: { name:'Slime', emoji:'🟢', hp:12, attack:3, defense:0, xp:8, gold:4, color:'#22c55e' },
+    bat:   { name:'Morcego', emoji:'🦇', hp:18, attack:5, defense:1, xp:12, gold:6, color:'#475569' },
+    wolf:  { name:'Lobo', emoji:'🐺', hp:30, attack:8, defense:2, xp:25, gold:12, color:'#6b7280' },
+    boss:  { name:'Dragão', emoji:'🐉', hp:90, attack:12, defense:3, xp:200, gold:80, color:'#dc2626' },
+  };
+
+  // STATS
+  function loadGame() {
+    try {
+      const s = localStorage.getItem('blg-rpg-save');
+      if (s) return JSON.parse(s);
+    } catch(e) {}
+    return null;
+  }
+  function saveGame() {
+    try {
+      const data = { player, npcs, enemies, defeatedBoss, talkedToElder, talkedAfterBoss };
+      localStorage.setItem('blg-rpg-save', JSON.stringify(data));
+    } catch(e) {}
+  }
+  function clearSave() { localStorage.removeItem('blg-rpg-save'); }
+
+  // STATE
+  let player = null, npcs = [], enemies = [];
+  let defeatedBoss = false, talkedToElder = false, talkedAfterBoss = false;
+  let inBattle = false;
+  let currentEnemy = null;
+  let defending = false;
+  let battleLog = [];
+
+  const menuScreen = document.getElementById('menuScreen');
+  const gameScreen = document.getElementById('gameScreen');
+  const endScreen = document.getElementById('endScreen');
+  function showScreen(s) {
+    [menuScreen, gameScreen, endScreen].forEach(el => el.classList.add('hidden'));
+    s.classList.remove('hidden');
+  }
+
+  function setupNewGame() {
+    player = { x: 2, y: 2, hp: 20, maxHp: 20, mp: 5, maxMp: 5, attack: 5, defense: 1, xp: 0, level: 1, gold: 0, facing: 'down' };
+    npcs = [
+      { x: 7, y: 6, name: 'Ancião', dialog: 'Bem-vindo, jovem herói! Um dragão roubou nosso cristal sagrado. Encontre-o no leste e traga-o de volta!', isElder: true, emoji: '🧙' },
+      { x: 8, y: 4, name: 'Mercador', dialog: 'Sua espada parece pequena, mas com coragem você consegue! Toma esta poção... ah, esqueci de trazer. Boa sorte!', emoji: '🧝' },
+    ];
+    enemies = [
+      { x: 4, y: 9, type: 'slime', alive: true },
+      { x: 10, y: 10, type: 'slime', alive: true },
+      { x: 3, y: 12, type: 'bat', alive: true },
+      { x: 12, y: 9, type: 'bat', alive: true },
+      { x: 7, y: 13, type: 'wolf', alive: true },
+      { x: 12, y: 13, type: 'wolf', alive: true },
+      { x: 13, y: 5, type: 'boss', alive: true },  // Dragão no canto leste
+    ];
+    defeatedBoss = false; talkedToElder = false; talkedAfterBoss = false;
+  }
+
+  function applyLoad(data) {
+    player = data.player;
+    npcs = data.npcs;
+    enemies = data.enemies;
+    defeatedBoss = data.defeatedBoss;
+    talkedToElder = data.talkedToElder;
+    talkedAfterBoss = data.talkedAfterBoss;
+  }
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    clearSave();
+    setupNewGame();
+    showScreen(gameScreen);
+    setTimeout(() => { resize(); updateHUD(); render(); showDialog('Ancião', 'Bem-vindo, herói! Procure o dragão no leste do reino. Cuidado com os monstros! Aperte ◀▲▼▶ pra mover e A pra falar/lutar.'); }, 30);
+  });
+  document.getElementById('continueBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    const loaded = loadGame();
+    if (loaded) {
+      applyLoad(loaded);
+      showScreen(gameScreen);
+      setTimeout(() => { resize(); updateHUD(); render(); }, 30);
+    } else {
+      showDialog('Sistema', 'Nenhum jogo salvo. Comece uma nova aventura!');
+    }
+  });
+
+  // CANVAS
+  const canvas = document.getElementById('worldCanvas');
+  const ctx = canvas.getContext('2d');
+  let CELL = 0, DPR = 1, W = 0, H = 0;
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    const stage = document.getElementById('stage');
+    const rect = stage.getBoundingClientRect();
+    const maxW = rect.width - 16;
+    const maxH = window.innerHeight - 320;
+    CELL = Math.max(16, Math.floor(Math.min(maxW / COLS, maxH / ROWS)));
+    W = CELL * COLS; H = CELL * ROWS;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.imageSmoothingEnabled = false;
+  }
+
+  function updateHUD() {
+    document.getElementById('hpVal').textContent = player.hp + '/' + player.maxHp;
+    document.getElementById('mpVal').textContent = player.mp + '/' + player.maxMp;
+    document.getElementById('lvVal').textContent = player.level;
+    document.getElementById('xpVal').textContent = player.xp;
+  }
+
+  function render() {
+    if (!CELL) return;
+    // Floor (grama)
+    for (let y = 0; y < ROWS; y++) {
+      for (let x = 0; x < COLS; x++) {
+        const c = MAP_RAW[y][x];
+        let color = '#15803d';  // grama
+        if (c === '#') color = '#475569';  // parede
+        else if (c === 'T') color = '#14532d';  // árvore base
+        else if (c === '~') color = '#0c4a6e';  // água
+        else if (c === 'v') color = '#92400e';  // casa
+        ctx.fillStyle = color;
+        ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
+        // texturas
+        if (c === '.') {
+          ctx.fillStyle = 'rgba(34,197,94,.4)';
+          if ((x + y * 3) % 5 === 0) {
+            ctx.fillRect(x * CELL + 2, y * CELL + 2, 3, 3);
+          }
+        } else if (c === 'T') {
+          // copa
+          ctx.fillStyle = '#22c55e';
+          ctx.beginPath();
+          ctx.arc(x * CELL + CELL/2, y * CELL + CELL/2, CELL * 0.4, 0, Math.PI*2);
+          ctx.fill();
+          ctx.fillStyle = '#86efac';
+          ctx.beginPath();
+          ctx.arc(x * CELL + CELL/2 - CELL*0.1, y * CELL + CELL/2 - CELL*0.1, CELL * 0.15, 0, Math.PI*2);
+          ctx.fill();
+        } else if (c === 'v') {
+          // casa: telhado triangular
+          ctx.fillStyle = '#dc2626';
+          ctx.beginPath();
+          ctx.moveTo(x * CELL + 2, y * CELL + CELL/2);
+          ctx.lineTo(x * CELL + CELL/2, y * CELL + 2);
+          ctx.lineTo(x * CELL + CELL - 2, y * CELL + CELL/2);
+          ctx.closePath();
+          ctx.fill();
+          // porta
+          ctx.fillStyle = '#451a03';
+          ctx.fillRect(x * CELL + CELL*0.4, y * CELL + CELL*0.6, CELL*0.2, CELL*0.35);
+        } else if (c === '~') {
+          // ondas
+          ctx.strokeStyle = 'rgba(255,255,255,.3)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(x * CELL + 2, y * CELL + CELL/3);
+          ctx.quadraticCurveTo(x * CELL + CELL/2, y * CELL + CELL/3 - 3, x * CELL + CELL - 2, y * CELL + CELL/3);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // NPCs
+    for (const n of npcs) {
+      drawCharacter(n.x, n.y, n.emoji, '#fbbf24');
+    }
+    // Enemies vivos
+    for (const e of enemies) {
+      if (!e.alive) continue;
+      const t = ENEMY_TYPES[e.type];
+      drawCharacter(e.x, e.y, t.emoji, t.color);
+    }
+    // Player
+    drawCharacter(player.x, player.y, player.facing === 'left' ? '🧝‍♂️' : '🧝', '#3b82f6');
+  }
+
+  function drawCharacter(gx, gy, emoji, color) {
+    const cx = gx * CELL + CELL/2;
+    const cy = gy * CELL + CELL/2;
+    // shadow
+    ctx.fillStyle = 'rgba(0,0,0,.3)';
+    ctx.beginPath();
+    ctx.ellipse(cx, gy * CELL + CELL - 3, CELL * 0.3, CELL * 0.08, 0, 0, Math.PI*2);
+    ctx.fill();
+    // emoji
+    ctx.font = Math.floor(CELL * 0.75) + 'px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(emoji, cx, cy + 1);
+  }
+
+  // MOVIMENTO
+  function tryMove(dx, dy) {
+    if (inBattle) return;
+    const nx = player.x + dx, ny = player.y + dy;
+    if (dx < 0) player.facing = 'left';
+    else if (dx > 0) player.facing = 'right';
+    else if (dy < 0) player.facing = 'up';
+    else if (dy > 0) player.facing = 'down';
+    if (!isWalkable(nx, ny)) { render(); return; }
+    // check NPC
+    if (npcs.some(n => n.x === nx && n.y === ny)) { render(); return; }
+    // check enemy → BATALHA
+    const enemy = enemies.find(e => e.alive && e.x === nx && e.y === ny);
+    if (enemy) {
+      startBattle(enemy);
+      return;
+    }
+    player.x = nx; player.y = ny;
+    sndStep();
+    render();
+    saveGame();
+  }
+
+  function tryAction() {
+    if (inBattle) return;
+    // Tile na direção que está olhando
+    let tx = player.x, ty = player.y;
+    if (player.facing === 'left') tx--;
+    else if (player.facing === 'right') tx++;
+    else if (player.facing === 'up') ty--;
+    else if (player.facing === 'down') ty++;
+    // NPC?
+    const npc = npcs.find(n => n.x === tx && n.y === ty);
+    if (npc) {
+      sndTalk();
+      if (npc.isElder && defeatedBoss && !talkedAfterBoss) {
+        talkedAfterBoss = true;
+        showDialog(npc.name, 'Você conseguiu! O cristal está salvo, a vila pode descansar. Você é uma lenda, herói!');
+        setTimeout(() => endGame(true), 100);
+        return;
+      }
+      if (npc.isElder) talkedToElder = true;
+      showDialog(npc.name, npc.dialog);
+      return;
+    }
+    // Enemy?
+    const enemy = enemies.find(e => e.alive && e.x === tx && e.y === ty);
+    if (enemy) startBattle(enemy);
+  }
+
+  // DIÁLOGO
+  const dialogModal = document.getElementById('dialogModal');
+  function showDialog(speaker, text) {
+    document.getElementById('dialogSpeaker').textContent = speaker;
+    document.getElementById('dialogText').textContent = text;
+    dialogModal.classList.remove('hidden');
+  }
+  document.getElementById('dialogClose').addEventListener('click', () => {
+    sndTap();
+    dialogModal.classList.add('hidden');
+  });
+
+  // BATALHA
+  const battleModal = document.getElementById('battleModal');
+  function startBattle(enemy) {
+    inBattle = true;
+    currentEnemy = enemy;
+    const t = ENEMY_TYPES[enemy.type];
+    currentEnemy.battleHp = t.hp;
+    currentEnemy.battleMaxHp = t.hp;
+    currentEnemy.attack = t.attack;
+    currentEnemy.defense = t.defense;
+    defending = false;
+    battleLog = [];
+    document.getElementById('enemyEmoji').textContent = t.emoji;
+    document.getElementById('enemyName').textContent = t.name;
+    updateBattleUI();
+    addLog('Encontrou um ' + t.name + '!');
+    battleModal.classList.remove('hidden');
+  }
+  function updateBattleUI() {
+    const t = ENEMY_TYPES[currentEnemy.type];
+    document.getElementById('enemyHpFill').style.width = (currentEnemy.battleHp / currentEnemy.battleMaxHp * 100) + '%';
+    document.getElementById('enemyHpText').textContent = currentEnemy.battleHp + '/' + currentEnemy.battleMaxHp;
+    document.getElementById('bpHp').textContent = player.hp;
+    document.getElementById('bpMp').textContent = player.mp;
+    document.getElementById('btnMagic').disabled = player.mp < 3;
+  }
+  function addLog(msg) {
+    battleLog.unshift(msg);
+    if (battleLog.length > 4) battleLog.length = 4;
+    const el = document.getElementById('battleLog');
+    el.innerHTML = battleLog.map((m, i) => `<div class="l${i === 0 ? ' curr' : ''}">${m}</div>`).join('');
+  }
+  function playerAction(action) {
+    if (!inBattle) return;
+    if (action === 'attack') {
+      const dmg = Math.max(1, player.attack + Math.floor(Math.random() * 4) - currentEnemy.defense);
+      currentEnemy.battleHp -= dmg;
+      sndAttack();
+      addLog('Você atacou! ' + dmg + ' de dano.');
+    } else if (action === 'defend') {
+      defending = true;
+      sndDefend();
+      addLog('Você se defende!');
+    } else if (action === 'magic') {
+      if (player.mp < 3) return;
+      player.mp -= 3;
+      const dmg = player.attack * 2;
+      currentEnemy.battleHp -= dmg;
+      sndMagic();
+      addLog('Magia! ' + dmg + ' de dano.');
+    } else if (action === 'run') {
+      sndTap();
+      if (Math.random() < 0.5 && currentEnemy.type !== 'boss') {
+        addLog('Você fugiu!');
+        endBattle('ran');
+        return;
+      } else {
+        addLog(currentEnemy.type === 'boss' ? 'O Dragão bloqueia!' : 'Você não conseguiu fugir!');
+      }
+    }
+    updateBattleUI();
+    // Check enemy morto
+    if (currentEnemy.battleHp <= 0) {
+      const t = ENEMY_TYPES[currentEnemy.type];
+      addLog(t.name + ' derrotado! +' + t.xp + ' XP, +' + t.gold + ' ouro');
+      sndDie();
+      currentEnemy.alive = false;
+      player.xp += t.xp;
+      player.gold += t.gold;
+      if (currentEnemy.type === 'boss') {
+        defeatedBoss = true;
+      }
+      checkLevelUp();
+      saveGame();
+      setTimeout(() => endBattle('won'), 1200);
+      return;
+    }
+    // Turn do inimigo
+    setTimeout(() => enemyTurn(), 600);
+  }
+  function enemyTurn() {
+    if (!inBattle) return;
+    const t = ENEMY_TYPES[currentEnemy.type];
+    let dmg = Math.max(1, t.attack + Math.floor(Math.random() * 3) - player.defense);
+    if (defending) { dmg = Math.max(1, Math.floor(dmg * 0.3)); defending = false; }
+    player.hp -= dmg;
+    sndHit();
+    addLog(t.name + ' atacou! -' + dmg + ' HP');
+    updateBattleUI();
+    updateHUD();
+    if (player.hp <= 0) {
+      sndDie();
+      setTimeout(() => endBattle('died'), 800);
+    }
+    saveGame();
+  }
+  function checkLevelUp() {
+    const nextLevel = player.xp >= player.level * 30;
+    if (nextLevel) {
+      player.level++;
+      player.maxHp += 6;
+      player.maxMp += 2;
+      player.attack += 2;
+      player.defense += 1;
+      player.hp = player.maxHp;
+      player.mp = player.maxMp;
+      addLog('★ NÍVEL ' + player.level + '! Tudo restaurado.');
+      sndLevelUp();
+    }
+  }
+  function endBattle(outcome) {
+    if (outcome === 'died') {
+      battleModal.classList.add('hidden');
+      inBattle = false;
+      // GAME OVER
+      endGame(false);
+      return;
+    }
+    battleModal.classList.add('hidden');
+    inBattle = false;
+    currentEnemy = null;
+    updateHUD();
+    render();
+  }
+
+  document.getElementById('btnAttack').addEventListener('click', () => { ensureAudio(); playerAction('attack'); });
+  document.getElementById('btnDefend').addEventListener('click', () => { ensureAudio(); playerAction('defend'); });
+  document.getElementById('btnMagic').addEventListener('click', () => { ensureAudio(); playerAction('magic'); });
+  document.getElementById('btnRun').addEventListener('click', () => { ensureAudio(); playerAction('run'); });
+
+  // CONTROLES
+  document.getElementById('btnUp').addEventListener('click', () => { ensureAudio(); tryMove(0, -1); });
+  document.getElementById('btnDown').addEventListener('click', () => { ensureAudio(); tryMove(0, 1); });
+  document.getElementById('btnLeft').addEventListener('click', () => { ensureAudio(); tryMove(-1, 0); });
+  document.getElementById('btnRight').addEventListener('click', () => { ensureAudio(); tryMove(1, 0); });
+  document.getElementById('btnAction').addEventListener('click', () => { ensureAudio(); tryAction(); });
+
+  // KEYBOARD
+  window.addEventListener('keydown', (e) => {
+    if (gameScreen.classList.contains('hidden')) return;
+    if (e.key === 'ArrowUp' || e.key === 'w') tryMove(0, -1);
+    else if (e.key === 'ArrowDown' || e.key === 's') tryMove(0, 1);
+    else if (e.key === 'ArrowLeft' || e.key === 'a') tryMove(-1, 0);
+    else if (e.key === 'ArrowRight' || e.key === 'd') tryMove(1, 0);
+    else if (e.key === ' ' || e.key === 'Enter') tryAction();
+  });
+
+  window.addEventListener('resize', () => { if (!gameScreen.classList.contains('hidden')) { resize(); render(); } });
+
+  function endGame(victory) {
+    let stars = 0;
+    if (victory) {
+      // estrelas baseado no level
+      if (player.level >= 5) stars = 3;
+      else if (player.level >= 3) stars = 2;
+      else stars = 1;
+      localStorage.setItem('blg-rpg-victory', '1');
+      const best = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+      if (stars > best) localStorage.setItem('blg-rpg-best-stars', stars);
+      sndVictory();
+    }
+    document.getElementById('endEmoji').textContent = victory ? '🏆' : '💀';
+    document.getElementById('endTitle').textContent = victory ? 'VITÓRIA!' : 'GAME OVER';
+    document.getElementById('endStats').innerHTML = victory ?
+      `Você salvou a vila!<br>Nível alcançado: <b>${player.level}</b><br>Ouro: <b>${player.gold}</b>` :
+      `Você caiu em batalha...<br>Nível alcançado: <b>${player.level}</b>`;
+    const es = document.getElementById('earnedStars');
+    es.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+      const s = document.createElement('span');
+      s.className = 's' + (i < stars ? ' lit' : '');
+      s.textContent = '★';
+      es.appendChild(s);
+    }
+    if (victory) clearSave();
+    setTimeout(() => showScreen(endScreen), 600);
+  }
+
+  document.getElementById('backBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    if (!menuScreen.classList.contains('hidden')) {
+      parent.postMessage('back-to-hub', '*');
+    } else {
+      showScreen(menuScreen);
+    }
+  });
+  document.getElementById('playAgainBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    clearSave();
+    setupNewGame();
+    showScreen(gameScreen);
+    setTimeout(() => { resize(); updateHUD(); render(); }, 30);
+  });
+  document.getElementById('backMenuBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    showScreen(menuScreen);
+  });
+})();
+<<<__SCRIPT_END__>>>
+
+<script>
+  // Helper global pra atualizar progresso após voltar de jogo
+  window.refreshHubStats = function() {
+    // Dash
+    let totalDone = 0, totalCoins = 0;
+    for (let i = 0; i < 11; i++) {
+      if (localStorage.getItem('cubo-dash-done-' + i) === '1') totalDone++;
+      totalCoins += +(localStorage.getItem('cubo-dash-coins-' + i) || 0);
+    }
+    const td = document.getElementById('totalTrophies');
+    const ts = document.getElementById('totalStars');
+    if (td) td.textContent = totalDone + '/11';
+    if (ts) ts.textContent = totalCoins + '/55';
+    const dashProg = document.querySelector('.card[data-game="dash"] .progress');
+    if (dashProg) {
+      const bar = dashProg.querySelector('div');
+      const pct = Math.round((totalDone * 100) / 11);
+      if (pct > 0 || totalCoins > 0) {
+        dashProg.classList.add('show');
+        bar.style.width = Math.max(5, pct) + '%';
+      }
+    }
+    // Outros jogos
+    const games = [
+      ['conta', 'blg-conta-stars-', 3, 9],
+      ['memory', 'blg-memory-stars-', 4, 12],
+      ['snake', 'blg-snake-stars-', 3, 9],
+      ['letroca', 'blg-letroca-stars-', 3, 9],
+      ['skyhop', 'blg-skyhop-stars-', 3, 9],
+      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
+      ['balloons', 'blg-balloons-stars-', 6, 18],
+      ['animals', 'blg-animal-stars-', 3, 9],
+      ['mole', 'blg-mole-stars-', 4, 12],
+      ['g2048', 'blg-2048-stars-', 3, 9],
+      ['tetris', 'blg-tetris-stars-', 3, 9],
+      ['breakout', 'blg-breakout-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
+      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
+    ];
+    for (const [game, prefix, levels, max] of games) {
+      let stars = 0;
+      for (let i = 0; i < levels; i++) stars += +(localStorage.getItem(prefix + i) || 0);
+      const prog = document.querySelector('.card[data-game="' + game + '"] .progress');
+      if (prog) {
+        const bar = prog.querySelector('div');
+        if (stars > 0) {
+          prog.classList.add('show');
+          bar.style.width = Math.max(5, (stars / max) * 100) + '%';
+        }
+      }
+    }
+    // Piano: 1 valor único
+    const pianoS = +(localStorage.getItem('blg-piano-stars') || 0);
+    const pianoP = document.querySelector('.card[data-game="piano"] .progress');
+    if (pianoP) {
+      const bar = pianoP.querySelector('div');
+      if (pianoS > 0) {
+        pianoP.classList.add('show');
+        bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
+      }
+    }
   };
 </script>
 </body>
@@ -15655,7 +17660,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       btn.addEventListener('click', (ev) => {
         const g = btn.dataset.game;
         // map game name → template id
-        const map = { dash:'dash', conta:'conta', memory:'memory', snake:'snake', letroca:'letroca', skyhop:'skyhop', platformer:'mario', cruzadas:'cruzadas', balloons:'balloons', animals:'animals', paint:'paint', piano:'piano', mole:'mole', g2048:'2048', tetris:'tetris', breakout:'breakout', race:'race', sokoban:'sokoban', invaders:'invaders', sudoku:'sudoku', pacman:'pacman' };
+        const map = { dash:'dash', conta:'conta', memory:'memory', snake:'snake', letroca:'letroca', skyhop:'skyhop', platformer:'mario', cruzadas:'cruzadas', balloons:'balloons', animals:'animals', paint:'paint', piano:'piano', mole:'mole', g2048:'2048', tetris:'tetris', breakout:'breakout', race:'race', sokoban:'sokoban', invaders:'invaders', sudoku:'sudoku', pacman:'pacman', tower:'tower', rpg:'rpg' };
         const tplId = map[g] || g;
         loadGame(tplId);
       });
@@ -15705,6 +17710,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
       ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -15739,6 +17745,16 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       if (sudokuS > 0) {
         sudokuP.classList.add('show');
         bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+    // RPG: 1 valor único
+    const rpgS = +(localStorage.getItem('blg-rpg-best-stars') || 0);
+    const rpgP = document.querySelector('.card[data-game="rpg"] .progress');
+    if (rpgP) {
+      const bar = rpgP.querySelector('div');
+      if (rpgS > 0) {
+        rpgP.classList.add('show');
+        bar.style.width = Math.max(5, (rpgS / 3) * 100) + '%';
       }
     }
   };
