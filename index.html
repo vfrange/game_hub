@@ -63,6 +63,9 @@
   .card[data-game="tetris"]    { border-color:rgba(34,211,238,.4); }
   .card[data-game="breakout"]  { border-color:rgba(236,72,153,.4); }
   .card[data-game="race"]      { border-color:rgba(251,146,60,.4); }
+  .card[data-game="sokoban"]   { border-color:rgba(251,191,36,.4); }
+  .card[data-game="invaders"]  { border-color:rgba(34,197,94,.4); }
+  .card[data-game="sudoku"]    { border-color:rgba(96,165,250,.4); }
 
   /* FOOTER */
   footer { position:relative; z-index:2; text-align:center; padding:18px 0 8px; opacity:.5; font-size:11px; }
@@ -204,6 +207,24 @@
       <div class="name">Corrida</div>
       <div class="progress"><div></div></div>
       <div class="tag">todos</div>
+    </button>
+    <button class="card available" data-game="sokoban">
+      <div class="icon">📦</div>
+      <div class="name">Sokoban</div>
+      <div class="progress"><div></div></div>
+      <div class="tag">8+</div>
+    </button>
+    <button class="card available" data-game="invaders">
+      <div class="icon">👾</div>
+      <div class="name">Invasores</div>
+      <div class="progress"><div></div></div>
+      <div class="tag">todos</div>
+    </button>
+    <button class="card available" data-game="sudoku">
+      <div class="icon">🔢</div>
+      <div class="name">Sudoku</div>
+      <div class="progress"><div></div></div>
+      <div class="tag">8+</div>
     </button>
   </div>
 
@@ -447,6 +468,46 @@
     if (raceStars > 0) {
       raceProg.classList.add('show');
       bar.style.width = Math.max(5, (raceStars / 9) * 100) + '%';
+    }
+  }
+
+  // Progresso Sokoban (25 fases × 3 = 75)
+  let sokobanStars = 0;
+  for (let i = 0; i < 25; i++) sokobanStars += +(localStorage.getItem('blg-sokoban-stars-' + i) || 0);
+  const sokobanProg = document.querySelector('.card[data-game="sokoban"] .progress');
+  if (sokobanProg) {
+    const bar = sokobanProg.querySelector('div');
+    if (sokobanStars > 0) {
+      sokobanProg.classList.add('show');
+      bar.style.width = Math.max(5, (sokobanStars / 75) * 100) + '%';
+    }
+  }
+
+  // Progresso Invaders (3 waves × 3 = 9)
+  let invadersStars = 0;
+  for (let i = 0; i < 3; i++) invadersStars += +(localStorage.getItem('blg-invaders-stars-' + i) || 0);
+  const invadersProg = document.querySelector('.card[data-game="invaders"] .progress');
+  if (invadersProg) {
+    const bar = invadersProg.querySelector('div');
+    if (invadersStars > 0) {
+      invadersProg.classList.add('show');
+      bar.style.width = Math.max(5, (invadersStars / 9) * 100) + '%';
+    }
+  }
+
+  // Progresso Sudoku (3 sizes × 3 diffs × 3 = 27 max)
+  let sudokuStars = 0;
+  for (const size of [4, 6, 9]) {
+    for (const diff of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuStars += +(localStorage.getItem('blg-sudoku-' + size + '-' + diff + '-stars') || 0);
+    }
+  }
+  const sudokuProg = document.querySelector('.card[data-game="sudoku"] .progress');
+  if (sudokuProg) {
+    const bar = sudokuProg.querySelector('div');
+    if (sudokuStars > 0) {
+      sudokuProg.classList.add('show');
+      bar.style.width = Math.max(5, (sudokuStars / 27) * 100) + '%';
     }
   }
 
@@ -3463,6 +3524,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -3484,6 +3547,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -3948,6 +4024,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -3969,6 +4047,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -4369,6 +4460,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -4390,6 +4483,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -4867,6 +4973,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -4888,6 +4996,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -5519,6 +5640,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -5540,6 +5663,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -6084,6 +6220,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -6105,6 +6243,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -6926,6 +7077,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -6947,6 +7100,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -7610,6 +7776,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -7631,6 +7799,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -8188,6 +8369,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -8209,6 +8392,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -8649,6 +8845,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -8670,6 +8868,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -9080,6 +9291,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -9101,6 +9314,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -9496,6 +9722,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -9517,6 +9745,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -9910,6 +10151,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -9931,6 +10174,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -10434,6 +10690,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -10455,6 +10713,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -11016,6 +11287,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -11037,6 +11310,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -11537,6 +11823,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -11558,6 +11846,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -12014,6 +12315,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -12035,6 +12338,2223 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+  };
+</script>
+</body>
+</html>
+
+</script>
+<script type="text/html" id="game-sokoban">
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a0e05">
+<title>Sokoban</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; }
+  html, body { width:100%; min-height:100%; background:#1a0e05; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; color:#fff; overscroll-behavior:none; touch-action:none; }
+  body { display:flex; justify-content:center; min-height:100vh; min-height:100dvh; }
+  #stage { width:100%; max-width:min(100vw, calc(100vh * 9 / 16)); min-height:100vh; min-height:100dvh; position:relative; display:flex; flex-direction:column; padding:env(safe-area-inset-top,12px) 14px env(safe-area-inset-bottom,12px); background:linear-gradient(180deg,#2a1810,#1a0e05); }
+
+  header { display:flex; align-items:center; justify-content:space-between; padding:6px 0 4px; }
+  .iconBtn { width:46px; height:46px; border:none; background:rgba(255,255,255,.12); color:#fff; border-radius:50%; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .15s; }
+  .iconBtn:active { transform:scale(.9); }
+  .infoBar { display:flex; align-items:center; gap:10px; background:rgba(0,0,0,.4); padding:8px 14px; border-radius:999px; font-size:13px; font-weight:700; }
+  .infoBar .num { color:#fbbf24; font-weight:900; font-size:15px; }
+
+  .screen { flex:1; display:flex; flex-direction:column; align-items:center; }
+  .screen.hidden { display:none; }
+
+  /* MENU */
+  #menuScreen { justify-content:flex-start; padding-top:8px; }
+  #menuScreen h1 { font-size:clamp(26px, 7vw, 36px); font-weight:900; margin-bottom:4px; background:linear-gradient(90deg,#fbbf24,#d97706); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  #menuScreen .sub { opacity:.7; font-size:13px; margin-bottom:16px; text-align:center; }
+  .levelsGrid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; width:100%; max-width:380px; }
+  .lvlCard { aspect-ratio:1; background:rgba(255,255,255,.08); border:2px solid rgba(251,191,36,.3); border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; cursor:pointer; transition:transform .1s; }
+  .lvlCard:active { transform:scale(.92); }
+  .lvlCard.done { background:rgba(34,197,94,.15); border-color:rgba(34,197,94,.5); }
+  .lvlCard .lvlNum { font-size:18px; font-weight:900; color:#fff; }
+  .lvlCard .lvlStars { font-size:9px; letter-spacing:1px; line-height:1; }
+  .lvlCard .lvlStars .s { opacity:.25; }
+  .lvlCard .lvlStars .s.lit { opacity:1; color:#fbbf24; filter:drop-shadow(0 0 2px #fbbf24); }
+
+  /* JOGO */
+  #gameScreen { padding-top:4px; }
+  .gameHud { display:flex; gap:6px; width:100%; max-width:380px; margin-bottom:8px; align-items:center; }
+  .gameHud .stat { flex:1; background:rgba(0,0,0,.4); border-radius:8px; padding:6px 8px; text-align:center; font-size:11px; }
+  .gameHud .stat .lbl { opacity:.6; font-size:9px; text-transform:uppercase; }
+  .gameHud .stat .val { font-size:16px; font-weight:900; color:#fbbf24; }
+  .gameHud .stat .val.warn { color:#fb923c; }
+  .gameHud .stat .val.crit { color:#ef4444; }
+  .actBtn { width:38px; height:38px; background:rgba(255,255,255,.12); border:none; color:#fff; border-radius:8px; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .actBtn:active { transform:scale(.9); }
+  .actBtn:disabled { opacity:.3; }
+
+  #boardWrap { width:100%; flex:1; max-height:55vh; display:flex; align-items:center; justify-content:center; padding:0; }
+  canvas { display:block; background:#1a0e05; border-radius:8px; max-width:100%; max-height:100%; }
+
+  .dpad { display:grid; grid-template-columns:repeat(3,70px); grid-template-rows:repeat(3,70px); gap:8px; margin-top:14px; }
+  .dpad .dBtn { background:rgba(255,255,255,.15); border:2px solid rgba(251,191,36,.3); border-radius:14px; color:#fff; font-size:28px; font-weight:900; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .dpad .dBtn:active { transform:scale(.92); background:rgba(251,191,36,.4); }
+  .dpad .empty { visibility:hidden; }
+  .dpad .up    { grid-column:2; grid-row:1; }
+  .dpad .left  { grid-column:1; grid-row:2; }
+  .dpad .right { grid-column:3; grid-row:2; }
+  .dpad .down  { grid-column:2; grid-row:3; }
+
+  /* FIM */
+  #endScreen { text-align:center; padding:20px; justify-content:center; }
+  #endScreen .bigEmoji { font-size:88px; line-height:1; margin-bottom:14px; animation:bounce .8s; }
+  @keyframes bounce { 0% { transform:scale(0); } 60% { transform:scale(1.2); } 100% { transform:scale(1); } }
+  #endScreen h2 { font-size:22px; margin-bottom:6px; }
+  #endScreen .levelName { font-size:14px; opacity:.7; margin-bottom:14px; }
+  #endScreen .stats { font-size:13px; margin:8px 0 6px; opacity:.85; }
+  #endScreen .stats b { color:#fbbf24; }
+  #endScreen .best { font-size:13px; opacity:.7; margin-bottom:14px; }
+  #endScreen .earnedStars { font-size:46px; margin:8px 0 18px; letter-spacing:6px; }
+  #endScreen .earnedStars .s { opacity:.25; display:inline-block; }
+  #endScreen .earnedStars .s.lit { opacity:1; filter:drop-shadow(0 0 12px #ffd700); }
+  #endScreen .btnRow { display:flex; gap:10px; max-width:340px; width:100%; }
+  #endScreen button { flex:1; padding:14px; font-size:14px; font-weight:800; border:none; border-radius:14px; cursor:pointer; color:#fff; }
+  #endScreen button:active { transform:scale(.96); }
+  .primaryBtn { background:linear-gradient(90deg,#fbbf24,#d97706); }
+  .secondaryBtn { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2) !important; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <header>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
+    <div class="infoBar"><span id="headerText">Sokoban</span></div>
+    <button class="iconBtn" id="muteBtn">🔊</button>
+  </header>
+
+  <!-- MENU -->
+  <div id="menuScreen" class="screen">
+    <h1>Sokoban</h1>
+    <div class="sub">Empurre as caixas pros alvos amarelos</div>
+    <div class="levelsGrid" id="levelsGrid"></div>
+  </div>
+
+  <!-- JOGO -->
+  <div id="gameScreen" class="screen hidden">
+    <div class="gameHud">
+      <button class="actBtn" id="undoBtn" title="Desfazer">↶</button>
+      <button class="actBtn" id="restartBtn" title="Reiniciar">↻</button>
+      <div class="stat"><div class="lbl">Movs</div><div class="val" id="movesVal">0</div></div>
+      <div class="stat"><div class="lbl">Ótimo</div><div class="val" id="optimalVal">0</div></div>
+    </div>
+    <div id="boardWrap"><canvas id="boardCanvas"></canvas></div>
+    <div class="dpad">
+      <div class="empty"></div>
+      <button class="dBtn up" id="btnUp">▲</button>
+      <div class="empty"></div>
+      <button class="dBtn left" id="btnLeft">◀</button>
+      <div class="empty"></div>
+      <button class="dBtn right" id="btnRight">▶</button>
+      <div class="empty"></div>
+      <button class="dBtn down" id="btnDown">▼</button>
+      <div class="empty"></div>
+    </div>
+  </div>
+
+  <!-- FIM -->
+  <div id="endScreen" class="screen hidden">
+    <div class="bigEmoji" id="endEmoji">🏆</div>
+    <h2 id="endTitle">Resolveu!</h2>
+    <div class="levelName" id="levelNameEnd"></div>
+    <div class="stats">Você usou <b id="finalMoves">0</b> movs (ótimo: <b id="finalOptimal">0</b>)</div>
+    <div class="best" id="bestMsg"></div>
+    <div class="earnedStars" id="earnedStars"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
+    <div class="btnRow">
+      <button class="secondaryBtn" id="backMenuBtn">Menu</button>
+      <button class="primaryBtn" id="nextBtn">Próxima →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const LEVELS = [{"name":"Primeiro empurrão","grid":["#####","#.$@#","#####"],"optimal":1,"star3":2,"star2":3,"star1":8},{"name":"Pra cima","grid":["####","#. #","#$ #","#@ #","####"],"optimal":1,"star3":2,"star2":3,"star1":8},{"name":"Dá a volta","grid":["######","#  @ #","# $  #","#.   #","######"],"optimal":5,"star3":6,"star2":9,"star1":20},{"name":"Duas caixas","grid":["#######","#.   .#","#  $  #","#  $  #","#  @  #","#######"],"optimal":14,"star3":17,"star2":23,"star1":47},{"name":"O caminho longo","grid":["########","#.     #","### $  #","#   @  #","########"],"optimal":6,"star3":7,"star2":11,"star1":23},{"name":"Bem no meio","grid":["#######","#  .  #","#     #","#  $  #","#  @  #","#######"],"optimal":2,"star3":3,"star2":5,"star1":11},{"name":"Qual primeiro?","grid":["########","# .    #","# $    #","# $  . #","#    @ #","########"],"optimal":10,"star3":12,"star2":17,"star1":35},{"name":"Contorne","grid":["#######","#    .#","# ### #","# # $ #","# #   #","# @   #","#######"],"optimal":8,"star3":10,"star2":14,"star1":29},{"name":"Trio","grid":["########","# . . .#","#      #","# $ $ $#","#      #","#  @   #","########"],"optimal":16,"star3":19,"star2":26,"star1":53},{"name":"Travessia","grid":["#########","#.      #","#       #","#       #","#  $ @  #","#       #","#########"],"optimal":8,"star3":10,"star2":14,"star1":29},{"name":"Subindo","grid":["######","#  . #","#    #","#    #","# $  #","# @  #","######"],"optimal":6,"star3":7,"star2":11,"star1":23},{"name":"Dois cantos","grid":["########","#.    .#","#      #","#      #","# $  $ #","#  @   #","########"],"optimal":18,"star3":21,"star2":29,"star1":59},{"name":"Volta inteira","grid":["#######","#.    #","#     #","#  $  #","#     #","#   @ #","#######"],"optimal":8,"star3":10,"star2":14,"star1":29},{"name":"Três alvos","grid":["########","# . . .#","#      #","#  $$$ #","#      #","#   @  #","########"],"optimal":17,"star3":20,"star2":27,"star1":56},{"name":"Passagem","grid":["#########","#       #","#   .   #","#       #","## ### ##","#  $@   #","#       #","#########"],"optimal":10,"star3":12,"star2":17,"star1":35},{"name":"Volta longa","grid":["#######","#.    #","#     #","#  $  #","#     #","#  @  #","#######"],"optimal":7,"star3":9,"star2":12,"star1":26},{"name":"Espalhadas","grid":["#########","#.  .  .#","#       #","# $   $ #","#       #","#   $   #","#       #","#   @   #","#########"],"optimal":22,"star3":26,"star2":35,"star1":71},{"name":"Em volta","grid":["##########","#.       #","#        #","#        #","#   $    #","#        #","#   @    #","##########"],"optimal":9,"star3":11,"star2":15,"star1":32},{"name":"Quatro cantos","grid":["########","#.    .#","#      #","# $  $ #","# $  $ #","#      #","#.    .#","#  @   #","########"],"optimal":28,"star3":33,"star2":44,"star1":89},{"name":"Posicione","grid":["########","#.   . #","#      #","#      #","#      #","# $  $ #","#   @  #","########"],"optimal":17,"star3":20,"star2":27,"star1":56},{"name":"Planeja bem","grid":["##########","# . . .  #","#        #","#        #","# $ $ $  #","#        #","#   @    #","##########"],"optimal":22,"star3":26,"star2":35,"star1":71},{"name":"Caminho L","grid":["########","#      #","# .    #","#      #","#      #","#    $ #","#    @ #","########"],"optimal":8,"star3":10,"star2":14,"star1":29},{"name":"Quartento","grid":["#########","#.     .#","#       #","# $   $ #","#       #","#   @   #","#       #","# $   $ #","#       #","#.     .#","#########"],"optimal":38,"star3":44,"star2":59,"star1":119},{"name":"Quatro diagonais","grid":["##########","# . . . .#","#        #","# $      #","#  $     #","#   $    #","#    $   #","#     @  #","##########"],"optimal":37,"star3":43,"star2":57,"star1":116},{"name":"Mestre Sokoban","grid":["##########","#.      .#","#        #","# $    $ #","#        #","#   @    #","#        #","# $    $ #","#        #","#.      .#","##########"],"optimal":39,"star3":45,"star2":60,"star1":122}];
+
+  // AUDIO
+  let audioCtx = null;
+  let muted = localStorage.getItem('blg-mute') === '1';
+  function ensureAudio() { if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} } if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
+  function beep(freq, dur=0.08, type='sine', vol=0.05, when=0) {
+    if (!audioCtx || muted) return;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    const t = audioCtx.currentTime + when;
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g).connect(audioCtx.destination);
+    o.start(t); o.stop(t + dur);
+  }
+  function sndStep() { beep(420, 0.03, 'triangle', 0.025); }
+  function sndPush() { beep(180, 0.06, 'square', 0.045); setTimeout(() => beep(140, 0.05, 'square', 0.035), 30); }
+  function sndOnGoal() { beep(880, 0.08, 'triangle', 0.06); setTimeout(() => beep(1175, 0.08, 'triangle', 0.05), 40); }
+  function sndUndo() { beep(330, 0.05, 'triangle', 0.04); }
+  function sndTap()  { beep(660, 0.04, 'triangle', 0.05); }
+  function sndWin()  { [523, 659, 784, 880, 1047, 1318].forEach((f, i) => beep(f, 0.15, 'triangle', 0.06, i*0.08)); }
+
+  const muteBtn = document.getElementById('muteBtn');
+  function refreshMute() { muteBtn.textContent = muted ? '🔇' : '🔊'; }
+  refreshMute();
+  muteBtn.addEventListener('click', () => {
+    ensureAudio();
+    muted = !muted;
+    localStorage.setItem('blg-mute', muted ? '1' : '0');
+    refreshMute();
+    if (!muted) sndTap();
+  });
+
+  // STATS
+  function getStars(i) { return +(localStorage.getItem('blg-sokoban-stars-' + i) || 0); }
+  function saveStars(i, n) { if (n > getStars(i)) localStorage.setItem('blg-sokoban-stars-' + i, n); }
+  function getBest(i) { return +(localStorage.getItem('blg-sokoban-best-' + i) || 0); }
+  function saveBest(i, m) {
+    const b = getBest(i);
+    if (b === 0 || m < b) localStorage.setItem('blg-sokoban-best-' + i, m);
+  }
+
+  // PARSER
+  function parseLevel(grid) {
+    const walls = new Set(), goals = new Set(), boxes = new Set();
+    let player = null;
+    const h = grid.length;
+    let w = 0;
+    for (const row of grid) w = Math.max(w, row.length);
+    for (let y = 0; y < h; y++) {
+      const row = grid[y].padEnd(w, ' ');
+      for (let x = 0; x < w; x++) {
+        const c = row[x];
+        const k = x + ',' + y;
+        if (c === '#') walls.add(k);
+        else if (c === '.') goals.add(k);
+        else if (c === '$') boxes.add(k);
+        else if (c === '*') { boxes.add(k); goals.add(k); }
+        else if (c === '@') player = [x, y];
+        else if (c === '+') { player = [x, y]; goals.add(k); }
+      }
+    }
+    return { w, h, walls, goals, boxes, player };
+  }
+
+  // STATE
+  let currentLevel = 0;
+  let levelData = null;
+  let player = [0, 0];
+  let boxes = new Set();
+  let moves = 0;
+  let history = [];
+  let won = false;
+
+  const canvas = document.getElementById('boardCanvas');
+  const ctx = canvas.getContext('2d');
+  let CELL = 0, OFFX = 0, OFFY = 0;
+
+  function resize() {
+    if (!levelData) return;
+    const wrap = document.getElementById('boardWrap');
+    const r = wrap.getBoundingClientRect();
+    const maxW = r.width - 4;
+    const maxH = r.height - 4;
+    CELL = Math.floor(Math.min(maxW / levelData.w, maxH / levelData.h));
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = levelData.w * CELL * dpr;
+    canvas.height = levelData.h * CELL * dpr;
+    canvas.style.width = (levelData.w * CELL) + 'px';
+    canvas.style.height = (levelData.h * CELL) + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function refreshMenu() {
+    const grid = document.getElementById('levelsGrid');
+    grid.innerHTML = '';
+    for (let i = 0; i < LEVELS.length; i++) {
+      const stars = getStars(i);
+      const card = document.createElement('div');
+      card.className = 'lvlCard' + (stars > 0 ? ' done' : '');
+      card.innerHTML = '<div class="lvlNum">' + (i + 1) + '</div>' +
+        '<div class="lvlStars">' +
+        ['★','★','★'].map((s, idx) => '<span class="s' + (idx < stars ? ' lit' : '') + '">' + s + '</span>').join('') +
+        '</div>';
+      card.addEventListener('click', () => {
+        ensureAudio(); sndTap();
+        currentLevel = i;
+        startLevel();
+      });
+      grid.appendChild(card);
+    }
+  }
+
+  function key(x, y) { return x + ',' + y; }
+
+  function startLevel() {
+    const lvl = LEVELS[currentLevel];
+    levelData = parseLevel(lvl.grid);
+    player = [...levelData.player];
+    boxes = new Set(levelData.boxes);
+    moves = 0;
+    history = [];
+    won = false;
+    document.getElementById('headerText').textContent = 'Fase ' + (currentLevel + 1) + ': ' + lvl.name;
+    document.getElementById('movesVal').textContent = '0';
+    document.getElementById('movesVal').className = 'val';
+    document.getElementById('optimalVal').textContent = lvl.optimal;
+    showScreen(gameScreen);
+    setTimeout(() => { resize(); render(); }, 30);
+  }
+
+  function tryMove(dx, dy) {
+    if (won || !levelData) return;
+    const [px, py] = player;
+    const nx = px + dx, ny = py + dy;
+    if (levelData.walls.has(key(nx, ny))) return;
+    let pushed = false;
+    let oldBoxes = null;
+    if (boxes.has(key(nx, ny))) {
+      const bx = nx + dx, by = ny + dy;
+      if (levelData.walls.has(key(bx, by)) || boxes.has(key(bx, by))) return;
+      oldBoxes = new Set(boxes);
+      boxes.delete(key(nx, ny));
+      boxes.add(key(bx, by));
+      pushed = true;
+    }
+    history.push({ player: [px, py], boxes: oldBoxes });
+    if (history.length > 200) history.shift();
+    player = [nx, ny];
+    moves++;
+    document.getElementById('movesVal').textContent = moves;
+    updateMovesColor();
+    if (pushed) {
+      if (levelData.goals.has(key(nx + dx, ny + dy))) sndOnGoal();
+      else sndPush();
+    } else {
+      sndStep();
+    }
+    render();
+    checkWin();
+  }
+
+  function updateMovesColor() {
+    const lvl = LEVELS[currentLevel];
+    const el = document.getElementById('movesVal');
+    el.className = 'val';
+    if (moves > lvl.star1) el.className = 'val crit';
+    else if (moves > lvl.star2) el.className = 'val warn';
+  }
+
+  function undo() {
+    if (history.length === 0 || won) return;
+    const last = history.pop();
+    player = [...last.player];
+    if (last.boxes) boxes = new Set(last.boxes);
+    moves++;  // undo CONTA como movimento (clássico Sokoban)
+    document.getElementById('movesVal').textContent = moves;
+    updateMovesColor();
+    sndUndo();
+    render();
+  }
+
+  function restart() {
+    if (!levelData) return;
+    player = [...levelData.player];
+    boxes = new Set(levelData.boxes);
+    moves = 0;
+    history = [];
+    won = false;
+    document.getElementById('movesVal').textContent = '0';
+    document.getElementById('movesVal').className = 'val';
+    sndTap();
+    render();
+  }
+
+  function checkWin() {
+    for (const g of levelData.goals) {
+      if (!boxes.has(g)) return;
+    }
+    won = true;
+    sndWin();
+    const lvl = LEVELS[currentLevel];
+    saveBest(currentLevel, moves);
+    let stars = 0;
+    if (moves <= lvl.star3) stars = 3;
+    else if (moves <= lvl.star2) stars = 2;
+    else if (moves <= lvl.star1) stars = 1;
+    else stars = 1;  // sempre garante 1 estrela por completar
+    saveStars(currentLevel, stars);
+    showEndScreen(stars);
+  }
+
+  function showEndScreen(stars) {
+    const lvl = LEVELS[currentLevel];
+    document.getElementById('levelNameEnd').textContent = lvl.name;
+    document.getElementById('finalMoves').textContent = moves;
+    document.getElementById('finalOptimal').textContent = lvl.optimal;
+    const best = getBest(currentLevel);
+    document.getElementById('bestMsg').textContent = moves <= best ? '🏆 Seu melhor: ' + best + ' movs!' : 'Melhor: ' + best + ' movs';
+    const es = document.getElementById('earnedStars');
+    es.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+      const s = document.createElement('span');
+      s.className = 's' + (i < stars ? ' lit' : '');
+      s.textContent = '★';
+      es.appendChild(s);
+    }
+    let emoji, title;
+    if (stars === 3) { emoji = '🏆'; title = 'PERFEITO!'; }
+    else if (stars === 2) { emoji = '🎉'; title = 'Muito bem!'; }
+    else { emoji = '👍'; title = 'Completou!'; }
+    document.getElementById('endEmoji').textContent = emoji;
+    document.getElementById('endTitle').textContent = title;
+    document.getElementById('nextBtn').textContent = (currentLevel < LEVELS.length - 1) ? 'Próxima →' : 'Menu';
+    setTimeout(() => showScreen(endScreen), 600);
+  }
+
+  function render() {
+    if (!levelData || !CELL) return;
+    const w = levelData.w * CELL, h = levelData.h * CELL;
+    ctx.fillStyle = '#2a1810';
+    ctx.fillRect(0, 0, w, h);
+
+    // Floor + walls
+    for (let y = 0; y < levelData.h; y++) {
+      for (let x = 0; x < levelData.w; x++) {
+        const k = key(x, y);
+        const px = x * CELL, py = y * CELL;
+        if (levelData.walls.has(k)) {
+          drawWall(px, py);
+        } else {
+          drawFloor(px, py);
+        }
+      }
+    }
+
+    // Goals (camada acima do floor, abaixo das boxes)
+    for (const g of levelData.goals) {
+      const [gx, gy] = g.split(',').map(Number);
+      drawGoal(gx * CELL, gy * CELL);
+    }
+
+    // Boxes
+    for (const b of boxes) {
+      const [bx, by] = b.split(',').map(Number);
+      const onGoal = levelData.goals.has(b);
+      drawBox(bx * CELL, by * CELL, onGoal);
+    }
+
+    // Player
+    drawPlayer(player[0] * CELL, player[1] * CELL);
+  }
+
+  function drawWall(x, y) {
+    ctx.fillStyle = '#6b4423';
+    ctx.fillRect(x, y, CELL, CELL);
+    ctx.fillStyle = '#4a2f17';
+    ctx.fillRect(x, y + CELL - 3, CELL, 3);
+    ctx.fillRect(x + CELL - 3, y, 3, CELL);
+    ctx.fillStyle = '#8b5a2b';
+    ctx.fillRect(x, y, CELL, 3);
+    ctx.fillRect(x, y, 3, CELL);
+    // brick pattern
+    ctx.strokeStyle = 'rgba(0,0,0,.25)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, y + CELL/2); ctx.lineTo(x + CELL, y + CELL/2);
+    ctx.stroke();
+  }
+  function drawFloor(x, y) {
+    ctx.fillStyle = '#d4a574';
+    ctx.fillRect(x, y, CELL, CELL);
+    ctx.fillStyle = 'rgba(0,0,0,.06)';
+    ctx.fillRect(x + CELL - 1, y, 1, CELL);
+    ctx.fillRect(x, y + CELL - 1, CELL, 1);
+  }
+  function drawGoal(x, y) {
+    const cx = x + CELL/2, cy = y + CELL/2;
+    ctx.fillStyle = 'rgba(251,191,36,.35)';
+    ctx.beginPath();
+    ctx.arc(cx, cy, CELL * 0.32, 0, Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, CELL * 0.32, 0, Math.PI*2);
+    ctx.stroke();
+    // X marking
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 1.5;
+    const m = CELL * 0.18;
+    ctx.beginPath();
+    ctx.moveTo(cx - m, cy - m); ctx.lineTo(cx + m, cy + m);
+    ctx.moveTo(cx + m, cy - m); ctx.lineTo(cx - m, cy + m);
+    ctx.stroke();
+  }
+  function drawBox(x, y, onGoal) {
+    const m = 3;
+    if (onGoal) {
+      // verde
+      const grad = ctx.createLinearGradient(x, y, x, y + CELL);
+      grad.addColorStop(0, '#22c55e');
+      grad.addColorStop(1, '#15803d');
+      ctx.fillStyle = grad;
+    } else {
+      const grad = ctx.createLinearGradient(x, y, x, y + CELL);
+      grad.addColorStop(0, '#a16207');
+      grad.addColorStop(1, '#713f12');
+      ctx.fillStyle = grad;
+    }
+    ctx.fillRect(x + m, y + m, CELL - m*2, CELL - m*2);
+    ctx.strokeStyle = onGoal ? '#86efac' : '#fbbf24';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x + m, y + m, CELL - m*2, CELL - m*2);
+    // X interno (madeira)
+    ctx.strokeStyle = onGoal ? 'rgba(255,255,255,.4)' : 'rgba(0,0,0,.35)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(x + m, y + m); ctx.lineTo(x + CELL - m, y + CELL - m);
+    ctx.moveTo(x + CELL - m, y + m); ctx.lineTo(x + m, y + CELL - m);
+    ctx.stroke();
+  }
+  function drawPlayer(x, y) {
+    const cx = x + CELL/2, cy = y + CELL/2;
+    // shadow
+    ctx.fillStyle = 'rgba(0,0,0,.3)';
+    ctx.beginPath();
+    ctx.ellipse(cx, y + CELL - 4, CELL * 0.3, CELL * 0.08, 0, 0, Math.PI*2);
+    ctx.fill();
+    // body
+    ctx.fillStyle = '#3b82f6';
+    ctx.beginPath();
+    ctx.arc(cx, cy + 4, CELL * 0.28, 0, Math.PI*2);
+    ctx.fill();
+    // head
+    ctx.fillStyle = '#fde68a';
+    ctx.beginPath();
+    ctx.arc(cx, cy - CELL*0.15, CELL * 0.18, 0, Math.PI*2);
+    ctx.fill();
+    // eyes
+    ctx.fillStyle = '#000';
+    ctx.beginPath();
+    ctx.arc(cx - CELL*0.07, cy - CELL*0.17, 1.5, 0, Math.PI*2);
+    ctx.arc(cx + CELL*0.07, cy - CELL*0.17, 1.5, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  // SCREENS
+  const menuScreen = document.getElementById('menuScreen');
+  const gameScreen = document.getElementById('gameScreen');
+  const endScreen = document.getElementById('endScreen');
+  function showScreen(s) {
+    [menuScreen, gameScreen, endScreen].forEach(el => el.classList.add('hidden'));
+    s.classList.remove('hidden');
+    if (s === menuScreen) refreshMenu();
+  }
+
+  // BACK
+  document.getElementById('backBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    if (!menuScreen.classList.contains('hidden')) {
+      parent.postMessage('back-to-hub', '*');
+    } else {
+      showScreen(menuScreen);
+    }
+  });
+
+  // CONTROLES
+  document.getElementById('btnUp').addEventListener('click', () => { ensureAudio(); tryMove(0, -1); });
+  document.getElementById('btnDown').addEventListener('click', () => { ensureAudio(); tryMove(0, 1); });
+  document.getElementById('btnLeft').addEventListener('click', () => { ensureAudio(); tryMove(-1, 0); });
+  document.getElementById('btnRight').addEventListener('click', () => { ensureAudio(); tryMove(1, 0); });
+  document.getElementById('undoBtn').addEventListener('click', () => { ensureAudio(); undo(); });
+  document.getElementById('restartBtn').addEventListener('click', () => { ensureAudio(); restart(); });
+
+  // KEYBOARD
+  window.addEventListener('keydown', (e) => {
+    if (gameScreen.classList.contains('hidden')) return;
+    if (e.key === 'ArrowUp' || e.key === 'w') { tryMove(0, -1); e.preventDefault(); }
+    else if (e.key === 'ArrowDown' || e.key === 's') { tryMove(0, 1); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'a') { tryMove(-1, 0); e.preventDefault(); }
+    else if (e.key === 'ArrowRight' || e.key === 'd') { tryMove(1, 0); e.preventDefault(); }
+    else if (e.key === 'z' || e.key === 'Z' || e.key === 'Backspace') { undo(); e.preventDefault(); }
+    else if (e.key === 'r' || e.key === 'R') { restart(); }
+  });
+
+  // SWIPE no canvas
+  let touchStart = null;
+  canvas.addEventListener('touchstart', (e) => {
+    ensureAudio();
+    const t = e.touches[0];
+    touchStart = { x: t.clientX, y: t.clientY };
+  }, { passive:true });
+  canvas.addEventListener('touchend', (e) => {
+    if (!touchStart) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStart.x;
+    const dy = t.clientY - touchStart.y;
+    touchStart = null;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 25) return;
+    if (Math.abs(dx) > Math.abs(dy)) tryMove(dx > 0 ? 1 : -1, 0);
+    else tryMove(0, dy > 0 ? 1 : -1);
+  }, { passive:true });
+
+  // END BUTTONS
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    if (currentLevel < LEVELS.length - 1) {
+      currentLevel++;
+      startLevel();
+    } else {
+      showScreen(menuScreen);
+    }
+  });
+  document.getElementById('backMenuBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    showScreen(menuScreen);
+  });
+
+  window.addEventListener('resize', () => { if (!gameScreen.classList.contains('hidden')) { resize(); render(); } });
+  refreshMenu();
+})();
+<<<__SCRIPT_END__>>>
+
+<script>
+  // Helper global pra atualizar progresso após voltar de jogo
+  window.refreshHubStats = function() {
+    // Dash
+    let totalDone = 0, totalCoins = 0;
+    for (let i = 0; i < 11; i++) {
+      if (localStorage.getItem('cubo-dash-done-' + i) === '1') totalDone++;
+      totalCoins += +(localStorage.getItem('cubo-dash-coins-' + i) || 0);
+    }
+    const td = document.getElementById('totalTrophies');
+    const ts = document.getElementById('totalStars');
+    if (td) td.textContent = totalDone + '/11';
+    if (ts) ts.textContent = totalCoins + '/55';
+    const dashProg = document.querySelector('.card[data-game="dash"] .progress');
+    if (dashProg) {
+      const bar = dashProg.querySelector('div');
+      const pct = Math.round((totalDone * 100) / 11);
+      if (pct > 0 || totalCoins > 0) {
+        dashProg.classList.add('show');
+        bar.style.width = Math.max(5, pct) + '%';
+      }
+    }
+    // Outros jogos
+    const games = [
+      ['conta', 'blg-conta-stars-', 3, 9],
+      ['memory', 'blg-memory-stars-', 4, 12],
+      ['snake', 'blg-snake-stars-', 3, 9],
+      ['letroca', 'blg-letroca-stars-', 3, 9],
+      ['skyhop', 'blg-skyhop-stars-', 3, 9],
+      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
+      ['balloons', 'blg-balloons-stars-', 6, 18],
+      ['animals', 'blg-animal-stars-', 3, 9],
+      ['mole', 'blg-mole-stars-', 4, 12],
+      ['g2048', 'blg-2048-stars-', 3, 9],
+      ['tetris', 'blg-tetris-stars-', 3, 9],
+      ['breakout', 'blg-breakout-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
+    ];
+    for (const [game, prefix, levels, max] of games) {
+      let stars = 0;
+      for (let i = 0; i < levels; i++) stars += +(localStorage.getItem(prefix + i) || 0);
+      const prog = document.querySelector('.card[data-game="' + game + '"] .progress');
+      if (prog) {
+        const bar = prog.querySelector('div');
+        if (stars > 0) {
+          prog.classList.add('show');
+          bar.style.width = Math.max(5, (stars / max) * 100) + '%';
+        }
+      }
+    }
+    // Piano: 1 valor único
+    const pianoS = +(localStorage.getItem('blg-piano-stars') || 0);
+    const pianoP = document.querySelector('.card[data-game="piano"] .progress');
+    if (pianoP) {
+      const bar = pianoP.querySelector('div');
+      if (pianoS > 0) {
+        pianoP.classList.add('show');
+        bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+  };
+</script>
+</body>
+</html>
+
+</script>
+<script type="text/html" id="game-invaders">
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000">
+<title>Invasores</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; }
+  html, body { width:100%; min-height:100%; background:#000; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,monospace; color:#fff; overscroll-behavior:none; touch-action:none; }
+  body { display:flex; justify-content:center; min-height:100vh; min-height:100dvh; }
+  #stage { width:100%; max-width:min(100vw, calc(100vh * 9 / 16)); min-height:100vh; min-height:100dvh; position:relative; display:flex; flex-direction:column; padding:env(safe-area-inset-top,8px) 10px env(safe-area-inset-bottom,8px); background:#000; }
+
+  header { display:flex; align-items:center; justify-content:space-between; padding:4px 0; }
+  .iconBtn { width:42px; height:42px; border:none; background:rgba(255,255,255,.1); color:#fff; border-radius:50%; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .15s; }
+  .iconBtn:active { transform:scale(.9); }
+  .hud { display:flex; align-items:center; gap:12px; font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:1px; color:#22c55e; font-family:monospace; }
+  .hud .label { opacity:.6; }
+  .hud .val { color:#fbbf24; }
+  .hud .lives { color:#ef4444; font-size:13px; }
+
+  .screen { flex:1; display:flex; flex-direction:column; align-items:center; }
+  .screen.hidden { display:none; }
+
+  #menuScreen { justify-content:center; padding:20px; }
+  #menuScreen h1 { font-size:clamp(28px, 8vw, 42px); font-weight:900; margin-bottom:6px; background:linear-gradient(90deg,#22c55e,#10b981); -webkit-background-clip:text; background-clip:text; color:transparent; font-family:monospace; letter-spacing:-2px; }
+  #menuScreen .sub { opacity:.65; font-size:13px; margin-bottom:24px; text-align:center; max-width:300px; }
+  .pointsLegend { background:rgba(255,255,255,.05); border:1px solid rgba(34,197,94,.3); border-radius:10px; padding:10px 14px; margin-bottom:18px; font-size:11px; text-align:left; line-height:1.7; font-family:monospace; }
+  .pointsLegend b { color:#22c55e; }
+  .levelGrid { display:flex; flex-direction:column; gap:10px; width:100%; max-width:340px; }
+  .levelCard { background:rgba(255,255,255,.06); border:2px solid rgba(34,197,94,.3); border-radius:14px; padding:14px 18px; display:flex; align-items:center; gap:12px; cursor:pointer; transition:transform .15s; }
+  .levelCard:active { transform:scale(.97); }
+  .levelCard .lvlIcon { font-size:30px; line-height:1; }
+  .levelCard .lvlInfo { flex:1; }
+  .levelCard .lvlName { font-size:16px; font-weight:800; }
+  .levelCard .lvlRange { font-size:11px; opacity:.6; margin-top:2px; }
+  .levelCard .lvlStars { display:flex; gap:2px; font-size:18px; }
+  .levelCard .lvlStars .s { opacity:.25; }
+  .levelCard .lvlStars .s.lit { opacity:1; filter:drop-shadow(0 0 4px #ffd700); }
+
+  #gameScreen { padding:0; justify-content:flex-start; }
+  #gameCanvas { width:100%; flex:1; display:block; background:#000; }
+  .controls { display:grid; grid-template-columns:1.4fr 0.8fr 1.4fr; gap:18px; padding:12px 10px 0; }
+  .ctrlBtn { background:rgba(34,197,94,.15); border:2px solid rgba(34,197,94,.5); color:#fff; height:74px; border-radius:14px; font-size:30px; font-weight:900; cursor:pointer; display:flex; align-items:center; justify-content:center; touch-action:none; }
+  .ctrlBtn:active, .ctrlBtn.pressed { background:rgba(34,197,94,.4); transform:scale(.95); }
+  .ctrlBtn.fire { background:rgba(239,68,68,.2); border-color:rgba(239,68,68,.6); font-size:28px; }
+  .ctrlBtn.fire:active, .ctrlBtn.fire.pressed { background:rgba(239,68,68,.5); }
+
+  #endScreen { text-align:center; padding:20px; justify-content:center; }
+  #endScreen .bigEmoji { font-size:80px; line-height:1; margin-bottom:14px; animation:bounce .8s; }
+  @keyframes bounce { 0% { transform:scale(0); } 60% { transform:scale(1.2); } 100% { transform:scale(1); } }
+  #endScreen h2 { font-size:24px; margin-bottom:8px; font-family:monospace; letter-spacing:2px; }
+  #endScreen .score { font-size:14px; margin:8px 0 4px; }
+  #endScreen .score .big { font-size:42px; font-weight:900; color:#22c55e; display:block; margin-top:4px; font-family:monospace; }
+  #endScreen .best { font-size:13px; opacity:.7; margin-bottom:14px; }
+  #endScreen .earnedStars { font-size:46px; margin:8px 0 18px; letter-spacing:6px; }
+  #endScreen .earnedStars .s { opacity:.25; display:inline-block; }
+  #endScreen .earnedStars .s.lit { opacity:1; filter:drop-shadow(0 0 12px #ffd700); }
+  #endScreen .btnRow { display:flex; gap:10px; max-width:340px; width:100%; }
+  #endScreen button { flex:1; padding:14px; font-size:14px; font-weight:800; border:none; border-radius:14px; cursor:pointer; color:#fff; }
+  #endScreen button:active { transform:scale(.96); }
+  .primaryBtn { background:linear-gradient(90deg,#22c55e,#15803d); }
+  .secondaryBtn { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2) !important; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <header>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
+    <div class="hud">
+      <span><span class="label">SCORE</span> <span class="val" id="scoreVal">0000</span></span>
+      <span class="lives" id="livesEl">▲▲▲</span>
+    </div>
+    <button class="iconBtn" id="muteBtn">🔊</button>
+  </header>
+
+  <!-- MENU -->
+  <div id="menuScreen" class="screen">
+    <h1>INVASORES</h1>
+    <div class="sub">Defenda a Terra dos alienígenas. Deslize ou use os botões.</div>
+    <div class="pointsLegend">
+      🟣 Polvo = <b>50</b> pts<br>
+      🦀 Carangueijo = <b>30</b> pts<br>
+      🦑 Lula = <b>10</b> pts<br>
+      🛸 UFO = <b>100-300</b> pts
+    </div>
+    <div class="levelGrid">
+      <div class="levelCard" data-lvl="0">
+        <div class="lvlIcon">🌱</div>
+        <div class="lvlInfo">
+          <div class="lvlName">Wave 1</div>
+          <div class="lvlRange">Invasão padrão</div>
+        </div>
+        <div class="lvlStars" id="stars0"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
+      </div>
+      <div class="levelCard" data-lvl="1">
+        <div class="lvlIcon">⚡</div>
+        <div class="lvlInfo">
+          <div class="lvlName">Wave 2</div>
+          <div class="lvlRange">Mais rápido</div>
+        </div>
+        <div class="lvlStars" id="stars1"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
+      </div>
+      <div class="levelCard" data-lvl="2">
+        <div class="lvlIcon">🔥</div>
+        <div class="lvlInfo">
+          <div class="lvlName">Wave 3</div>
+          <div class="lvlRange">Tiros duplos!</div>
+        </div>
+        <div class="lvlStars" id="stars2"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JOGO -->
+  <div id="gameScreen" class="screen hidden">
+    <canvas id="gameCanvas"></canvas>
+    <div class="controls">
+      <button class="ctrlBtn" id="btnLeft">◀</button>
+      <button class="ctrlBtn fire" id="btnFire">🔴</button>
+      <button class="ctrlBtn" id="btnRight">▶</button>
+    </div>
+  </div>
+
+  <!-- FIM -->
+  <div id="endScreen" class="screen hidden">
+    <div class="bigEmoji" id="endEmoji">👾</div>
+    <h2 id="endTitle">GAME OVER</h2>
+    <div class="score">Pontuação<span class="big" id="finalScore">0</span></div>
+    <div class="best" id="bestMsg"></div>
+    <div class="earnedStars" id="earnedStars"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
+    <div class="btnRow">
+      <button class="secondaryBtn" id="backMenuBtn">Menu</button>
+      <button class="primaryBtn" id="playAgainBtn">Jogar de novo</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const SPRITES = {
+  octopusA: ["    XXXX    ", " XXXXXXXXXX ", "XXXXXXXXXXXX", "XXX  XX  XXX", "XXXXXXXXXXXX", "   XX  XX   ", "  XX XX XX  ", "XX        XX"],
+  octopusB: ["    XXXX    ", " XXXXXXXXXX ", "XXXXXXXXXXXX", "XXX  XX  XXX", "XXXXXXXXXXXX", "  XXX  XXX  ", " XX  XX  XX ", "  XX    XX  "],
+  crabA: ["  X     X  ", "   X   X   ", "  XXXXXXX  ", " XX XXX XX ", "XXXXXXXXXXX", "X XXXXXXX X", "X X     X X", "   XX XX   "],
+  crabB: ["  X     X  ", "X  X   X  X", "X XXXXXXX X", "XXX XXX XXX", "XXXXXXXXXXX", " XXXXXXXXX ", "  X     X  ", " X       X "],
+  squidA: ["   XX   ", "  XXXX  ", " XXXXXX ", "XX XX XX", "XXXXXXXX", "  X  X  ", " X XX X ", "X X  X X"],
+  squidB: ["   XX   ", "  XXXX  ", " XXXXXX ", "XX XX XX", "XXXXXXXX", " X XX X ", "X  XX  X", " X    X "],
+  ufo: ["     XXXXXX     ", "    XXXXXXXX    ", "   XXXXXXXXXX   ", "  XX XX XX XX   ", " XXXXXXXXXXXXXX ", "   XXX    XXX   ", "    X      X    "],
+  player: ["      X      ", "     XXX     ", "     XXX     ", " XXXXXXXXXXX ", "XXXXXXXXXXXXX", "XXXXXXXXXXXXX", "XXXXXXXXXXXXX", "XXXXXXXXXXXXX"],
+  playerExp: ["  X   X X    ", "X   X     X X", " X   X X   X ", "X X XXXXX X  ", " XXXXXXXXX X ", "X XXXXXXXXX X", "XXXXXXXXXXX X", "X XXXXXXXX  X"],
+  playerBullet: ["X", "X", "X", "X"],
+  alienBulletSquig: [" X ", "X  ", " X ", "  X"],
+  alienBulletFast: ["X X", "XXX", " X ", " X ", "XXX", "X X"],
+  alienBulletPlain: ["X", "X", "X", "X"],
+};
+
+  // AUDIO
+  let audioCtx = null;
+  let muted = localStorage.getItem('blg-mute') === '1';
+  function ensureAudio() { if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} } if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
+  function beep(freq, dur=0.08, type='sine', vol=0.05, when=0) {
+    if (!audioCtx || muted) return;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    const t = audioCtx.currentTime + when;
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g).connect(audioCtx.destination);
+    o.start(t); o.stop(t + dur);
+  }
+  function sndShoot()  { beep(880, 0.07, 'square', 0.04); setTimeout(() => beep(440, 0.06, 'sawtooth', 0.03), 30); }
+  function sndHit()    { beep(180, 0.12, 'sawtooth', 0.06); }
+  function sndUfo()    { beep(440, 0.10, 'triangle', 0.04); setTimeout(() => beep(660, 0.10, 'triangle', 0.04), 80); setTimeout(() => beep(880, 0.10, 'triangle', 0.04), 160); }
+  function sndUfoKill(){ [1320, 1175, 1047, 880, 784].forEach((f, i) => beep(f, 0.08, 'triangle', 0.05, i*0.06)); }
+  function sndPlayerDie() { beep(110, 0.3, 'sawtooth', 0.07); setTimeout(() => beep(80, 0.4, 'sawtooth', 0.06), 150); }
+  function sndStep(idx) {
+    // 4 tons descendentes pra marcha dos aliens
+    const freqs = [220, 196, 175, 155];
+    beep(freqs[idx % 4], 0.05, 'square', 0.03);
+  }
+  function sndTap()    { beep(660, 0.04, 'triangle', 0.05); }
+  function sndWin()    { [523, 659, 784, 880, 1047, 1318].forEach((f, i) => beep(f, 0.15, 'triangle', 0.06, i*0.08)); }
+
+  const muteBtn = document.getElementById('muteBtn');
+  function refreshMute() { muteBtn.textContent = muted ? '🔇' : '🔊'; }
+  refreshMute();
+  muteBtn.addEventListener('click', () => {
+    ensureAudio();
+    muted = !muted;
+    localStorage.setItem('blg-mute', muted ? '1' : '0');
+    refreshMute();
+    if (!muted) sndTap();
+  });
+
+  // LEVELS
+  const LEVELS = [
+    { name:'Wave 1', baseStepMs:550, bulletSpeed:3.0, shootChance:0.005, maxAlienBullets:2, goal3:1100, goal2:700, goal1:300 },
+    { name:'Wave 2', baseStepMs:420, bulletSpeed:3.6, shootChance:0.008, maxAlienBullets:3, goal3:1400, goal2:900, goal1:400 },
+    { name:'Wave 3', baseStepMs:320, bulletSpeed:4.2, shootChance:0.012, maxAlienBullets:4, goal3:1700, goal2:1100, goal1:500 },
+  ];
+
+  // STATS
+  function getStars(l) { return +(localStorage.getItem('blg-invaders-stars-' + l) || 0); }
+  function saveStars(l, n) { if (n > getStars(l)) localStorage.setItem('blg-invaders-stars-' + l, n); }
+  function getBest(l) { return +(localStorage.getItem('blg-invaders-best-' + l) || 0); }
+  function saveBest(l, s) { if (s > getBest(l)) localStorage.setItem('blg-invaders-best-' + l, s); }
+  function refreshMenu() {
+    for (let i = 0; i < 3; i++) {
+      const s = getStars(i);
+      const ct = document.getElementById('stars' + i);
+      if (!ct) continue;
+      ct.querySelectorAll('.s').forEach((el, idx) => el.classList.toggle('lit', idx < s));
+    }
+  }
+  refreshMenu();
+
+  // SPRITE CACHE (pre-renderiza cada sprite em canvas offscreen com cor)
+  const spriteCache = {};
+  function makeSprite(name, pixels, color, pixelSize) {
+    const w = pixels[0].length, h = pixels.length;
+    const c = document.createElement('canvas');
+    c.width = w * pixelSize;
+    c.height = h * pixelSize;
+    const cx = c.getContext('2d');
+    cx.fillStyle = color;
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        if (pixels[y][x] === 'X') cx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
+      }
+    }
+    spriteCache[name] = { canvas: c, w: w * pixelSize, h: h * pixelSize, pxW: w, pxH: h };
+  }
+
+  function buildSpriteCache(pixelSize) {
+    makeSprite('octopusA', SPRITES.octopusA, '#a855f7', pixelSize);
+    makeSprite('octopusB', SPRITES.octopusB, '#a855f7', pixelSize);
+    makeSprite('crabA',    SPRITES.crabA,    '#22c55e', pixelSize);
+    makeSprite('crabB',    SPRITES.crabB,    '#22c55e', pixelSize);
+    makeSprite('squidA',   SPRITES.squidA,   '#fbbf24', pixelSize);
+    makeSprite('squidB',   SPRITES.squidB,   '#fbbf24', pixelSize);
+    makeSprite('ufo',      SPRITES.ufo,      '#ef4444', pixelSize);
+    makeSprite('player',   SPRITES.player,   '#22c55e', pixelSize);
+    makeSprite('playerExp', SPRITES.playerExp, '#fbbf24', pixelSize);
+    makeSprite('playerBullet', SPRITES.playerBullet, '#fff', pixelSize);
+    makeSprite('alienBulletSquig', SPRITES.alienBulletSquig, '#fff', pixelSize);
+    makeSprite('alienBulletFast',  SPRITES.alienBulletFast,  '#fff', pixelSize);
+    makeSprite('alienBulletPlain', SPRITES.alienBulletPlain, '#fff', pixelSize);
+  }
+
+  // CANVAS
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  let W = 0, H = 0, DPR = 1, PX = 2;
+  const COLS = 8, ROWS = 5;
+  // game coords são pixels do canvas (sem dpr)
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    const r = canvas.getBoundingClientRect();
+    W = r.width; H = r.height;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.imageSmoothingEnabled = false;
+    // Pixel scale baseado na largura — pixels alien-sprite têm largura nominal ~13. 8 colunas = ~120 pixels nominais
+    // PX = px por unit do sprite. Quero alien render ~30-40px wide. octopus=12, crab=11, squid=8
+    PX = Math.max(2, Math.floor(W / 180));
+    buildSpriteCache(PX);
+  }
+
+  // STATE
+  let currentLevel = 0;
+  let score = 0, lives = 0, running = false;
+  let aliens = [];   // {col, row, type, alive}
+  let fleetX = 0, fleetY = 0;
+  let fleetDir = 1;  // 1 right, -1 left
+  let fleetStepIdx = 0;
+  let lastStep = 0;
+  let stepInterval = 550;
+  let playerX = 0, playerY = 0, playerW = 0, playerH = 0, playerVx = 0;
+  let playerAlive = true, playerExplodeUntil = 0;
+  let playerBullets = []; // até 2 simultâneos
+  let alienBullets = [];   // {x, y, kind, vy}
+  let ufo = null;          // {x, y, vx} when active
+  let ufoNextSpawn = 0;
+  let shields = [];        // array de matrizes
+  let lastTime = 0;
+  let inputLeft = false, inputRight = false;
+  let pendingFire = false;
+  let gameOverReason = '';  // 'killed', 'invaded'
+  // dimensões calculadas em resize
+  let alienSpacingX = 0, alienSpacingY = 0;
+  let alienAreaTop = 0, alienAreaWidth = 0;
+
+  const menuScreen = document.getElementById('menuScreen');
+  const gameScreen = document.getElementById('gameScreen');
+  const endScreen = document.getElementById('endScreen');
+  function showScreen(s) {
+    [menuScreen, gameScreen, endScreen].forEach(el => el.classList.add('hidden'));
+    s.classList.remove('hidden');
+    if (s === menuScreen) refreshMenu();
+  }
+
+  document.querySelectorAll('.levelCard').forEach(card => {
+    card.addEventListener('click', () => {
+      ensureAudio(); sndTap();
+      currentLevel = +card.dataset.lvl;
+      showScreen(gameScreen);
+      setTimeout(() => { resize(); startGame(); }, 30);
+    });
+  });
+
+  function startGame() {
+    score = 0;
+    lives = 3;
+    running = true;
+    document.getElementById('scoreVal').textContent = '0000';
+    document.getElementById('livesEl').textContent = '▲▲▲';
+    setupWave();
+    lastTime = performance.now();
+    requestAnimationFrame(loop);
+  }
+
+  function setupWave() {
+    const lvl = LEVELS[currentLevel];
+    stepInterval = lvl.baseStepMs;
+    // spacing
+    alienSpacingX = Math.floor(W * 0.09);
+    alienSpacingY = Math.floor(alienSpacingX * 0.75);
+    alienAreaWidth = (COLS - 1) * alienSpacingX + alienSpacingX;
+    alienAreaTop = Math.floor(H * 0.08);
+    // aliens grid
+    aliens = [];
+    for (let row = 0; row < ROWS; row++) {
+      for (let col = 0; col < COLS; col++) {
+        let type;
+        if (row === 0) type = 'octopus';     // 50pts (era 30 no original; quis dar mais peso ao top)
+        else if (row <= 2) type = 'crab';    // 30pts
+        else type = 'squid';                 // 10pts
+        aliens.push({ col, row, type, alive: true });
+      }
+    }
+    fleetX = Math.floor((W - alienAreaWidth) / 2);
+    fleetY = alienAreaTop;
+    fleetDir = 1;
+    fleetStepIdx = 0;
+    lastStep = performance.now();
+    // player
+    const playerSprite = spriteCache.player || { w:30, h:18 };
+    playerW = playerSprite.w; playerH = playerSprite.h;
+    playerX = Math.floor((W - playerW) / 2);
+    playerY = H - 100;  // acima da área dos controles
+    playerAlive = true;
+    playerExplodeUntil = 0;
+    playerBullets = [];
+    alienBullets = [];
+    ufo = null;
+    ufoNextSpawn = performance.now() + 15000 + Math.random() * 15000;
+    // escudos: 4 escudos, cada um 24x16 pixels lógicos (8x6 bricks de 3x3 pixels)
+    shields = [];
+    const shieldCols = 8, shieldRows = 6;
+    const brickSize = PX;
+    const shieldW = shieldCols * brickSize;
+    const shieldH = shieldRows * brickSize;
+    const numShields = 4;
+    const totalShieldsWidth = numShields * shieldW;
+    const gapTotal = W - totalShieldsWidth;
+    const gap = gapTotal / (numShields + 1);
+    const shieldY = playerY - shieldH - 30;
+    for (let i = 0; i < numShields; i++) {
+      const sx = Math.floor(gap + i * (shieldW + gap));
+      const m = [];
+      for (let r = 0; r < shieldRows; r++) {
+        const rr = [];
+        for (let c = 0; c < shieldCols; c++) {
+          let alive = 1;
+          // arco em U: bricks 3,4 vazios nas 2 linhas de baixo
+          if (r >= shieldRows - 2 && c >= 3 && c <= 4) alive = 0;
+          // cantos superiores arredondados
+          if (r === 0 && (c === 0 || c === shieldCols - 1)) alive = 0;
+          rr.push(alive);
+        }
+        m.push(rr);
+      }
+      shields.push({ x: sx, y: shieldY, brickSize, cols: shieldCols, rows: shieldRows, m });
+    }
+  }
+
+  function loop(now) {
+    if (!running) return;
+    const dt = Math.min(2.5, (now - lastTime) / 16.67);
+    lastTime = now;
+    update(dt, now);
+    render();
+    requestAnimationFrame(loop);
+  }
+
+  function update(dt, now) {
+    const lvl = LEVELS[currentLevel];
+    // PLAYER
+    if (playerAlive) {
+      if (inputLeft && !inputRight) playerVx = -3.5;
+      else if (inputRight && !inputLeft) playerVx = 3.5;
+      else playerVx *= 0.85;
+      playerX += playerVx * dt;
+      if (playerX < 4) playerX = 4;
+      if (playerX > W - playerW - 4) playerX = W - playerW - 4;
+      // FIRE: até 2 tiros simultâneos, mais rápidos
+      if (pendingFire && playerBullets.length < 2) {
+        const bs = spriteCache.playerBullet;
+        playerBullets.push({
+          x: playerX + playerW / 2 - bs.w / 2,
+          y: playerY - bs.h,
+          vy: -8.5,
+        });
+        sndShoot();
+      }
+      pendingFire = false;
+    } else {
+      if (now > playerExplodeUntil) {
+        // respawn ou fim
+        if (lives > 0) {
+          playerAlive = true;
+          playerX = Math.floor((W - playerW) / 2);
+          playerVx = 0;
+          alienBullets = [];
+        } else {
+          gameOver('killed');
+          return;
+        }
+      }
+    }
+
+    // PLAYER BULLETS
+    const bs = spriteCache.playerBullet;
+    for (let bi = playerBullets.length - 1; bi >= 0; bi--) {
+      const pb = playerBullets[bi];
+      pb.y += pb.vy * dt;
+      if (pb.y + bs.h < 0) { playerBullets.splice(bi, 1); continue; }
+      // colisão escudo
+      let consumed = false;
+      for (const sh of shields) {
+        const r = collideShield(sh, pb.x, pb.y, bs.w, bs.h);
+        if (r) { destroyShieldBrick(sh, r.row, r.col); consumed = true; break; }
+      }
+      if (consumed) { playerBullets.splice(bi, 1); continue; }
+      // colisão alien
+      let hitAlien = false;
+      for (const a of aliens) {
+        if (!a.alive) continue;
+        const ap = alienAbsPos(a);
+        const sp = spriteForAlien(a);
+        if (aabb(pb.x, pb.y, bs.w, bs.h, ap.x, ap.y, sp.w, sp.h)) {
+          a.alive = false;
+          score += pointsFor(a.type);
+          sndHit();
+          updateHUD();
+          hitAlien = true;
+          break;
+        }
+      }
+      if (hitAlien) { playerBullets.splice(bi, 1); continue; }
+      // colisão UFO
+      if (ufo) {
+        const us = spriteCache.ufo;
+        if (aabb(pb.x, pb.y, bs.w, bs.h, ufo.x, ufo.y, us.w, us.h)) {
+          const pts = [100, 150, 200, 300][Math.floor(Math.random() * 4)];
+          score += pts;
+          sndUfoKill();
+          ufo = null;
+          ufoNextSpawn = now + 15000 + Math.random() * 15000;
+          updateHUD();
+          playerBullets.splice(bi, 1);
+          continue;
+        }
+      }
+    }
+
+    // FLEET MOVIMENTO
+    const aliveCount = aliens.filter(a => a.alive).length;
+    if (aliveCount === 0) {
+      // wave clear
+      sndWin();
+      setTimeout(() => waveComplete(), 600);
+      running = false;
+      return;
+    }
+    // velocidade: começa em baseStepMs e acelera ao restar menos aliens
+    const totalAliens = COLS * ROWS;
+    const speedup = Math.max(0.2, aliveCount / totalAliens);
+    stepInterval = Math.max(60, lvl.baseStepMs * speedup);
+    if (now - lastStep > stepInterval) {
+      lastStep = now;
+      stepFleet();
+      sndStep(fleetStepIdx);
+      fleetStepIdx++;
+    }
+
+    // ALIEN SHOOT
+    if (Math.random() < lvl.shootChance * dt && alienBullets.length < lvl.maxAlienBullets) {
+      // escolhe alien aleatório vivo
+      const aliveAliens = aliens.filter(a => a.alive);
+      if (aliveAliens.length > 0) {
+        const shooter = aliveAliens[Math.floor(Math.random() * aliveAliens.length)];
+        const ap = alienAbsPos(shooter);
+        const sp = spriteForAlien(shooter);
+        const kindRoll = Math.random();
+        const kind = kindRoll < 0.4 ? 'alienBulletSquig' : (kindRoll < 0.8 ? 'alienBulletPlain' : 'alienBulletFast');
+        const bs = spriteCache[kind];
+        alienBullets.push({
+          x: ap.x + sp.w / 2 - bs.w / 2,
+          y: ap.y + sp.h,
+          kind,
+          vy: lvl.bulletSpeed,
+        });
+      }
+    }
+
+    // ALIEN BULLETS update
+    for (const b of alienBullets) {
+      b.y += b.vy * dt;
+    }
+    alienBullets = alienBullets.filter(b => b.y < H);
+    // colisões alien bullet
+    for (let i = alienBullets.length - 1; i >= 0; i--) {
+      const b = alienBullets[i];
+      const bs = spriteCache[b.kind];
+      // shield
+      let consumed = false;
+      for (const sh of shields) {
+        const r = collideShield(sh, b.x, b.y, bs.w, bs.h);
+        if (r) { destroyShieldBrick(sh, r.row, r.col); consumed = true; break; }
+      }
+      // player
+      if (!consumed && playerAlive && aabb(b.x, b.y, bs.w, bs.h, playerX, playerY, playerW, playerH)) {
+        playerAlive = false;
+        playerExplodeUntil = now + 1200;
+        lives--;
+        sndPlayerDie();
+        updateHUD();
+        consumed = true;
+      }
+      if (consumed) alienBullets.splice(i, 1);
+    }
+
+    // UFO
+    if (!ufo && now > ufoNextSpawn) {
+      const fromLeft = Math.random() < 0.5;
+      const us = spriteCache.ufo;
+      ufo = {
+        x: fromLeft ? -us.w : W,
+        y: Math.floor(H * 0.04),
+        vx: fromLeft ? 1.5 : -1.5,
+      };
+      sndUfo();
+    }
+    if (ufo) {
+      ufo.x += ufo.vx * dt;
+      const us = spriteCache.ufo;
+      if ((ufo.vx > 0 && ufo.x > W) || (ufo.vx < 0 && ufo.x + us.w < 0)) {
+        ufo = null;
+        ufoNextSpawn = now + 15000 + Math.random() * 15000;
+      }
+    }
+
+    // check: alien chegou no chão (ou ao nível do jogador)
+    for (const a of aliens) {
+      if (!a.alive) continue;
+      const ap = alienAbsPos(a);
+      const sp = spriteForAlien(a);
+      if (ap.y + sp.h >= playerY) {
+        gameOver('invaded');
+        return;
+      }
+    }
+  }
+
+  function stepFleet() {
+    // determina próximo passo: se algum vivo passaria da borda, desce
+    let willHitEdge = false;
+    const step = Math.max(4, Math.floor(W * 0.012));
+    for (const a of aliens) {
+      if (!a.alive) continue;
+      const ap = alienAbsPos(a);
+      const sp = spriteForAlien(a);
+      const nx = ap.x + fleetDir * step;
+      if (nx < 4 || nx + sp.w > W - 4) { willHitEdge = true; break; }
+    }
+    if (willHitEdge) {
+      fleetDir *= -1;
+      fleetY += Math.max(8, Math.floor(H * 0.018));
+    } else {
+      fleetX += fleetDir * step;
+    }
+  }
+
+  function alienAbsPos(a) {
+    return {
+      x: fleetX + a.col * alienSpacingX,
+      y: fleetY + a.row * alienSpacingY,
+    };
+  }
+  function spriteForAlien(a) {
+    const frame = (fleetStepIdx % 2 === 0) ? 'A' : 'B';
+    if (a.type === 'octopus') return spriteCache['octopus' + frame];
+    if (a.type === 'crab')    return spriteCache['crab' + frame];
+    return spriteCache['squid' + frame];
+  }
+  function pointsFor(type) {
+    if (type === 'octopus') return 50;
+    if (type === 'crab') return 30;
+    return 10;
+  }
+
+  function aabb(x1, y1, w1, h1, x2, y2, w2, h2) {
+    return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2;
+  }
+
+  function collideShield(sh, bx, by, bw, bh) {
+    // testa se bullet overlap algum brick vivo do escudo
+    for (let r = 0; r < sh.rows; r++) {
+      for (let c = 0; c < sh.cols; c++) {
+        if (!sh.m[r][c]) continue;
+        const brX = sh.x + c * sh.brickSize;
+        const brY = sh.y + r * sh.brickSize;
+        if (aabb(bx, by, bw, bh, brX, brY, sh.brickSize, sh.brickSize)) {
+          return { row: r, col: c };
+        }
+      }
+    }
+    return null;
+  }
+
+  function destroyShieldBrick(sh, row, col) {
+    sh.m[row][col] = 0;
+    // erode bricks adjacentes 30% (damage realista)
+    const adj = [[-1,0],[1,0],[0,-1],[0,1]];
+    for (const [dr, dc] of adj) {
+      const r = row + dr, c = col + dc;
+      if (r >= 0 && r < sh.rows && c >= 0 && c < sh.cols && Math.random() < 0.2) {
+        sh.m[r][c] = 0;
+      }
+    }
+  }
+
+  function updateHUD() {
+    document.getElementById('scoreVal').textContent = String(score).padStart(4, '0');
+    document.getElementById('livesEl').textContent = '▲'.repeat(Math.max(0, lives));
+  }
+
+  function waveComplete() {
+    // próxima wave do mesmo nível? Pra simplificar: encerra com vitória.
+    endGame(true);
+  }
+
+  function gameOver(reason) {
+    running = false;
+    gameOverReason = reason;
+    endGame(false);
+  }
+
+  function endGame(victory) {
+    const lvl = LEVELS[currentLevel];
+    saveBest(currentLevel, score);
+    let earned = 0;
+    if (score >= lvl.goal3) earned = 3;
+    else if (score >= lvl.goal2) earned = 2;
+    else if (score >= lvl.goal1) earned = 1;
+    saveStars(currentLevel, earned);
+    document.getElementById('finalScore').textContent = score;
+    const best = getBest(currentLevel);
+    document.getElementById('bestMsg').textContent = score >= best ? '🏆 Novo recorde!' : 'Melhor: ' + best;
+    const es = document.getElementById('earnedStars');
+    es.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+      const s = document.createElement('span');
+      s.className = 's' + (i < earned ? ' lit' : '');
+      s.textContent = '★';
+      es.appendChild(s);
+    }
+    let emoji, title;
+    if (victory) { emoji = '🏆'; title = 'WAVE CLEAR!'; }
+    else if (gameOverReason === 'invaded') { emoji = '👾'; title = 'INVADIDOS!'; }
+    else { emoji = '💀'; title = 'GAME OVER'; }
+    document.getElementById('endEmoji').textContent = emoji;
+    document.getElementById('endTitle').textContent = title;
+    setTimeout(() => showScreen(endScreen), 700);
+  }
+
+  function render() {
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, W, H);
+
+    // linha verde no chão
+    ctx.fillStyle = '#22c55e';
+    ctx.fillRect(0, playerY + playerH + 8, W, 2);
+
+    // ALIENS
+    for (const a of aliens) {
+      if (!a.alive) continue;
+      const ap = alienAbsPos(a);
+      const sp = spriteForAlien(a);
+      ctx.drawImage(sp.canvas, ap.x, ap.y);
+    }
+
+    // SHIELDS
+    for (const sh of shields) {
+      ctx.fillStyle = '#22c55e';
+      for (let r = 0; r < sh.rows; r++) {
+        for (let c = 0; c < sh.cols; c++) {
+          if (!sh.m[r][c]) continue;
+          ctx.fillRect(sh.x + c * sh.brickSize, sh.y + r * sh.brickSize, sh.brickSize, sh.brickSize);
+        }
+      }
+    }
+
+    // UFO
+    if (ufo) {
+      const us = spriteCache.ufo;
+      ctx.drawImage(us.canvas, ufo.x, ufo.y);
+    }
+
+    // PLAYER
+    if (playerAlive) {
+      ctx.drawImage(spriteCache.player.canvas, playerX, playerY);
+    } else {
+      // pisca explosion
+      if (Math.floor(performance.now() / 100) % 2 === 0) {
+        ctx.drawImage(spriteCache.playerExp.canvas, playerX, playerY);
+      }
+    }
+
+    // PLAYER BULLETS
+    for (const pb of playerBullets) {
+      ctx.drawImage(spriteCache.playerBullet.canvas, pb.x, pb.y);
+    }
+    // ALIEN BULLETS
+    for (const b of alienBullets) {
+      const bs = spriteCache[b.kind];
+      ctx.drawImage(bs.canvas, b.x, b.y);
+    }
+  }
+
+  // CONTROLES
+  function bindHold(el, set) {
+    el.addEventListener('touchstart', (e) => { e.preventDefault(); ensureAudio(); set(true); el.classList.add('pressed'); }, { passive:false });
+    el.addEventListener('touchend',   (e) => { e.preventDefault(); set(false); el.classList.remove('pressed'); }, { passive:false });
+    el.addEventListener('touchcancel', () => { set(false); el.classList.remove('pressed'); });
+    el.addEventListener('mousedown',  () => { ensureAudio(); set(true); el.classList.add('pressed'); });
+    el.addEventListener('mouseup',    () => { set(false); el.classList.remove('pressed'); });
+    el.addEventListener('mouseleave', () => { set(false); el.classList.remove('pressed'); });
+  }
+  bindHold(document.getElementById('btnLeft'),  (v) => inputLeft = v);
+  bindHold(document.getElementById('btnRight'), (v) => inputRight = v);
+  const btnFire = document.getElementById('btnFire');
+  btnFire.addEventListener('touchstart', (e) => { e.preventDefault(); ensureAudio(); pendingFire = true; btnFire.classList.add('pressed'); }, { passive:false });
+  btnFire.addEventListener('touchend',   (e) => { e.preventDefault(); btnFire.classList.remove('pressed'); }, { passive:false });
+  btnFire.addEventListener('mousedown',  () => { ensureAudio(); pendingFire = true; btnFire.classList.add('pressed'); });
+  btnFire.addEventListener('mouseup',    () => { btnFire.classList.remove('pressed'); });
+
+  // KEYBOARD
+  window.addEventListener('keydown', (e) => {
+    if (gameScreen.classList.contains('hidden')) return;
+    if (e.key === 'ArrowLeft' || e.key === 'a') { inputLeft = true; e.preventDefault(); }
+    else if (e.key === 'ArrowRight' || e.key === 'd') { inputRight = true; e.preventDefault(); }
+    else if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'w') { pendingFire = true; e.preventDefault(); }
+  });
+  window.addEventListener('keyup', (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'a') inputLeft = false;
+    if (e.key === 'ArrowRight' || e.key === 'd') inputRight = false;
+  });
+
+  window.addEventListener('resize', () => { if (!gameScreen.classList.contains('hidden')) resize(); });
+
+  document.getElementById('backBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    if (!menuScreen.classList.contains('hidden')) {
+      parent.postMessage('back-to-hub', '*');
+    } else {
+      running = false;
+      showScreen(menuScreen);
+    }
+  });
+  document.getElementById('playAgainBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    showScreen(gameScreen);
+    setTimeout(() => { resize(); startGame(); }, 30);
+  });
+  document.getElementById('backMenuBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    running = false;
+    showScreen(menuScreen);
+  });
+})();
+<<<__SCRIPT_END__>>>
+
+<script>
+  // Helper global pra atualizar progresso após voltar de jogo
+  window.refreshHubStats = function() {
+    // Dash
+    let totalDone = 0, totalCoins = 0;
+    for (let i = 0; i < 11; i++) {
+      if (localStorage.getItem('cubo-dash-done-' + i) === '1') totalDone++;
+      totalCoins += +(localStorage.getItem('cubo-dash-coins-' + i) || 0);
+    }
+    const td = document.getElementById('totalTrophies');
+    const ts = document.getElementById('totalStars');
+    if (td) td.textContent = totalDone + '/11';
+    if (ts) ts.textContent = totalCoins + '/55';
+    const dashProg = document.querySelector('.card[data-game="dash"] .progress');
+    if (dashProg) {
+      const bar = dashProg.querySelector('div');
+      const pct = Math.round((totalDone * 100) / 11);
+      if (pct > 0 || totalCoins > 0) {
+        dashProg.classList.add('show');
+        bar.style.width = Math.max(5, pct) + '%';
+      }
+    }
+    // Outros jogos
+    const games = [
+      ['conta', 'blg-conta-stars-', 3, 9],
+      ['memory', 'blg-memory-stars-', 4, 12],
+      ['snake', 'blg-snake-stars-', 3, 9],
+      ['letroca', 'blg-letroca-stars-', 3, 9],
+      ['skyhop', 'blg-skyhop-stars-', 3, 9],
+      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
+      ['balloons', 'blg-balloons-stars-', 6, 18],
+      ['animals', 'blg-animal-stars-', 3, 9],
+      ['mole', 'blg-mole-stars-', 4, 12],
+      ['g2048', 'blg-2048-stars-', 3, 9],
+      ['tetris', 'blg-tetris-stars-', 3, 9],
+      ['breakout', 'blg-breakout-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
+    ];
+    for (const [game, prefix, levels, max] of games) {
+      let stars = 0;
+      for (let i = 0; i < levels; i++) stars += +(localStorage.getItem(prefix + i) || 0);
+      const prog = document.querySelector('.card[data-game="' + game + '"] .progress');
+      if (prog) {
+        const bar = prog.querySelector('div');
+        if (stars > 0) {
+          prog.classList.add('show');
+          bar.style.width = Math.max(5, (stars / max) * 100) + '%';
+        }
+      }
+    }
+    // Piano: 1 valor único
+    const pianoS = +(localStorage.getItem('blg-piano-stars') || 0);
+    const pianoP = document.querySelector('.card[data-game="piano"] .progress');
+    if (pianoP) {
+      const bar = pianoP.querySelector('div');
+      if (pianoS > 0) {
+        pianoP.classList.add('show');
+        bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
+      }
+    }
+  };
+</script>
+</body>
+</html>
+
+</script>
+<script type="text/html" id="game-sudoku">
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0c1426">
+<title>Sudoku</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; -webkit-tap-highlight-color:transparent; }
+  html, body { width:100%; min-height:100%; background:#0c1426; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; color:#fff; overscroll-behavior:none; touch-action:none; }
+  body { display:flex; justify-content:center; min-height:100vh; min-height:100dvh; }
+  #stage { width:100%; max-width:min(100vw, calc(100vh * 9 / 16)); min-height:100vh; min-height:100dvh; position:relative; display:flex; flex-direction:column; padding:env(safe-area-inset-top,12px) 14px env(safe-area-inset-bottom,12px); background:linear-gradient(180deg,#0c1426,#1e293b); }
+
+  header { display:flex; align-items:center; justify-content:space-between; padding:6px 0 4px; }
+  .iconBtn { width:42px; height:42px; border:none; background:rgba(255,255,255,.1); color:#fff; border-radius:50%; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .15s; }
+  .iconBtn:active { transform:scale(.9); }
+  .hud { display:flex; align-items:center; gap:10px; background:rgba(0,0,0,.4); padding:6px 12px; border-radius:99px; font-size:12px; font-weight:700; }
+  .hud .num { color:#60a5fa; font-weight:900; }
+
+  .screen { flex:1; display:flex; flex-direction:column; align-items:center; }
+  .screen.hidden { display:none; }
+
+  #menuScreen { padding-top:6px; justify-content:flex-start; }
+  #menuScreen h1 { font-size:clamp(28px, 8vw, 38px); font-weight:900; margin-bottom:4px; background:linear-gradient(90deg,#60a5fa,#3b82f6); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  #menuScreen .sub { opacity:.7; font-size:13px; margin-bottom:16px; text-align:center; padding:0 10px; }
+  .sizeGroup { width:100%; max-width:380px; margin-bottom:12px; }
+  .sizeGroup .gTitle { font-size:13px; font-weight:700; opacity:.8; margin-bottom:6px; padding-left:4px; display:flex; align-items:center; gap:6px; }
+  .sizeGroup .gTitle .ico { font-size:18px; }
+  .diffGrid { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; }
+  .diffCard { background:rgba(255,255,255,.06); border:2px solid rgba(96,165,250,.3); border-radius:12px; padding:10px 8px; text-align:center; cursor:pointer; transition:transform .12s; }
+  .diffCard:active { transform:scale(.95); }
+  .diffCard.done { background:rgba(34,197,94,.12); border-color:rgba(34,197,94,.5); }
+  .diffCard .dName { font-size:13px; font-weight:800; margin-bottom:3px; }
+  .diffCard .dStars { font-size:13px; letter-spacing:1px; }
+  .diffCard .dStars .s { opacity:.25; }
+  .diffCard .dStars .s.lit { opacity:1; color:#fbbf24; }
+
+  #gameScreen { padding-top:4px; gap:8px; }
+  .gameTop { display:flex; gap:8px; width:100%; max-width:380px; align-items:center; font-size:11px; }
+  .gameTop .stat { flex:1; background:rgba(0,0,0,.4); border-radius:8px; padding:6px; text-align:center; }
+  .gameTop .stat .lbl { opacity:.6; font-size:9px; text-transform:uppercase; }
+  .gameTop .stat .val { font-size:14px; font-weight:900; color:#60a5fa; }
+  .gameTop .stat .val.warn { color:#fb923c; }
+
+  #gridWrap { display:flex; align-items:center; justify-content:center; flex:1; min-height:200px; max-height:55vh; padding:4px; }
+  #gridCanvas { display:block; background:#fff; border-radius:6px; max-width:100%; max-height:100%; }
+
+  .actions { display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; width:100%; max-width:380px; }
+  .actBtn { background:rgba(255,255,255,.08); border:2px solid rgba(255,255,255,.18); color:#fff; padding:8px 4px; border-radius:10px; font-size:11px; font-weight:700; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .actBtn:active { transform:scale(.93); }
+  .actBtn .ico { font-size:18px; }
+  .actBtn.active { background:rgba(96,165,250,.3); border-color:#60a5fa; }
+
+  .numPad { display:grid; gap:6px; width:100%; max-width:380px; }
+  .numPad.size4 { grid-template-columns:repeat(4, 1fr); }
+  .numPad.size6 { grid-template-columns:repeat(6, 1fr); }
+  .numPad.size9 { grid-template-columns:repeat(9, 1fr); }
+  .numBtn { background:rgba(96,165,250,.2); border:2px solid rgba(96,165,250,.4); color:#fff; aspect-ratio:1; border-radius:10px; font-size:22px; font-weight:900; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .numBtn:active { transform:scale(.92); background:rgba(96,165,250,.4); }
+
+  #endScreen { text-align:center; padding:20px; justify-content:center; }
+  #endScreen .bigEmoji { font-size:80px; line-height:1; margin-bottom:14px; animation:bounce .8s; }
+  @keyframes bounce { 0% { transform:scale(0); } 60% { transform:scale(1.2); } 100% { transform:scale(1); } }
+  #endScreen h2 { font-size:24px; margin-bottom:8px; }
+  #endScreen .stats { font-size:13px; margin:8px 0 12px; opacity:.85; line-height:1.6; }
+  #endScreen .stats b { color:#60a5fa; }
+  #endScreen .earnedStars { font-size:46px; margin:8px 0 18px; letter-spacing:6px; }
+  #endScreen .earnedStars .s { opacity:.25; display:inline-block; }
+  #endScreen .earnedStars .s.lit { opacity:1; filter:drop-shadow(0 0 12px #ffd700); }
+  #endScreen .btnRow { display:flex; gap:10px; max-width:340px; width:100%; }
+  #endScreen button { flex:1; padding:14px; font-size:14px; font-weight:800; border:none; border-radius:14px; cursor:pointer; color:#fff; }
+  #endScreen button:active { transform:scale(.96); }
+  .primaryBtn { background:linear-gradient(90deg,#60a5fa,#2563eb); }
+  .secondaryBtn { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2) !important; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <header>
+    <button class="iconBtn" id="backBtn" aria-label="Voltar">←</button>
+    <div class="hud"><span id="headerText">Sudoku</span></div>
+    <button class="iconBtn" id="muteBtn">🔊</button>
+  </header>
+
+  <div id="menuScreen" class="screen">
+    <h1>Sudoku</h1>
+    <div class="sub">Preencha o grid sem repetir números na linha, coluna ou bloco.</div>
+    <div class="sizeGroup">
+      <div class="gTitle"><span class="ico">🌱</span>4 × 4 (fácil pro Luca)</div>
+      <div class="diffGrid" id="diff4"></div>
+    </div>
+    <div class="sizeGroup">
+      <div class="gTitle"><span class="ico">⚡</span>6 × 6</div>
+      <div class="diffGrid" id="diff6"></div>
+    </div>
+    <div class="sizeGroup">
+      <div class="gTitle"><span class="ico">🔥</span>9 × 9 (Sudoku clássico)</div>
+      <div class="diffGrid" id="diff9"></div>
+    </div>
+  </div>
+
+  <div id="gameScreen" class="screen hidden">
+    <div class="gameTop">
+      <div class="stat"><div class="lbl">Dicas</div><div class="val" id="hintsVal">0</div></div>
+      <div class="stat"><div class="lbl">Erros</div><div class="val" id="errorsVal">0</div></div>
+      <div class="stat"><div class="lbl">Tempo</div><div class="val" id="timerVal">0:00</div></div>
+    </div>
+    <div id="gridWrap"><canvas id="gridCanvas"></canvas></div>
+    <div class="actions">
+      <button class="actBtn" id="undoBtn"><span class="ico">↶</span>Desfazer</button>
+      <button class="actBtn" id="eraseBtn"><span class="ico">⌫</span>Apagar</button>
+      <button class="actBtn" id="candBtn"><span class="ico">✏️</span>Anotar</button>
+      <button class="actBtn" id="hintBtn"><span class="ico">💡</span>Dica</button>
+    </div>
+    <div class="numPad" id="numPad"></div>
+  </div>
+
+  <div id="endScreen" class="screen hidden">
+    <div class="bigEmoji" id="endEmoji">🏆</div>
+    <h2 id="endTitle">Completou!</h2>
+    <div class="stats">
+      Tempo: <b id="finalTime">0:00</b><br>
+      Dicas usadas: <b id="finalHints">0</b>
+    </div>
+    <div class="earnedStars" id="earnedStars"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
+    <div class="btnRow">
+      <button class="secondaryBtn" id="backMenuBtn">Menu</button>
+      <button class="primaryBtn" id="newPuzzleBtn">Outro puzzle</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"puzzle":".4.12.3...4.4213","solution":"3421213413424213"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"puzzle":".4.1..42.2.44.23","solution":"2431134232144123"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"puzzle":"3421..342..34...","solution":"3421123421434312"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"puzzle":".13443.232...4..","solution":"2134431232411423"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"puzzle":"2...134..21.412.","solution":"2431134232144123"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"puzzle":".2..4.1221.3..21","solution":"1234431221433421"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"puzzle":".32.2..3..32321.","solution":"4321214314323214"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"puzzle":"12.3..212.3..41.","solution":"1243432121343412"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Médio","clues":7,"puzzle":"2....3...2.43.12","solution":"2143432112343412"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Médio","clues":7,"puzzle":".3....32.24.4..3","solution":"2314143232414123"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Médio","clues":7,"puzzle":"..14.4...2.14.2.","solution":"2314143232414123"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Médio","clues":7,"puzzle":"...32..141..3..4","solution":"1423234141323214"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Médio","clues":7,"puzzle":"12..4.12......34","solution":"1243431234212134"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Médio","clues":7,"puzzle":".3...143.41....4","solution":"4321214334121234"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Médio","clues":7,"puzzle":"3....134.24...1.","solution":"3421213412434312"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Médio","clues":7,"puzzle":"..121.....3434..","solution":"4312124321343421"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Difícil","clues":5,"puzzle":".3....2.3..14...","solution":"2314142332414132"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Difícil","clues":5,"puzzle":"...1.12.4......3","solution":"2431312443121243"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Difícil","clues":5,"puzzle":"4....1....1..3.2","solution":"4231312424131342"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Difícil","clues":5,"puzzle":"2..4.....3..4.1.","solution":"2134342113424213"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Difícil","clues":5,"puzzle":".13..21...2.....","solution":"4132321414232341"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Difícil","clues":5,"puzzle":".....41..34...2.","solution":"1234341223414123"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Difícil","clues":5,"puzzle":".....43.2.4....3","solution":"3214143223414123"},{"size":4,"boxH":2,"boxW":2,"difficulty":"Difícil","clues":5,"puzzle":".42......3.1..3.","solution":"1423321423414132"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Fácil","clues":22,"puzzle":"5.32.621..544526..36.5..125..3.341..","solution":"543216216354452631361542125463634125"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Fácil","clues":22,"puzzle":"1...3.3.645.5.214..312..613.242.4.16","solution":"145632326451562143431265613524254316"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Fácil","clues":22,"puzzle":"...45654.213.5362...2531.2...56.534.","solution":"231456546213153624462531324165615342"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Fácil","clues":22,"puzzle":"6.154..5..3.3.5214..2365126.53...62.","solution":"631542254136365214412365126453543621"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Fácil","clues":22,"puzzle":"25164.4.625162......3.623...2.5.2436","solution":"251643436251625314143562364125512436"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Fácil","clues":22,"puzzle":"5.4.23623.1.25..363.62.1435..2..2.4.","solution":"514623623514251436346251435162162345"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Fácil","clues":22,"puzzle":"..2.56..53.46..4...41635324561..624.","solution":"432156165324653412241635324561516243"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Fácil","clues":22,"puzzle":"4.2...6532.132.415....2.1.4.52265.34","solution":"412563653241326415541326134652265134"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Médio","clues":18,"puzzle":"4....5...24.5.41.2......241563..5421","solution":"426315153246564132312654241563635421"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Médio","clues":18,"puzzle":"....523.561...2...514.3.2...6115.42.","solution":"461352325614632145514236243561156423"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Médio","clues":18,"puzzle":".35..2..46.3......2..54...623434.165","solution":"635412124653451326263541516234342165"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Médio","clues":18,"puzzle":"54..3..1...43.416.....45.654.3.3..56","solution":"542631613524354162126345265413431256"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Médio","clues":18,"puzzle":"....1....54616.2..23.165.1..53.4..21","solution":"456312321546165234234165612453543621"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Médio","clues":18,"puzzle":".3....5624..45.1..213.45.21.....52.1","solution":"134526562413456132213645621354345261"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Médio","clues":18,"puzzle":".61.4.43.12.1.635.5.3.6...4.1...24..","solution":"261543435126126354543261354612612435"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Médio","clues":18,"puzzle":"61534.3....5.64..31...642..45....2.6","solution":"615342342615564123123564236451451236"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Difícil","clues":14,"puzzle":".5.31...1.....5134....56.14...3...4.","solution":"456312231465625134143256514623362541"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Difícil","clues":14,"puzzle":"6....31.2..6.63.5.2........42..2..31","solution":"645213132546463152251364316425524631"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Difícil","clues":14,"puzzle":"2..61.61..4..24...1..5....2...4...63","solution":"243615615342524136136524362451451263"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Difícil","clues":14,"puzzle":"2.6..54..23.1....3.......6...1.1456.","solution":"236415451236145623623154562341314562"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Difícil","clues":14,"puzzle":".561.....45....3....1.45.2.6.46....3","solution":"456132132456245361361245523614614523"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Difícil","clues":14,"puzzle":"6.2.1..413.6..4...12..5.4..2......4.","solution":"632514541326354162126453465231213645"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Difícil","clues":14,"puzzle":"....3..3.5.4.432..5..1.3.2....3.14..","solution":"415632236514143265562143624351351426"},{"size":6,"boxH":2,"boxW":3,"difficulty":"Difícil","clues":14,"puzzle":"...3....3.65...54.....36.624..43..5.","solution":"615324243165326541154236562413431652"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Fácil","clues":40,"puzzle":"6.5.3.8...9.5427..4178.6.....197..8...64.8.9....1.53.21..689527..92....88....491.","solution":"625731849398542761417896253251973684736428195984165372143689527569217438872354916"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Fácil","clues":40,"puzzle":".8..6..47.4..8.31......1586.6.5...3.87.23..69...61.7..918.236.4..61.9.7...3846..1","solution":"581362947647985312239471586162597438875234169394618725918723654426159873753846291"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Fácil","clues":40,"puzzle":".....86.36.9...84..52..6.9.79.5.1.8..16..27393...675149..8.4.7..83...4...7..13.28","solution":"147298653639175842852346197794531286516482739328967514961824375283759461475613928"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Fácil","clues":40,"puzzle":".....2.....931....31.586.....3.9..2.9267435..4.7.28.3.7.58...6484..69..5.32.5.918","solution":"568972143279314856314586792183695427926743581457128639795831264841269375632457918"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Fácil","clues":40,"puzzle":"..4.....2625.19.7.39..6251..31...7...57321.8..8.957.21....9....5.9274...1....3945","solution":"714538692625419873398762514231846759957321486486957321843195267569274138172683945"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Fácil","clues":40,"puzzle":"3.89.14259.1.3.67.2..568....2.65......581...9.16..27.......63.7..2.895.669....182","solution":"368971425951234678247568931729653814435817269816492753584126397172389546693745182"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Médio","clues":32,"puzzle":"5.73..62..3..75.....416.75.4.2.5.......9.38.68.....2..3..6..51..5..8..37....3.9..","solution":"517398624236475189984162753492856371175923846863714295329647518651289437748531962"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Médio","clues":32,"puzzle":".6....5..7...5.46..9...7....4..15..6.52.83.4..3..6.7..3..296......5.1..812....359","solution":"263148597718359462594627813847915236652783941931462785385296174479531628126874359"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Médio","clues":32,"puzzle":"1749..8.6.5......2..8.73.51.4...1...73.......62...451.96.2....5....369...12.....3","solution":"174952836356418792298673451845721369731569248629384517963247185587136924412895673"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Médio","clues":32,"puzzle":"..91....7.4379...22...459...5...14.367.5.21.....4.952..9..53..........3..3....68.","solution":"569128347143796852287345961952681473674532198318479526796853214821964735435217689"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Médio","clues":32,"puzzle":".8..1..369..43...8...8.....4.3....75.783.....6.29...4.....43.12.4....3.9..1.96.87","solution":"784512936926437158135869724493681275578324691612975843869743512247158369351296487"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Médio","clues":32,"puzzle":".19.....828.....936..9..2.1........9..75.314...6.1.72..98....6.1.24...8.76.2...1.","solution":"319652478285147693674938251541726839827593146936814725498371562152469387763285914"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Difícil","clues":26,"puzzle":"9.5....41...8...3...3........7..83.........1.6...732....82...9.7.2...4..4..9867..","solution":"985732641276814539143569872527198364834625917619473258368247195792351486451986723"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Difícil","clues":26,"puzzle":".1....9.3..3.7.28.6.4.....5..7.5......53...4....61....3.69...1..42......5.....4.7","solution":"718524963953176284624893175187452396265389741439617528376945812842731659591268437"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Difícil","clues":26,"puzzle":".......98....59....2....1.51...7.2....26..7..79...138....496.21.8..........2.8...","solution":"517362498843159672629847135138974256452683719796521384375496821284715963961238547"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Difícil","clues":26,"puzzle":"...83...4.7..5......1..47...6..8..5.25...........21....12.9..43..8...6.....64..29","solution":"926837514374152968581964732163489257259376481847521396612795843498213675735648129"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Difícil","clues":26,"puzzle":"24.6.....7.9...42.638..2.1.32.......1..3.5..7...71....4.....75...1.....9.....8...","solution":"245691378719853426638472915327986541194325687856714293483169752561247839972538164"},{"size":9,"boxH":3,"boxW":3,"difficulty":"Difícil","clues":27,"puzzle":"...........5..846..6.9.....1...2....4...13..7..38..14.3..26.5.9.1........2..976.3","solution":"734156298295738461861942375179524836482613957653879142347261589916385724528497613"}];
+(() => {
+  // AUDIO
+  let audioCtx = null;
+  let muted = localStorage.getItem('blg-mute') === '1';
+  function ensureAudio() { if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {} } if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume(); }
+  function beep(freq, dur=0.08, type='sine', vol=0.05, when=0) {
+    if (!audioCtx || muted) return;
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    const t = audioCtx.currentTime + when;
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g).connect(audioCtx.destination);
+    o.start(t); o.stop(t + dur);
+  }
+  function sndPlace() { beep(660, 0.05, 'triangle', 0.04); }
+  function sndError() { beep(220, 0.15, 'sawtooth', 0.06); }
+  function sndHint()  { beep(880, 0.06, 'triangle', 0.05); setTimeout(() => beep(1175, 0.08, 'triangle', 0.04), 30); }
+  function sndUndo()  { beep(440, 0.05, 'triangle', 0.04); }
+  function sndTap()   { beep(660, 0.04, 'triangle', 0.05); }
+  function sndWin()   { [523, 659, 784, 880, 1047, 1318, 1568].forEach((f, i) => beep(f, 0.15, 'triangle', 0.06, i*0.08)); }
+
+  const muteBtn = document.getElementById('muteBtn');
+  function refreshMute() { muteBtn.textContent = muted ? '🔇' : '🔊'; }
+  refreshMute();
+  muteBtn.addEventListener('click', () => {
+    ensureAudio();
+    muted = !muted;
+    localStorage.setItem('blg-mute', muted ? '1' : '0');
+    refreshMute();
+    if (!muted) sndTap();
+  });
+
+  // STATS
+  function statsKey(size, diff) { return 'blg-sudoku-' + size + '-' + diff; }
+  function getStars(size, diff) { return +(localStorage.getItem(statsKey(size, diff) + '-stars') || 0); }
+  function saveStars(size, diff, n) { if (n > getStars(size, diff)) localStorage.setItem(statsKey(size, diff) + '-stars', n); }
+  function getBest(size, diff) { return +(localStorage.getItem(statsKey(size, diff) + '-best') || 0); }
+  function saveBest(size, diff, t) {
+    const b = getBest(size, diff);
+    if (b === 0 || t < b) localStorage.setItem(statsKey(size, diff) + '-best', t);
+  }
+
+  const DIFFS = ['Fácil', 'Médio', 'Difícil'];
+
+  function refreshMenu() {
+    for (const size of [4, 6, 9]) {
+      const ct = document.getElementById('diff' + size);
+      ct.innerHTML = '';
+      for (const diff of DIFFS) {
+        const stars = getStars(size, diff);
+        const card = document.createElement('div');
+        card.className = 'diffCard' + (stars > 0 ? ' done' : '');
+        card.innerHTML =
+          '<div class="dName">' + diff + '</div>' +
+          '<div class="dStars">' + [0,1,2].map(i => '<span class="s' + (i < stars ? ' lit' : '') + '">★</span>').join('') + '</div>';
+        card.addEventListener('click', () => {
+          ensureAudio(); sndTap();
+          startPuzzle(size, diff);
+        });
+        ct.appendChild(card);
+      }
+    }
+  }
+  refreshMenu();
+
+  // STATE
+  let currentSize = 4, currentDiff = 'Fácil', currentPuzzle = null;
+  let n = 4, boxH = 2, boxW = 2;
+  let grid = [], candidates = [], given = [];
+  let solution = [];
+  let selected = -1;
+  let hintsUsed = 0, errors = 0;
+  let history = [];
+  let mode = 'number'; // 'number' or 'candidate'
+  let startTime = 0, timerInterval = null, elapsed = 0;
+
+  const menuScreen = document.getElementById('menuScreen');
+  const gameScreen = document.getElementById('gameScreen');
+  const endScreen = document.getElementById('endScreen');
+  function showScreen(s) {
+    [menuScreen, gameScreen, endScreen].forEach(el => el.classList.add('hidden'));
+    s.classList.remove('hidden');
+    if (s === menuScreen) refreshMenu();
+  }
+
+  function startPuzzle(size, diff) {
+    // sortear puzzle
+    const pool = PUZZLES.filter(p => p.size === size && p.difficulty === diff);
+    if (pool.length === 0) return;
+    currentPuzzle = pool[Math.floor(Math.random() * pool.length)];
+    currentSize = size; currentDiff = diff;
+    n = size; boxH = currentPuzzle.boxH; boxW = currentPuzzle.boxW;
+    grid = []; given = []; candidates = [];
+    for (let i = 0; i < n * n; i++) {
+      const c = currentPuzzle.puzzle[i];
+      const v = c === '.' ? 0 : parseInt(c, 10);
+      grid.push(v);
+      given.push(v !== 0);
+      candidates.push(new Set());
+    }
+    solution = currentPuzzle.solution.split('').map(c => parseInt(c, 10));
+    selected = -1; hintsUsed = 0; errors = 0;
+    history = []; mode = 'number';
+    document.getElementById('candBtn').classList.remove('active');
+    document.getElementById('hintsVal').textContent = '0';
+    document.getElementById('hintsVal').className = 'val';
+    document.getElementById('errorsVal').textContent = '0';
+    document.getElementById('errorsVal').className = 'val';
+    document.getElementById('headerText').textContent = size + '×' + size + ' ' + diff;
+    // numpad
+    const pad = document.getElementById('numPad');
+    pad.className = 'numPad size' + size;
+    pad.innerHTML = '';
+    for (let v = 1; v <= size; v++) {
+      const b = document.createElement('button');
+      b.className = 'numBtn';
+      b.textContent = v;
+      b.addEventListener('click', () => { ensureAudio(); pressNumber(v); });
+      pad.appendChild(b);
+    }
+    showScreen(gameScreen);
+    startTime = Date.now(); elapsed = 0;
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(updateTimer, 1000);
+    updateTimer();
+    setTimeout(() => { resize(); render(); }, 30);
+  }
+
+  function updateTimer() {
+    elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const m = Math.floor(elapsed / 60);
+    const s = elapsed % 60;
+    document.getElementById('timerVal').textContent = m + ':' + s.toString().padStart(2, '0');
+  }
+
+  // CANVAS
+  const canvas = document.getElementById('gridCanvas');
+  const ctx = canvas.getContext('2d');
+  let CELL = 0, GW = 0;
+  function resize() {
+    const wrap = document.getElementById('gridWrap');
+    const r = wrap.getBoundingClientRect();
+    const maxW = r.width - 8;
+    const maxH = r.height - 8;
+    CELL = Math.floor(Math.min(maxW, maxH) / n);
+    GW = CELL * n;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = GW * dpr; canvas.height = GW * dpr;
+    canvas.style.width = GW + 'px'; canvas.style.height = GW + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function getCellInfo(idx) {
+    const r = Math.floor(idx / n);
+    const c = idx % n;
+    return { r, c, x: c * CELL, y: r * CELL };
+  }
+
+  function getPeers(idx) {
+    // retorna conjunto de indices peers (row, col, box, exceto self)
+    const peers = new Set();
+    const r = Math.floor(idx / n), c = idx % n;
+    for (let cc = 0; cc < n; cc++) if (cc !== c) peers.add(r * n + cc);
+    for (let rr = 0; rr < n; rr++) if (rr !== r) peers.add(rr * n + c);
+    const br = Math.floor(r / boxH) * boxH;
+    const bc = Math.floor(c / boxW) * boxW;
+    for (let rr = br; rr < br + boxH; rr++) {
+      for (let cc = bc; cc < bc + boxW; cc++) {
+        if (rr !== r || cc !== c) peers.add(rr * n + cc);
+      }
+    }
+    return peers;
+  }
+
+  function isConflict(idx, val) {
+    if (val === 0) return false;
+    const peers = getPeers(idx);
+    for (const p of peers) {
+      if (grid[p] === val) return true;
+    }
+    return false;
+  }
+
+  function render() {
+    if (!CELL) return;
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, GW, GW);
+
+    // highlight selected + peers
+    if (selected >= 0) {
+      const info = getCellInfo(selected);
+      const peers = getPeers(selected);
+      // peers in light blue
+      for (const p of peers) {
+        const pi = getCellInfo(p);
+        ctx.fillStyle = '#dbeafe';
+        ctx.fillRect(pi.x, pi.y, CELL, CELL);
+      }
+      // same-value cells highlight
+      const selV = grid[selected];
+      if (selV > 0) {
+        for (let i = 0; i < n * n; i++) {
+          if (i !== selected && grid[i] === selV) {
+            const ii = getCellInfo(i);
+            ctx.fillStyle = '#bfdbfe';
+            ctx.fillRect(ii.x, ii.y, CELL, CELL);
+          }
+        }
+      }
+      // selected cell
+      ctx.fillStyle = '#93c5fd';
+      ctx.fillRect(info.x, info.y, CELL, CELL);
+    }
+
+    // numbers
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for (let i = 0; i < n * n; i++) {
+      const info = getCellInfo(i);
+      const cx = info.x + CELL / 2;
+      const cy = info.y + CELL / 2;
+      const v = grid[i];
+      if (v > 0) {
+        const conflicted = isConflict(i, v);
+        if (given[i]) ctx.fillStyle = '#0c1426';
+        else if (conflicted) ctx.fillStyle = '#dc2626';
+        else ctx.fillStyle = '#2563eb';
+        ctx.font = '900 ' + Math.floor(CELL * 0.55) + 'px -apple-system, sans-serif';
+        ctx.fillText(v, cx, cy);
+      } else if (candidates[i].size > 0) {
+        // candidates em sub-grid
+        ctx.fillStyle = '#94a3b8';
+        const subW = boxW, subH = boxH;
+        const sw = CELL / Math.max(subW, subH);
+        ctx.font = '700 ' + Math.floor(CELL * 0.2) + 'px monospace';
+        for (let v2 = 1; v2 <= n; v2++) {
+          if (!candidates[i].has(v2)) continue;
+          const ci = (v2 - 1) % subW;
+          const ri = Math.floor((v2 - 1) / subW);
+          const px = info.x + (ci + 0.5) * (CELL / subW);
+          const py = info.y + (ri + 0.5) * (CELL / Math.ceil(n / subW));
+          ctx.fillText(v2, px, py);
+        }
+      }
+    }
+
+    // grid lines
+    ctx.strokeStyle = '#cbd5e1';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= n; i++) {
+      ctx.beginPath();
+      ctx.moveTo(i * CELL, 0); ctx.lineTo(i * CELL, GW); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, i * CELL); ctx.lineTo(GW, i * CELL); ctx.stroke();
+    }
+    // box borders mais grossas
+    ctx.strokeStyle = '#0c1426';
+    ctx.lineWidth = 2.5;
+    for (let i = 0; i <= n; i += boxW) {
+      ctx.beginPath();
+      ctx.moveTo(i * CELL, 0); ctx.lineTo(i * CELL, GW); ctx.stroke();
+    }
+    for (let i = 0; i <= n; i += boxH) {
+      ctx.beginPath();
+      ctx.moveTo(0, i * CELL); ctx.lineTo(GW, i * CELL); ctx.stroke();
+    }
+    // border externa
+    ctx.lineWidth = 3;
+    ctx.strokeRect(0, 0, GW, GW);
+  }
+
+  canvas.addEventListener('click', (e) => {
+    ensureAudio();
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const c = Math.floor(x / CELL);
+    const r = Math.floor(y / CELL);
+    if (c < 0 || c >= n || r < 0 || r >= n) return;
+    selected = r * n + c;
+    render();
+  });
+
+  function pressNumber(v) {
+    if (selected < 0) return;
+    if (given[selected]) return;
+    if (mode === 'candidate') {
+      const cs = candidates[selected];
+      // salva history ANTES da mudança
+      history.push({ idx: selected, prevValue: grid[selected], prevCands: new Set(cs), prevGiven: given[selected], action: 'candidate' });
+      if (cs.has(v)) cs.delete(v); else cs.add(v);
+      sndPlace();
+    } else {
+      // salva history ANTES da mudança
+      history.push({ idx: selected, prevValue: grid[selected], prevCands: new Set(candidates[selected]), prevGiven: given[selected], action: 'number' });
+      grid[selected] = v;
+      candidates[selected] = new Set();
+      sndPlace();
+      if (v !== solution[selected]) {
+        errors++;
+        document.getElementById('errorsVal').textContent = errors;
+        document.getElementById('errorsVal').className = errors >= 5 ? 'val warn' : 'val';
+        sndError();
+      } else {
+        checkWin();
+      }
+    }
+    render();
+  }
+
+  function eraseCell() {
+    if (selected < 0 || given[selected]) return;
+    if (grid[selected] === 0 && candidates[selected].size === 0) return;
+    history.push({ idx: selected, prevValue: grid[selected], prevCands: new Set(candidates[selected]), prevGiven: given[selected], action: 'erase' });
+    grid[selected] = 0;
+    candidates[selected].clear();
+    sndUndo();
+    render();
+  }
+
+  function undo() {
+    if (history.length === 0) return;
+    const h = history.pop();
+    grid[h.idx] = h.prevValue;
+    candidates[h.idx] = new Set(h.prevCands);
+    if (h.prevGiven !== undefined) given[h.idx] = h.prevGiven;
+    selected = h.idx;
+    sndUndo();
+    render();
+  }
+
+  function giveHint() {
+    const candidatesIdx = [];
+    for (let i = 0; i < n * n; i++) {
+      if (!given[i] && grid[i] !== solution[i]) candidatesIdx.push(i);
+    }
+    if (candidatesIdx.length === 0) return;
+    const idx = candidatesIdx[Math.floor(Math.random() * candidatesIdx.length)];
+    history.push({ idx, prevValue: grid[idx], prevCands: new Set(candidates[idx]), prevGiven: given[idx], action: 'hint' });
+    grid[idx] = solution[idx];
+    candidates[idx].clear();
+    given[idx] = true;
+    hintsUsed++;
+    document.getElementById('hintsVal').textContent = hintsUsed;
+    document.getElementById('hintsVal').className = hintsUsed > 3 ? 'val warn' : 'val';
+    selected = idx;
+    sndHint();
+    render();
+    checkWin();
+  }
+
+  function checkWin() {
+    for (let i = 0; i < n * n; i++) {
+      if (grid[i] !== solution[i]) return;
+    }
+    // win!
+    if (timerInterval) clearInterval(timerInterval);
+    sndWin();
+    let stars = 1;
+    if (hintsUsed === 0) stars = 3;
+    else if (hintsUsed <= 3) stars = 2;
+    saveStars(currentSize, currentDiff, stars);
+    saveBest(currentSize, currentDiff, elapsed);
+    document.getElementById('finalTime').textContent = formatTime(elapsed);
+    document.getElementById('finalHints').textContent = hintsUsed;
+    const es = document.getElementById('earnedStars');
+    es.innerHTML = '';
+    for (let i = 0; i < 3; i++) {
+      const s = document.createElement('span');
+      s.className = 's' + (i < stars ? ' lit' : '');
+      s.textContent = '★';
+      es.appendChild(s);
+    }
+    let emoji, title;
+    if (stars === 3) { emoji = '🏆'; title = 'PERFEITO!'; }
+    else if (stars === 2) { emoji = '🎉'; title = 'Muito bem!'; }
+    else { emoji = '👍'; title = 'Completou!'; }
+    document.getElementById('endEmoji').textContent = emoji;
+    document.getElementById('endTitle').textContent = title;
+    setTimeout(() => showScreen(endScreen), 600);
+  }
+
+  function formatTime(s) {
+    const m = Math.floor(s / 60);
+    return m + ':' + (s % 60).toString().padStart(2, '0');
+  }
+
+  // BUTTONS
+  document.getElementById('candBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    mode = mode === 'candidate' ? 'number' : 'candidate';
+    document.getElementById('candBtn').classList.toggle('active', mode === 'candidate');
+  });
+  document.getElementById('undoBtn').addEventListener('click', () => { ensureAudio(); undo(); });
+  document.getElementById('eraseBtn').addEventListener('click', () => { ensureAudio(); eraseCell(); });
+  document.getElementById('hintBtn').addEventListener('click', () => { ensureAudio(); giveHint(); });
+
+  // KEYBOARD
+  window.addEventListener('keydown', (e) => {
+    if (gameScreen.classList.contains('hidden')) return;
+    if (e.key >= '1' && e.key <= '9') {
+      const v = parseInt(e.key, 10);
+      if (v <= n) pressNumber(v);
+    } else if (e.key === 'Backspace' || e.key === 'Delete' || e.key === '0') {
+      eraseCell();
+    } else if (e.key === 'z' || e.key === 'Z') {
+      undo();
+    } else if (selected >= 0) {
+      const r = Math.floor(selected / n), c = selected % n;
+      if (e.key === 'ArrowLeft' && c > 0) { selected--; render(); }
+      else if (e.key === 'ArrowRight' && c < n - 1) { selected++; render(); }
+      else if (e.key === 'ArrowUp' && r > 0) { selected -= n; render(); }
+      else if (e.key === 'ArrowDown' && r < n - 1) { selected += n; render(); }
+    }
+  });
+
+  window.addEventListener('resize', () => { if (!gameScreen.classList.contains('hidden')) { resize(); render(); } });
+
+  document.getElementById('backBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    if (timerInterval) clearInterval(timerInterval);
+    if (!menuScreen.classList.contains('hidden')) {
+      parent.postMessage('back-to-hub', '*');
+    } else {
+      showScreen(menuScreen);
+    }
+  });
+  document.getElementById('newPuzzleBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    startPuzzle(currentSize, currentDiff);
+  });
+  document.getElementById('backMenuBtn').addEventListener('click', () => {
+    ensureAudio(); sndTap();
+    if (timerInterval) clearInterval(timerInterval);
+    showScreen(menuScreen);
+  });
+})();
+<<<__SCRIPT_END__>>>
+
+<script>
+  // Helper global pra atualizar progresso após voltar de jogo
+  window.refreshHubStats = function() {
+    // Dash
+    let totalDone = 0, totalCoins = 0;
+    for (let i = 0; i < 11; i++) {
+      if (localStorage.getItem('cubo-dash-done-' + i) === '1') totalDone++;
+      totalCoins += +(localStorage.getItem('cubo-dash-coins-' + i) || 0);
+    }
+    const td = document.getElementById('totalTrophies');
+    const ts = document.getElementById('totalStars');
+    if (td) td.textContent = totalDone + '/11';
+    if (ts) ts.textContent = totalCoins + '/55';
+    const dashProg = document.querySelector('.card[data-game="dash"] .progress');
+    if (dashProg) {
+      const bar = dashProg.querySelector('div');
+      const pct = Math.round((totalDone * 100) / 11);
+      if (pct > 0 || totalCoins > 0) {
+        dashProg.classList.add('show');
+        bar.style.width = Math.max(5, pct) + '%';
+      }
+    }
+    // Outros jogos
+    const games = [
+      ['conta', 'blg-conta-stars-', 3, 9],
+      ['memory', 'blg-memory-stars-', 4, 12],
+      ['snake', 'blg-snake-stars-', 3, 9],
+      ['letroca', 'blg-letroca-stars-', 3, 9],
+      ['skyhop', 'blg-skyhop-stars-', 3, 9],
+      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
+      ['balloons', 'blg-balloons-stars-', 6, 18],
+      ['animals', 'blg-animal-stars-', 3, 9],
+      ['mole', 'blg-mole-stars-', 4, 12],
+      ['g2048', 'blg-2048-stars-', 3, 9],
+      ['tetris', 'blg-tetris-stars-', 3, 9],
+      ['breakout', 'blg-breakout-stars-', 3, 9],
+      ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
+    ];
+    for (const [game, prefix, levels, max] of games) {
+      let stars = 0;
+      for (let i = 0; i < levels; i++) stars += +(localStorage.getItem(prefix + i) || 0);
+      const prog = document.querySelector('.card[data-game="' + game + '"] .progress');
+      if (prog) {
+        const bar = prog.querySelector('div');
+        if (stars > 0) {
+          prog.classList.add('show');
+          bar.style.width = Math.max(5, (stars / max) * 100) + '%';
+        }
+      }
+    }
+    // Piano: 1 valor único
+    const pianoS = +(localStorage.getItem('blg-piano-stars') || 0);
+    const pianoP = document.querySelector('.card[data-game="piano"] .progress');
+    if (pianoP) {
+      const bar = pianoP.querySelector('div');
+      if (pianoS > 0) {
+        pianoP.classList.add('show');
+        bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
@@ -12070,7 +14590,7 @@
       btn.addEventListener('click', (ev) => {
         const g = btn.dataset.game;
         // map game name → template id
-        const map = { dash:'dash', conta:'conta', memory:'memory', snake:'snake', letroca:'letroca', skyhop:'skyhop', platformer:'mario', cruzadas:'cruzadas', balloons:'balloons', animals:'animals', paint:'paint', piano:'piano', mole:'mole', g2048:'2048', tetris:'tetris', breakout:'breakout', race:'race' };
+        const map = { dash:'dash', conta:'conta', memory:'memory', snake:'snake', letroca:'letroca', skyhop:'skyhop', platformer:'mario', cruzadas:'cruzadas', balloons:'balloons', animals:'animals', paint:'paint', piano:'piano', mole:'mole', g2048:'2048', tetris:'tetris', breakout:'breakout', race:'race', sokoban:'sokoban', invaders:'invaders', sudoku:'sudoku' };
         const tplId = map[g] || g;
         loadGame(tplId);
       });
@@ -12117,6 +14637,8 @@
       ['tetris', 'blg-tetris-stars-', 3, 9],
       ['breakout', 'blg-breakout-stars-', 3, 9],
       ['race', 'blg-race-stars-', 3, 9],
+      ['sokoban', 'blg-sokoban-stars-', 25, 75],
+      ['invaders', 'blg-invaders-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
       let stars = 0;
@@ -12138,6 +14660,19 @@
       if (pianoS > 0) {
         pianoP.classList.add('show');
         bar.style.width = Math.max(5, (pianoS / 3) * 100) + '%';
+      }
+    }
+    // Sudoku: 3 sizes × 3 diffs
+    let sudokuS = 0;
+    for (const sz of [4, 6, 9]) for (const df of ['Fácil', 'Médio', 'Difícil']) {
+      sudokuS += +(localStorage.getItem('blg-sudoku-' + sz + '-' + df + '-stars') || 0);
+    }
+    const sudokuP = document.querySelector('.card[data-game="sudoku"] .progress');
+    if (sudokuP) {
+      const bar = sudokuP.querySelector('div');
+      if (sudokuS > 0) {
+        sudokuP.classList.add('show');
+        bar.style.width = Math.max(5, (sudokuS / 27) * 100) + '%';
       }
     }
   };
