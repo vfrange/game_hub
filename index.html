@@ -9967,15 +9967,19 @@
 
   function flashKey(idx, manual=false) {
     const key = document.querySelectorAll('.key')[idx];
+    if (!key) return;
     if (manual) {
+      // Player tocou: highlight rápido
       key.classList.remove('active');
       void key.offsetWidth;
       key.classList.add('active');
       setTimeout(() => key.classList.remove('active'), 250);
     } else {
-      key.classList.remove('flash');
+      // Sequência tocando: cor sólida e mais duradoura
+      key.classList.remove('active', 'flash');
       void key.offsetWidth;
-      key.classList.add('flash');
+      key.classList.add('active');
+      setTimeout(() => key.classList.remove('active'), 450);
     }
   }
 
@@ -10020,17 +10024,18 @@
     acceptingInput = false;
     waitingPlayer = false;
     // Toca a sequência
+    const interval = 650;
     sequence.forEach((noteIdx, i) => {
       setTimeout(() => {
         note(NOTES[noteIdx].freq, 0.4, 0.08);
         flashKey(noteIdx, false);
-      }, 400 + i * 550);
+      }, 500 + i * interval);
     });
     setTimeout(() => {
       waitingPlayer = true;
       acceptingInput = true;
       setStatus(`<span class="label">Sua vez! Nível</span> <span class="num">${sequenceLevel}</span>`);
-    }, 400 + sequence.length * 550 + 100);
+    }, 500 + sequence.length * interval + 100);
   }
 
   function endSequence(reached) {
