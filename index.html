@@ -374,8 +374,8 @@
   }
 
   // Progresso do Mini Mario (5 fases × 3 estrelas = 15 max)
-  let marioStars = 0, marioMax = 15;
-  for (let i = 0; i < 5; i++) marioStars += +(localStorage.getItem('blg-mario-stars-' + i) || 0);
+  let marioStars = 0, marioMax = 9;
+  for (let i = 0; i < 3; i++) marioStars += +(localStorage.getItem('blg-mario-stars-' + i) || 0);
   const marioProg = document.querySelector('.card[data-game="platformer"] .progress');
   if (marioProg) {
     const bar = marioProg.querySelector('div');
@@ -532,15 +532,15 @@
     }
   }
 
-  // Progresso Pac-Man (5 níveis × 3 = 15)
+  // Progresso Pac-Man (3 níveis × 3 = 9)
   let pacmanStars = 0;
-  for (let i = 0; i < 5; i++) pacmanStars += +(localStorage.getItem('blg-pacman-stars-' + i) || 0);
+  for (let i = 0; i < 3; i++) pacmanStars += +(localStorage.getItem('blg-pacman-stars-' + i) || 0);
   const pacmanProg = document.querySelector('.card[data-game="pacman"] .progress');
   if (pacmanProg) {
     const bar = pacmanProg.querySelector('div');
     if (pacmanStars > 0) {
       pacmanProg.classList.add('show');
-      bar.style.width = Math.max(5, (pacmanStars / 15) * 100) + '%';
+      bar.style.width = Math.max(5, (pacmanStars / 9) * 100) + '%';
     }
   }
 
@@ -3580,7 +3580,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -3591,7 +3591,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -4110,7 +4110,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -4121,7 +4121,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -4576,7 +4576,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -4587,7 +4587,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -5119,7 +5119,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -5130,7 +5130,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -5832,7 +5832,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -5843,7 +5843,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -6442,7 +6442,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -6453,7 +6453,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -6661,93 +6661,60 @@
 
   // =========== FASES ===========
   // Tile map: '.' vazio, '#' chão, '=' plataforma, '?' moeda, 'E' inimigo, 'F' bandeira, 'P' start
-  const STAGES = [
+const STAGES = [
     {
-      name: 'Tutorial',
+      name: "Aventura",
       map: [
-        '..............................',
-        '..............................',
-        '..............................',
-        '..............................',
-        '..............................',
-        '..............................',
-        '...........?......?......?....',
-        '..............................',
-        '..............................',
-        '....P...................E....F',
-        '##############################',
-        '##############################',
+        "............................................................",
+        "............................................................",
+        "............................................................",
+        "............................................................",
+        "............................................................",
+        "............................................................",
+        "..................................??..........=======.......",
+        ".....?....?......?....?.....?....====....?..............?...",
+        "................===....................................===..",
+        "..P.....E................E..................E.............F.",
+        "###############....#############......#################...##",
+        "###############....#############......#################...##",
       ],
     },
     {
-      name: 'Buracos',
+      name: "Cavernas",
       map: [
-        '..............................',
-        '..............................',
-        '..............................',
-        '..............................',
-        '..............................',
-        '..............................',
-        '..?...........?..........?....',
-        '..............................',
-        '..............................',
-        '....P.....E...........E......F',
-        '######....######...####....###',
-        '######....######...####....###',
+        "..........................................................................................",
+        "..........................................................................................",
+        "..........................................................................................",
+        "..........................................................................................",
+        "..................................................................................====....",
+        "..............??........................??........=====...................???.............",
+        "......................====...??...........................??.............=====............",
+        "....?...?..............??...====...?...............???...====......?..?............??...?.",
+        ".............====......................====...............................................",
+        "..P....E............E.............E............E....E............E..E.............E.....F.",
+        "#############....###########....#######....##############....############.....############",
+        "#############....###########....#######....##############....############.....############",
       ],
     },
     {
-      name: 'Plataformas',
+      name: "Castelo",
       map: [
-        '..............................',
-        '..............................',
-        '..............................',
-        '......?......?......?......?.',
-        '....====...====...====...====',
-        '..............................',
-        '..............................',
-        '..............................',
-        '........E........E........E...',
-        '....P........................F',
-        '##############################',
-        '##############################',
-      ],
-    },
-    {
-      name: 'Inimigos',
-      map: [
-        '..............................',
-        '..............................',
-        '..?.?.?.?.....?....?......?...',
-        '..............................',
-        '..====........====............',
-        '..............................',
-        '..............E.....E.........',
-        '..............................',
-        '....P..E.E..........E....E...F',
-        '##############################',
-        '##############################',
-        '##############################',
-      ],
-    },
-    {
-      name: 'Boss',
-      map: [
-        '..............................',
-        '..............................',
-        '..............................',
-        '......?....?....?....?....?...',
-        '......=====================...',
-        '..............................',
-        '..............................',
-        '......===......===......===...',
-        '..............................',
-        '....P.E....E....E....E....E..F',
-        '##############################',
-        '##############################',
+        "........................................................................................................................",
+        "........................................................................................................................",
+        "........................................................................................................................",
+        "......................?...........................===.........?......................===................................",
+        "....................===...........................?...........====....................................?.................",
+        "..........................?......................====.....................................?..........====...............",
+        ".......................====...................................................?.........====............................",
+        "..?...?...?===?...?...........?...?...?...?...?.......?...?.......?...?...?====...?...?.......?...?.......?...?...?...?.",
+        "....................................====..........................................................................==....",
+        "..P..E...........E............E..............E.........E..E..........E..E.........E...........E..E..........E..E......F.",
+        "###########...#########....#########....#########....#########....#########....#########....#########....#########..####",
+        "###########...#########....#########....#########....#########....#########....#########....#########....#########..####",
       ],
     },
   ];
+
   const TILE = 32;       // pixels por tile
   const GRAVITY = 0.55;
   const JUMP_V = -11.5;
@@ -7259,6 +7226,40 @@
   bindBtn(document.getElementById('btnRight'), (v) => inputRight = v);
   bindBtn(document.getElementById('btnJump'),  (v) => inputJump = v);
 
+  // Touch zones no canvas: lado esquerdo = move esquerda, direito = move direita, meio = pula
+  // Multi-touch suportado (segurar direção + pular ao mesmo tempo)
+  const activeTouches = new Map();
+  function hasActive(type) {
+    for (const v of activeTouches.values()) if (v === type) return true;
+    return false;
+  }
+  canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    ensureAudio();
+    const rect = canvas.getBoundingClientRect();
+    for (const t of e.changedTouches) {
+      const xFrac = (t.clientX - rect.left) / rect.width;
+      let type;
+      if (xFrac < 0.35) type = 'left';
+      else if (xFrac > 0.65) type = 'right';
+      else type = 'jump';
+      activeTouches.set(t.identifier, type);
+      if (type === 'left') inputLeft = true;
+      else if (type === 'right') inputRight = true;
+      else inputJump = true;
+    }
+  }, { passive: false });
+  function releaseTouch(e) {
+    for (const t of e.changedTouches) {
+      activeTouches.delete(t.identifier);
+    }
+    if (!hasActive('left')) inputLeft = false;
+    if (!hasActive('right')) inputRight = false;
+    if (!hasActive('jump')) inputJump = false;
+  }
+  canvas.addEventListener('touchend', releaseTouch);
+  canvas.addEventListener('touchcancel', releaseTouch);
+
   // Keyboard
   window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft' || e.key === 'a') inputLeft = true;
@@ -7329,7 +7330,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -7340,7 +7341,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -8058,7 +8059,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -8069,7 +8070,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -8681,7 +8682,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -8692,7 +8693,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -9187,7 +9188,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -9198,7 +9199,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -9663,7 +9664,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -9674,7 +9675,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -10129,7 +10130,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -10140,7 +10141,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -10588,7 +10589,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -10599,7 +10600,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -11157,7 +11158,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -11168,7 +11169,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -11827,7 +11828,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -11838,7 +11839,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -12401,7 +12402,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -12412,7 +12413,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -12948,7 +12949,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -12959,7 +12960,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -13633,7 +13634,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -13644,7 +13645,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -14536,7 +14537,7 @@
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -14547,7 +14548,7 @@
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -15218,7 +15219,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -15229,7 +15230,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -15383,44 +15384,28 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
     </div>
     <div class="levelGrid">
       <div class="levelCard" data-lvl="0">
-        <div class="lvlIcon">🐣</div>
+        <div class="lvlIcon">🌱</div>
         <div class="lvlInfo">
-          <div class="lvlName">Bebê</div>
-          <div class="lvlRange">Bem devagar</div>
+          <div class="lvlName">Fácil</div>
+          <div class="lvlRange">Fantasmas devagar</div>
         </div>
         <div class="lvlStars" id="stars0"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
       </div>
       <div class="levelCard" data-lvl="1">
-        <div class="lvlIcon">🌱</div>
+        <div class="lvlIcon">⚡</div>
         <div class="lvlInfo">
-          <div class="lvlName">Aprendiz</div>
-          <div class="lvlRange">Devagar</div>
+          <div class="lvlName">Médio</div>
+          <div class="lvlRange">Ritmo médio</div>
         </div>
         <div class="lvlStars" id="stars1"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
       </div>
       <div class="levelCard" data-lvl="2">
-        <div class="lvlIcon">🍀</div>
-        <div class="lvlInfo">
-          <div class="lvlName">Fácil</div>
-          <div class="lvlRange">Fantasmas lentos</div>
-        </div>
-        <div class="lvlStars" id="stars2"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
-      </div>
-      <div class="levelCard" data-lvl="3">
-        <div class="lvlIcon">⚡</div>
-        <div class="lvlInfo">
-          <div class="lvlName">Normal</div>
-          <div class="lvlRange">Padrão arcade</div>
-        </div>
-        <div class="lvlStars" id="stars3"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
-      </div>
-      <div class="levelCard" data-lvl="4">
         <div class="lvlIcon">🔥</div>
         <div class="lvlInfo">
           <div class="lvlName">Difícil</div>
-          <div class="lvlRange">Fantasmas implacáveis</div>
+          <div class="lvlRange">Fantasmas espertos</div>
         </div>
-        <div class="lvlStars" id="stars4"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
+        <div class="lvlStars" id="stars2"><span class="s">★</span><span class="s">★</span><span class="s">★</span></div>
       </div>
     </div>
   </div>
@@ -15507,11 +15492,9 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
 
   // LEVELS
   const LEVELS = [
-    { name:'Bebê',     pacSpeed:0.08, ghostSpeed:0.05, frightSpeed:0.04, frightenedMs:10000, goal3:2500, goal2:1500, goal1:800  },
-    { name:'Aprendiz', pacSpeed:0.10, ghostSpeed:0.07, frightSpeed:0.05, frightenedMs:9000,  goal3:3500, goal2:2000, goal1:1000 },
-    { name:'Fácil',    pacSpeed:0.12, ghostSpeed:0.09, frightSpeed:0.06, frightenedMs:8000,  goal3:6000, goal2:3500, goal1:1500 },
-    { name:'Normal',   pacSpeed:0.14, ghostSpeed:0.12, frightSpeed:0.08, frightenedMs:7000,  goal3:8000, goal2:4500, goal1:2000 },
-    { name:'Difícil',  pacSpeed:0.16, ghostSpeed:0.15, frightSpeed:0.09, frightenedMs:5000,  goal3:10000, goal2:5500, goal1:2500 },
+    { name:'Fácil',   pacSpeed:0.11, ghostSpeed:0.04, frightSpeed:0.03, frightenedMs:10000, goal3:2500, goal2:1500, goal1:800 },
+    { name:'Médio',   pacSpeed:0.12, ghostSpeed:0.07, frightSpeed:0.05, frightenedMs:8000,  goal3:4500, goal2:2800, goal1:1500 },
+    { name:'Difícil', pacSpeed:0.13, ghostSpeed:0.10, frightSpeed:0.07, frightenedMs:6000,  goal3:7000, goal2:4500, goal1:2500 },
   ];
 
   // STATS
@@ -15520,7 +15503,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
   function getBest(l) { return +(localStorage.getItem('blg-pacman-best-' + l) || 0); }
   function saveBest(l, s) { if (s > getBest(l)) localStorage.setItem('blg-pacman-best-' + l, s); }
   function refreshMenu() {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 3; i++) {
       const s = getStars(i);
       const ct = document.getElementById('stars' + i);
       if (!ct) continue;
@@ -16185,22 +16168,24 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
     else if (e.key === 'ArrowRight' || e.key === 'd') { setDir('right'); e.preventDefault(); }
   });
 
-  // SWIPE no canvas
+  // SWIPE no canvas (mais responsivo)
   let touchStart = null;
   canvas.addEventListener('touchstart', (e) => {
     ensureAudio();
     touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
   }, { passive:true });
-  canvas.addEventListener('touchend', (e) => {
+  canvas.addEventListener('touchmove', (e) => {
     if (!touchStart) return;
-    const t = e.changedTouches[0];
+    const t = e.touches[0];
     const dx = t.clientX - touchStart.x;
     const dy = t.clientY - touchStart.y;
-    touchStart = null;
-    if (Math.max(Math.abs(dx), Math.abs(dy)) < 20) return;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 12) return;
     if (Math.abs(dx) > Math.abs(dy)) setDir(dx > 0 ? 'right' : 'left');
     else setDir(dy > 0 ? 'down' : 'up');
+    // reset pra permitir nova direção sem soltar
+    touchStart = { x: t.clientX, y: t.clientY };
   }, { passive:true });
+  canvas.addEventListener('touchend', () => { touchStart = null; }, { passive:true });
 
   window.addEventListener('resize', () => { if (!gameScreen.classList.contains('hidden')) resize(); });
 
@@ -16264,7 +16249,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -16275,7 +16260,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -17213,7 +17198,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -17224,7 +17209,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -18021,7 +18006,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -18032,7 +18017,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
@@ -18151,7 +18136,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['snake', 'blg-snake-stars-', 3, 9],
       ['letroca', 'blg-letroca-stars-', 3, 9],
       ['skyhop', 'blg-skyhop-stars-', 3, 9],
-      ['platformer', 'blg-mario-stars-', 5, 15],
+      ['platformer', 'blg-mario-stars-', 3, 9],
       ['cruzadas', 'blg-cruzadas-stars-', 6, 18],
       ['balloons', 'blg-balloons-stars-', 6, 18],
       ['animals', 'blg-animal-stars-', 3, 9],
@@ -18162,7 +18147,7 @@ const PUZZLES = [{"size":4,"boxH":2,"boxW":2,"difficulty":"Fácil","clues":9,"pu
       ['race', 'blg-race-stars-', 5, 15],
       ['sokoban', 'blg-sokoban-stars-', 25, 75],
       ['invaders', 'blg-invaders-stars-', 3, 9],
-      ['pacman', 'blg-pacman-stars-', 5, 15],
+      ['pacman', 'blg-pacman-stars-', 3, 9],
       ['tower', 'blg-tower-stars-', 3, 9],
     ];
     for (const [game, prefix, levels, max] of games) {
